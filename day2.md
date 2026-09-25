@@ -340,6 +340,12 @@ operations, every field with its rule, and the error table (400/401/404).
 
 **Goal:** know the parts of an MCP before planning one.
 
+> **Theory:** read [mcp-theory.md](mcp-theory.md), parts 4–7 —
+> [how a conversation works](mcp-theory.md#4--how-a-conversation-works-step-by-step),
+> [what a tool is made of](mcp-theory.md#5--what-a-tool-is-made-of),
+> [how the host and server connect](mcp-theory.md#6--how-the-host-and-the-server-connect) and
+> [where MCP sits next to your API](mcp-theory.md#7--where-mcp-sits-next-to-your-api). This topic is the short version.
+
 An **MCP server** is a small program that tells an AI app: *"here are the actions you may take, and
 exactly what each one needs."* The AI decides **when** to use an action; your code decides **what it
 is allowed to do**.

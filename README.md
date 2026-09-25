@@ -21,6 +21,10 @@ Software Development Kit · **stdio** = standard input/output (how the AI app ta
 - **[Day 2 — Build the REST API, then Pivot to MCP](day2.md)**
 - **[Day 3 — Build the MCP, Connect & Verify](day3.md)**
 
+**The theory:** **[MCP Explained — the Theory, in Plain Words](mcp-theory.md)** — what MCP is, how it
+works, what a server should and should not do, and best practice, with as little jargon as possible.
+Each day links to the parts it needs.
+
 **How to read this:** every topic follows the same shape — a short **Goal** (what you set out to do),
 the **steps**, and a **Checkpoint ✅** you can verify. Topics are ordered *prerequisites first, easy
 first* — each one builds on the last.
@@ -103,6 +107,7 @@ present a final group project.*
 | Path | What |
 |---|---|
 | `day1.md` · `day2.md` · `day3.md` | the lab notes |
+| `mcp-theory.md` | MCP theory in plain words — read alongside the days |
 | `basics/` | three plain CFML lesson pages (Day 1) |
 | `crud/` | the existing student-records app (Day 1) |
 | `api-demo/` | small `pelajar` API the trainer builds live (Day 2) |
@@ -124,4 +129,4 @@ Day 1, Topic 1.2). Never upload it here: Adobe's licence does not allow redistri
 ---
 
 *Files in this folder: [`day1.md`](day1.md) · [`day2.md`](day2.md) · [`day3.md`](day3.md) ·
-[`COURSE-OUTLINE.md`](COURSE-OUTLINE.md) (original course outline).*
+[`mcp-theory.md`](mcp-theory.md) (MCP theory) · [`COURSE-OUTLINE.md`](COURSE-OUTLINE.md) (original course outline).*

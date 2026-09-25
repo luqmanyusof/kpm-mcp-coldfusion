@@ -234,6 +234,10 @@ The pages ask for a datasource called `cf_test_crud`. In the Administrator:
 
 **Goal:** know *why* we are building each piece before building it.
 
+> **Theory:** the full plain-words explanation is in [mcp-theory.md](mcp-theory.md), parts 1–3 —
+> [the problem MCP solves](mcp-theory.md#1--the-problem-mcp-solves), [the players](mcp-theory.md#2--the-players)
+> and [what a server can offer](mcp-theory.md#3--what-an-mcp-server-can-offer). Read them with this topic.
+
 **Web apps are built for people.** You log in, click, fill forms. Nothing happens unless someone is
 there doing it. An **MCP server** gives an AI assistant its own entrance — a **"staff entrance"**
 next to the front door for humans. The AI can then operate the app on request, in plain English,

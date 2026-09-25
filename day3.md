@@ -197,6 +197,11 @@ logged as a finding.
 
 **Goal:** name the guardrails that made Topic 5 safe — you carry this list to your own projects.
 
+> **Theory:** read [mcp-theory.md](mcp-theory.md), parts 8–11 —
+> [what a server should do](mcp-theory.md#8--what-an-mcp-server-should-do),
+> [what it should NOT do](mcp-theory.md#9--what-an-mcp-server-should-not-do),
+> [best practice](mcp-theory.md#10--best-practice-in-one-page) and [the risks](mcp-theory.md#11--the-risks-in-plain-words).
+
 - [ ] The key lives in one file outside the web folder and in the client config — never in code, git,
       or chat.
 - [ ] The MCP server checks every tool call against the contract and **rejects** bad values.
