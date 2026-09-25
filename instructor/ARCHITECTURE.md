@@ -9,7 +9,7 @@ of a plain per-app REST API and the interview framework.
 |-------|--------|-----|
 | App server | Adobe ColdFusion 2021, Developer Edition, built-in server :8500 | course target; free for localhost |
 | Database | Oracle 21c XE in Docker (`gvenzl/oracle-xe:21-slim-faststart`) | free, ~2 GB, 1-minute start; the SQL is valid on 19c |
-| Build AI | Continue (VS Code) Agent mode -> Ollama Cloud, `gemma4:31b-cloud`; backup `gpt-oss:120b-cloud` | edits files directly; no API key in config (via `ollama signin`) |
+| Build AI | Continue (VS Code) Agent mode -> Ollama Cloud, `gemma4:31b-cloud`; backup `gpt-oss:120b-cloud`; second provider Token Harbor (OpenAI-compatible, `https://tokenharbor.ai/v1`) | edits files directly; Ollama via `ollama signin`, Token Harbor key in `~/.continue/.env`, never in the config |
 | MCP server | Node.js, `@modelcontextprotocol/sdk` + `zod`, stdio | the official SDK; stdio needs no port |
 | MCP client | Claude Desktop; Continue Agent mode as the alternative | the finale runs in a mainstream AI app |
 | API testing | Postman, AI-generated collection; reference collection as comparison | |
@@ -36,6 +36,7 @@ of a plain per-app REST API and the interview framework.
 - **Two layers of validation:** the MCP schema rejects bad tool calls; the API validates again.
 - **Delete:** `confirm: true` in the tool schema + per-call approval in Claude Desktop. No bulk tools.
 - **Errors:** short and safe. Details go to the ColdFusion log (`murid-api.log`), never to the caller.
+- **AI provider keys:** Token Harbor's `thk_live_...` key lives in `%USERPROFILE%\.continue\.env` (outside the repo and the workspace the agent reads). Ollama needs no key.
 - **Datasource password** lives in the CF Administrator, not in `Application.cfc`.
 
 ## Deliberately not done

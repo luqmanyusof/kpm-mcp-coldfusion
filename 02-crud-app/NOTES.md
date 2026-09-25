@@ -9,7 +9,7 @@ Bootstrap UI.
 
 - **Pages:** [`crud/`](crud/)
 - **Table:** `murid` (full student record - see [DATABASE.md](../00-setup/DATABASE.md))
-- **Run this project:** <http://localhost:8500/cf-mcp-course/02-crud-app/crud/> (the home page redirects to the list).
+- **Run this project:** <http://localhost:8500/kpm-mcp-coldfusion/02-crud-app/crud/> (the home page redirects to the list).
 
 ---
 

@@ -8,7 +8,7 @@ The file `pelajar.cfm` is a skeleton with four `TODO`s. This guide has the exact
 - **Table:** `pelajar` (`id`, `name`, `email`).
 - **File you edit:** [`pelajar.cfm`](pelajar.cfm)
 - **Stuck?** Compare with [`pelajar.reference.cfm`](pelajar.reference.cfm) (the finished version).
-- **Run this project:** open <http://localhost:8500/cf-mcp-course/04-rest-api/api-demo/>.
+- **Run this project:** open <http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/api-demo/>.
 
 ---
 
@@ -59,8 +59,8 @@ respond({ "data": rows(all) });
 **Test it:**
 
 ```bash
-curl http://localhost:8500/cf-mcp-course/04-rest-api/api-demo/pelajar.cfm
-curl http://localhost:8500/cf-mcp-course/04-rest-api/api-demo/pelajar.cfm?id=1
+curl http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/api-demo/pelajar.cfm
+curl http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/api-demo/pelajar.cfm?id=1
 ```
 
 ---
@@ -97,7 +97,7 @@ quotes inside don't end the string.)
 **Test it:**
 
 ```bash
-curl -X POST http://localhost:8500/cf-mcp-course/04-rest-api/api-demo/pelajar.cfm \
+curl -X POST http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/api-demo/pelajar.cfm \
      -H "Content-Type: application/json" \
      -d '{"name":"Chong Ke Xin","email":"kexin@example.com"}'
 ```
@@ -124,7 +124,7 @@ respond({ "updated": true, "id": val(url.id) });
 **Test it:**
 
 ```bash
-curl -X PUT "http://localhost:8500/cf-mcp-course/04-rest-api/api-demo/pelajar.cfm?id=1" \
+curl -X PUT "http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/api-demo/pelajar.cfm?id=1" \
      -H "Content-Type: application/json" \
      -d '{"name":"Ahmad Danish","email":"ahmad.new@example.com"}'
 ```
@@ -148,7 +148,7 @@ respond({ "deleted": true, "id": val(url.id) });
 **Test it:**
 
 ```bash
-curl -X DELETE "http://localhost:8500/cf-mcp-course/04-rest-api/api-demo/pelajar.cfm?id=6"
+curl -X DELETE "http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/api-demo/pelajar.cfm?id=6"
 ```
 
 ---

@@ -57,13 +57,13 @@ Your own words are fine. Short and specific beats long.
 **1. Make your workspace** - a copy of the CRUD app with the starter dropped in (PowerShell):
 
 ```powershell
-cd C:\ColdFusion2021\cfusion\wwwroot\cf-mcp-course
+cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion
 Copy-Item 02-crud-app\crud 04-rest-api\workspace -Recurse
 Copy-Item 03-ai-framework\START_PROMPT.md, 03-ai-framework\project_starter.json 04-rest-api\workspace
 code 04-rest-api\workspace
 ```
 
-Check the copy runs: <http://localhost:8500/cf-mcp-course/04-rest-api/workspace/>.
+Check the copy runs: <http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/workspace/>.
 (`workspace` folders are yours - git ignores them.)
 
 **2. Start the interview.** In VS Code open the Continue panel, choose **Gemma 4 31B**, mode **Agent**.
@@ -103,7 +103,7 @@ Gemma is capable but not perfect. Stay calm, and correct it with a short, direct
 | starts writing code or files before you approved | `Undo that. No code or files until I type approved.` |
 | uses emojis, tables or strange symbols | `Plain text only, as message_format in the starter says.` |
 | goes round in circles or forgets the rules | Start a **new chat** in Continue and paste `START_PROMPT.md` again. |
-| is slow or keeps failing | Switch the model to **gpt-oss 120B** (the backup) and start a new chat. |
+| is slow or keeps failing | Switch the model to **gpt-oss 120B**, or to **Token Harbor (backup)** if Ollama is down or over its limit, and start a new chat. |
 
 **Why this matters:** in real projects the AI makes the same mistakes. The framework does not make it
 perfect - it makes its mistakes *visible and easy to correct*.

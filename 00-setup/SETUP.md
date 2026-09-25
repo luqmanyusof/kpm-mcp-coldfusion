@@ -1,6 +1,6 @@
 # 00 - Setup: install everything before Day 1
 
-Do this **at home or at the office, before the course**. Allow about **1.5 hours** (mostly downloads,
+Do this **at home or at the office, before the course**. Allow about **1.75 hours** (mostly downloads,
 about 4 GB in total). Day 1 starts with a 30-minute check of section 12 - anything that does not work
 by then is fixed together.
 
@@ -12,7 +12,7 @@ by then is fixed together.
 | 4-5 | Oracle 21c XE (in Docker) | the database: tables `pelajar`, `murid` | whole course |
 | 6 | ColdFusion datasource | connects ColdFusion to Oracle | whole course |
 | 7 | API key file | the secret that protects the REST API | Day 2-3 |
-| 8 | VS Code + Continue + Ollama | the AI assistant that writes the code | Day 1 PM-3 |
+| 8 | VS Code + Continue + Ollama / Token Harbor | the AI assistant that writes the code | Day 1 PM-3 |
 | 9 | Node.js | runs the MCP server | Day 2 PM-3 |
 | 10 | Postman | tests the REST API | Day 2 |
 | 11 | Claude Desktop | the AI app that uses your MCP server | Day 3 |
@@ -38,8 +38,9 @@ by then is fixed together.
 
 ## 2. Adobe ColdFusion 2021
 
-1. Download `ColdFusion_2021_GUI_WWEJ_win64.exe` (1.2 GB) from the course repo's **Releases** page
-   (link from your trainer). It is not inside the repo itself - it is too big for git.
+1. Get `ColdFusion_2021_GUI_WWEJ_win64.exe` (1.2 GB) from the **download link your trainer sends you**
+   (or the trainer's USB stick). It is not in the GitHub repo - it is too big for git, and Adobe's
+   licence does not allow it to be shared publicly. **Do not upload it anywhere.**
 2. Run it **as administrator**. At each screen:
 
    | Screen | Choose |
@@ -74,15 +75,15 @@ C:\ColdFusion2021\cfusion\bin\cfpm.bat install oracle
 3. Clone the course into that folder - **normal** PowerShell:
 
    ```powershell
-   git clone <course-repo-url> C:\ColdFusion2021\cfusion\wwwroot\cf-mcp-course
+   git clone https://github.com/luqmanyusof/kpm-mcp-coldfusion.git C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion
    ```
 
-   The folder **must** be called `cf-mcp-course` - every link in the notes uses that name.
+   The folder **must** be called `kpm-mcp-coldfusion` - every link in the notes uses that name.
 
 ## 4. Start Oracle
 
 ```powershell
-cd C:\ColdFusion2021\cfusion\wwwroot\cf-mcp-course\00-setup
+cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\00-setup
 docker compose up -d
 ```
 
@@ -135,27 +136,72 @@ Get-Content C:\course-secrets\api-key.txt
 The last line prints your key. You will paste it into **Postman** and **Claude Desktop** only -
 **never into the AI chat**.
 
-## 8. VS Code + Continue + Ollama (the AI assistant)
+## 8. The AI assistant: VS Code + Continue + two AI providers
 
-1. **VS Code** - <https://code.visualstudio.com/> (all defaults).
-2. **Ollama** - <https://ollama.com/download>, install, then in PowerShell:
+Continue (inside VS Code) is the AI assistant that writes the code. It can use two providers:
+
+| Provider | Models | Cost | Key needed in Continue? |
+|----------|--------|------|-------------------------|
+| **Ollama Cloud** (main) | Gemma 4, gpt-oss | free account, with usage limits | no - the Ollama app signs you in |
+| **Token Harbor** (backup) | GPT, Claude, Gemini, DeepSeek, Qwen... | pay per use; the account is free | yes - one `thk_live_...` key |
+
+### 8a. VS Code
+
+Install from <https://code.visualstudio.com/> (all defaults).
+
+### 8b. Ollama account + app
+
+1. Go to <https://ollama.com> > **Sign up**. Use your work email (or Google), confirm the email.
+2. Download and install the app: <https://ollama.com/download>.
+3. In a **new** PowerShell window:
 
    ```powershell
-   ollama signin                              # opens the browser - create / log in to your Ollama account
+   ollama signin
+   ```
+
+   The browser opens - log in and click **Connect** to link this laptop to your account.
+4. Test the cloud model (it runs on Ollama's servers, not your laptop):
+
+   ```powershell
    ollama run gemma4:31b-cloud "Say hello in five words"
    ```
 
-   A short reply = your account can reach the cloud model. (It runs on Ollama's servers, not your laptop.)
-3. **Continue** - in VS Code: Extensions (Ctrl+Shift+X) > search **Continue** > Install.
-4. Give Continue the course models - copy the course config over Continue's own:
+   A short reply = done. Your usage so far is at <https://ollama.com/settings> - the free plan has
+   hourly and weekly limits, so check it if replies suddenly stop.
+
+### 8c. Token Harbor account + API key
+
+1. Go to <https://tokenharbor.ai> > **Sign up**. The account is free and needs no card; the wallet
+   starts at $0. **Top up only if your trainer says so** - the course runs on Ollama.
+2. Dashboard > **API keys**. Copy the **Universal Key** (`thk_live_...`) **straight away** - it is
+   shown only once. Lost it? Delete it and create a new one.
+3. Store the key where Continue can read it, but the AI and git cannot - Continue's own `.env` file
+   in your user folder:
 
    ```powershell
    New-Item -ItemType Directory -Force $HOME\.continue | Out-Null
-   Copy-Item C:\ColdFusion2021\cfusion\wwwroot\cf-mcp-course\00-setup\continue-config.yaml $HOME\.continue\config.yaml
+   Add-Content $HOME\.continue\.env "TOKEN_HARBOR_API_KEY=paste-your-thk_live-key-here"
+   notepad $HOME\.continue\.env      # check it: one line, no spaces around =
    ```
 
-5. Open the Continue panel (its icon on the left bar), pick **Gemma 4 31B (Ollama Cloud)**, switch the
-   mode to **Agent**, and type `hello`. A reply = done.
+   **Never** put this key in the course folder, in a chat message, or in a screenshot. It spends real
+   money. If it leaks: dashboard > API keys > delete it, then make a new one.
+
+### 8d. Continue
+
+1. In VS Code: Extensions (Ctrl+Shift+X) > search **Continue** > Install.
+2. Give Continue the course models - copy the course config over Continue's own:
+
+   ```powershell
+   Copy-Item C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\00-setup\continue-config.yaml $HOME\.continue\config.yaml
+   ```
+
+   The config refers to the key as `${{ secrets.TOKEN_HARBOR_API_KEY }}` - Continue fills it in from
+   the `.env` file, so the key is never written in the config.
+3. Reload VS Code (Ctrl+Shift+P > **Reload Window**). Open the Continue panel (its icon on the left
+   bar), switch the mode to **Agent**, and test both providers:
+   - pick **Gemma 4 31B (Ollama Cloud)**, type `hello` - a reply
+   - pick **Token Harbor (backup)**, type `hello` - a reply
 
 ## 9. Node.js
 
@@ -183,11 +229,11 @@ You will connect it to your own MCP server on Day 3 - nothing to configure yet.
 | # | Check | You should see |
 |---|-------|----------------|
 | 1 | `docker ps` | `cf-oracle` ... `(healthy)` |
-| 2 | <http://localhost:8500/cf-mcp-course/01-cf-basics/basics/03-database.cfm> | a table of 5 `pelajar` rows |
-| 3 | <http://localhost:8500/cf-mcp-course/02-crud-app/crud/> | the list of 6 students |
-| 4 | <http://localhost:8500/cf-mcp-course/04-rest-api/api-demo/pelajar.reference.cfm> | JSON: `{"data":[{"id":1,...` |
-| 5 | <http://localhost:8500/cf-mcp-course/04-rest-api/reference/murid.cfm> | `{"error":"Missing or wrong API key."}` - **correct!** The browser sends no key |
-| 6 | Continue panel, Agent mode, `hello` | a reply from Gemma 4 |
+| 2 | <http://localhost:8500/kpm-mcp-coldfusion/01-cf-basics/basics/03-database.cfm> | a table of 5 `pelajar` rows |
+| 3 | <http://localhost:8500/kpm-mcp-coldfusion/02-crud-app/crud/> | the list of 6 students |
+| 4 | <http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/api-demo/pelajar.reference.cfm> | JSON: `{"data":[{"id":1,...` |
+| 5 | <http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/reference/murid.cfm> | `{"error":"Missing or wrong API key."}` - **correct!** The browser sends no key |
+| 6 | Continue panel, Agent mode, `hello` | a reply from **Gemma 4** and from **Token Harbor** |
 | 7 | `node -v` | v20 or newer |
 | 8 | Postman and Claude Desktop | both open and signed in |
 
@@ -197,7 +243,7 @@ All eight = you are ready.
 
 ## Every day after that
 
-1. Start **Docker Desktop**, then in `cf-mcp-course\00-setup`: `docker compose up -d`.
+1. Start **Docker Desktop**, then in `kpm-mcp-coldfusion\00-setup`: `docker compose up -d`.
 2. ColdFusion starts by itself with Windows (it is a service).
 3. `.cfm` edits show on the next page refresh - no restart needed.
 
@@ -215,11 +261,15 @@ To stop Oracle: `docker compose down` (data kept). `docker compose down -v` wipe
 | `Datasource cf_test_crud could not be found` | Step 6 not done, or the name is spelled differently. |
 | `Driver not found` / no Oracle in the driver list | Step 2: `cfpm.bat install oracle`, restart the service. |
 | `localhost:8500` does not open | Windows Services > start "ColdFusion 2021 Application Server". |
-| `404` on a course page | The repo folder is not named `cf-mcp-course`, or not inside `wwwroot` (step 3). |
+| `404` on a course page | The repo folder is not named `kpm-mcp-coldfusion`, or not inside `wwwroot` (step 3). |
 | `git clone` / VS Code save says "Access denied" | Step 3.2 (`icacls`) was skipped. |
 | Check 5 says `Server key is not configured` / 500 | Step 7 was skipped, or the file is in a different folder. |
 | `ollama` not recognised | Close and reopen PowerShell after installing Ollama. |
-| Continue shows no Gemma model | Step 8.4 - the config file was not copied. Reload VS Code (Ctrl+Shift+P > "Reload Window"). |
+| Continue shows no Gemma / Token Harbor model | Step 8d - the config file was not copied. Reload VS Code (Ctrl+Shift+P > "Reload Window"). |
+| Gemma: `unauthorized` or no reply | Run `ollama signin` again. Still failing: check usage limits at ollama.com/settings. |
+| Token Harbor: `401` / `invalid api key` | The `.env` line is wrong (check spelling `TOKEN_HARBOR_API_KEY=`, no quotes or spaces), then Reload Window. |
+| Token Harbor: `402` / `insufficient balance` | The model needs credit. Pick a free model in the config, or top up (ask your trainer first). |
+| Token Harbor: `model not found` | The model ID in `config.yaml` is not in the catalog - copy the exact ID from tokenharbor.ai/models. |
 
 > **Local training only.** The passwords here and in `docker-compose.yml` are throwaway values for
 > this laptop. Never reuse them, and never point these apps at a real database.

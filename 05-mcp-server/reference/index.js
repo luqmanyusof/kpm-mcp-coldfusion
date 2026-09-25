@@ -6,7 +6,7 @@
  * ColdFusion REST API from Module 04. The AI never touches the database directly.
  *
  * Settings come from environment variables (set in the MCP client's config, never in code):
- *   API_BASE_URL  e.g. http://localhost:8500/cf-mcp-course/04-rest-api/reference/murid.cfm
+ *   API_BASE_URL  e.g. http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/reference/murid.cfm
  *   API_KEY       the key from C:\course-secrets\api-key.txt
  *
  * Transport is stdio: the client starts this file and talks to it over stdin/stdout.

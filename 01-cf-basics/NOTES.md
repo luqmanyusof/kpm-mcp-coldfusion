@@ -7,7 +7,7 @@ the language stays in focus. Open the pages in your browser and read the code al
 
 - **Pages:** [`basics/`](basics/) (`index`, `01-syntax`, `02-logic`, `03-database`)
 - **Table used:** `pelajar` (`id`, `name`, `email`)
-- **Run this project:** <http://localhost:8500/cf-mcp-course/01-cf-basics/basics/> (Oracle container running -
+- **Run this project:** <http://localhost:8500/kpm-mcp-coldfusion/01-cf-basics/basics/> (Oracle container running -
   [00-setup](../00-setup/SETUP.md)).
 
 ---

@@ -9,7 +9,7 @@ node_modules/
 api-key.txt
 .env
 
-# The installer is attached to a GitHub Release, never committed (too big for git)
+# The installer is shared by the trainer (Drive link / USB), never committed: too big for git, and Adobe's licence does not allow public redistribution
 *.exe
 
 # Old / local-only material

@@ -8,11 +8,14 @@ Timings assume 09:00-17:00, lunch 13:00-14:00, breaks at 10:30 and 15:30.
       code. These are **untested on real Adobe CF + Oracle** and must be checked first:
       the datasource "Service Name" screen, `04-rest-api/reference/murid.cfm` (JSON numbers and dates),
       and `api-demo/pelajar.reference.cfm`.
-- [ ] Push the repo; create a **Release** and attach `ColdFusion_2021_GUI_WWEJ_win64.exe`.
+- [ ] Upload `ColdFusion_2021_GUI_WWEJ_win64.exe` to a **private** Drive/OneDrive folder, shared only with
+      the participants (the repo is public - never attach it to a GitHub Release). Put it on the USB kit too.
       Give participants access (private repo = add them, or share a download link).
 - [ ] Send `SETUP.md` **one week before**. Ask each participant for a screenshot of the section 12 table.
 - [ ] Each participant makes a free **Ollama** account (`ollama signin`). Check the free tier's usage
       limits cover a full day of Agent mode - if not, arrange paid seats.
+- [ ] Each participant makes a **Token Harbor** account and key (SETUP 8c). It is pay-per-use:
+      decide who pays, which model, and a budget per person **before** anyone tops up. Try the free models first.
 - [ ] **USB kit** for bad Wi-Fi: every installer from SETUP.md, plus the Oracle image as a file:
       `docker save gvenzl/oracle-xe:21-slim-faststart -o oracle-xe.tar` (load with `docker load -i oracle-xe.tar`).
 - [ ] Your own machine: reference API and reference MCP working in Claude Desktop - your demo and the class fallback.
@@ -59,7 +62,7 @@ Timings assume 09:00-17:00, lunch 13:00-14:00, breaks at 10:30 and 15:30.
 | Problem | Do this |
 |---------|---------|
 | A laptop cannot run Docker | Pair them with a neighbour for the whole course (Docker-only is the setup choice). |
-| Ollama Cloud slow / rate-limited | Switch to `gpt-oss 120B` in Continue. If the whole room is blocked, drive from your machine on the projector while they follow. |
+| Ollama Cloud slow / rate-limited | Switch to `gpt-oss 120B`, then to **Token Harbor (backup)** in Continue. If the whole room is blocked, drive from your machine on the projector while they follow. |
 | Gemma misbehaves in the interview | `03-ai-framework/NOTES.md` recovery table. Last resort: `START_PROMPT.fallback-with-questions.md` in this folder (the questions written into the prompt). |
 | Participant's API not done by lunch Day 2 | Reference API: `04-rest-api/reference/murid.cfm` + `reference/API.md`. |
 | Participant's MCP not done by 10:30 Day 3 | Reference server: `05-mcp-server/reference` (`npm install` first). |

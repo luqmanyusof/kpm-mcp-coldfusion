@@ -2,7 +2,7 @@
 
 The blueprint the MCP server is built from. If the API and this file disagree, the API is wrong.
 
-- **Base URL:** `http://localhost:8500/cf-mcp-course/04-rest-api/reference/murid.cfm`
+- **Base URL:** `http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/reference/murid.cfm`
 - **Auth:** every request sends header `X-API-Key: <key>`. The key is in `C:\course-secrets\api-key.txt`
   (outside the web folder). Missing or wrong key -> `401`.
 - **Body:** JSON, header `Content-Type: application/json`.

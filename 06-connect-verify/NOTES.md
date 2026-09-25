@@ -14,7 +14,7 @@
    | Setting | Put |
    |---------|-----|
    | `args` | the full path to **your** server's main file (ask the AI: *"What is the full path of the file that starts the server?"*). In JSON every `\` is written `\\`. |
-   | `API_BASE_URL` | **your** API URL from Module 04 - or the reference: `http://localhost:8500/cf-mcp-course/04-rest-api/reference/murid.cfm` |
+   | `API_BASE_URL` | **your** API URL from Module 04 - or the reference: `http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/reference/murid.cfm` |
    | `API_KEY` | the key from `C:\course-secrets\api-key.txt` |
 
    Using the reference server? Point `args` at `...\\05-mcp-server\\reference\\index.js` (run

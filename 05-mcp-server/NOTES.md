@@ -43,7 +43,7 @@ is allowed to do**.
 **1. Make the workspace** (PowerShell):
 
 ```powershell
-cd C:\ColdFusion2021\cfusion\wwwroot\cf-mcp-course
+cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion
 New-Item -ItemType Directory 05-mcp-server\workspace | Out-Null
 Copy-Item 03-ai-framework\START_PROMPT.md, 03-ai-framework\project_starter.json 05-mcp-server\workspace
 Copy-Item 04-rest-api\workspace\API.md 05-mcp-server\workspace      # yours - or use reference\API.md
@@ -78,7 +78,7 @@ Build the phases up to the first tool (usually: project skeleton + `list_murid`)
 without any AI app, use the **MCP Inspector** - a web page that calls your tools directly:
 
 ```powershell
-cd C:\ColdFusion2021\cfusion\wwwroot\cf-mcp-course\05-mcp-server\workspace
+cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\05-mcp-server\workspace
 npm install
 npx @modelcontextprotocol/inspector -e "API_BASE_URL=<your API URL>" -e "API_KEY=$(Get-Content C:\course-secrets\api-key.txt)" node index.js
 ```
@@ -87,7 +87,7 @@ In the Inspector page: **Connect** > **Tools** > **List Tools** > `list_murid` >
 You should see the students from Oracle. **That is an AI-ready action, working end to end.**
 
 `<your API URL>` is your own API from Module 04, or the reference:
-`http://localhost:8500/cf-mcp-course/04-rest-api/reference/murid.cfm`
+`http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/reference/murid.cfm`
 
 ## Part D - The other four tools (Day 3 morning)
 

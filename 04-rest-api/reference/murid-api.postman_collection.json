@@ -27,7 +27,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:8500/cf-mcp-course/04-rest-api/reference/murid.cfm"
+      "value": "http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/reference/murid.cfm"
     },
     {
       "key": "apiKey",

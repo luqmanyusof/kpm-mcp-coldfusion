@@ -88,7 +88,7 @@ this afternoon - if it is wrong, the MCP will be wrong.
 - [ ] the CRUD web pages still work (the API did not break the app)
 
 **Not finished by lunch?** No problem - the afternoon uses the **reference API** instead:
-`http://localhost:8500/cf-mcp-course/04-rest-api/reference/murid.cfm` with [reference/API.md](reference/API.md).
+`http://localhost:8500/kpm-mcp-coldfusion/04-rest-api/reference/murid.cfm` with [reference/API.md](reference/API.md).
 Everyone starts Module 05 on equal footing.
 
 Next: **[05 - Build the MCP server](../05-mcp-server/NOTES.md)**.
