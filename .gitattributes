@@ -1,0 +1,5 @@
+* text=auto
+# schema.sql runs in sqlplus inside a Linux container - CRLF can break its "/" lines
+*.sql text eol=lf
+*.sh  text eol=lf
+*.exe binary

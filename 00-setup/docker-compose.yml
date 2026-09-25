@@ -1,0 +1,21 @@
+# Local Oracle for the course. LOCAL TRAINING ONLY - these passwords are throwaway.
+#   Start:   docker compose up -d        (first start ~1 min; image ~2 GB download)
+#   Ready?:  docker ps                   (STATUS shows "healthy")
+#   Load:    docker exec cf-oracle sqlplus -s cfapp/cfapp123@//localhost:1521/XEPDB1 @/db/schema.sql
+#   Stop:    docker compose down         (data kept; add -v to wipe it)
+services:
+  oracle:
+    image: gvenzl/oracle-xe:21-slim-faststart
+    container_name: cf-oracle
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_PASSWORD: SysPass123     # SYS/SYSTEM - not used by the apps
+      APP_USER: cfapp                 # created inside XEPDB1 on first start
+      APP_USER_PASSWORD: cfapp123
+    volumes:
+      - ./db:/db:ro
+      - oracle-data:/opt/oracle/oradata
+
+volumes:
+  oracle-data:

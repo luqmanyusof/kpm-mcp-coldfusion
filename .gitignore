@@ -1,0 +1,21 @@
+# Participants' own work, created during the course
+**/workspace/
+
+# Node
+node_modules/
+
+# Secrets - the API key lives outside the repo (C:\course-secrets), but just in case
+*.key
+api-key.txt
+.env
+
+# The installer is attached to a GitHub Release, never committed (too big for git)
+*.exe
+
+# Old / local-only material
+_lucee-original/
+commandbox/
+testing/
+.engine/
+WEB-INF/
+*.log

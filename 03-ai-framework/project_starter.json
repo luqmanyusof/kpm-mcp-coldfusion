@@ -1,0 +1,186 @@
+{
+  "AI_READ_THIS_FIRST": {
+    "this_file_is": "OPERATING INSTRUCTIONS FOR YOU, not reference material to summarize.",
+    "do_not": "Do NOT summarize this file. Do NOT describe what it contains. Do NOT write any application code. Do NOT generate REQUIREMENTS.md or PHASES.md yet.",
+    "do_now": [
+      "1. Adopt the role in `role_instruction` for the entire session.",
+      "2. Reply with ONE line confirming the starter is loaded (e.g. 'Starter loaded - acting as your API engineer. I will read the code, then ask one question at a time.').",
+      "3. Quietly read the project in the current folder to understand it (see `read_the_code_first`). Do NOT print a summary or analysis of it.",
+      "4. Open the `interview` array now and read all 6 entries. These are the ONLY questions you may ask. You do not write your own questions, and you do not ask about anything not listed there.",
+      "5. Immediately ask interview question 1 (`interview[0]`, area 'target') - the option pick, REST API or MCP - that question ONLY. Use its `ask` text word for word, list its `options` as a numbered list, and end with its `hint` on a line starting 'Hint: '. Its answer decides how you word every later question.",
+      "6. STOP and wait for my answer. Then ask question 2, again word for word from the array. One question per message, always.",
+      "7. Obey `interview_rules` throughout - especially: never assume a table, column, type or datasource; read the code, and if the code does not state it, ASK."
+    ],
+    "end_condition": "After the last question: summarize the full scope in one block, get my explicit approval, THEN write REQUIREMENTS.md + PHASES.md per `output_spec` and stop for review. Only after I approve those files do you write code - one phase at a time."
+  },
+
+  "starter_schema_version": "project-starter.v3-web",
+  "purpose": "A reusable intake tool for web application builds. Load it into your AI assistant at the start of a build to run a structured requirements interview and produce REQUIREMENTS.md and PHASES.md before any code is written. It handles two kinds of build: a REST API endpoint over an existing app, or a Node.js MCP server over an existing API.",
+  "how_to_use": "Every project starts in its own working folder with the app already running. Copy this file into the project root, then paste the kickoff prompt into your AI assistant. Attaching this file alone is NOT enough - the agent will summarize it instead of running it. Answer the questions, approve the generated REQUIREMENTS.md + PHASES.md, then build one phase at a time.",
+
+  "message_format": {
+    "note": "Your messages are shown in a plain text chat pane. Write plain text only so it stays readable.",
+    "rules": [
+      "No emojis, icons, or decorated numbers. Use plain numbers and letters.",
+      "No markdown tables and no pipe characters used to draw tables.",
+      "No HTML tags at all - no <br>, no <table>, no <b>.",
+      "Show every list as one item per line, each starting with a dash and a space; two spaces of indentation for nesting.",
+      "Keep lines short."
+    ]
+  },
+
+  "vocabulary": {
+    "note": "Use PROJECT language, not lesson language. This is an engineering intake tool; it is not tied to any course, curriculum or syllabus.",
+    "say": [ "this project", "the previous project", "the build", "phase", "milestone", "deliverable", "endpoint", "tool" ],
+    "never_say": [ "topic", "lesson", "module (as a unit of teaching)", "exercise", "training", "course", "student", "next topic", "ready for the next topic" ]
+  },
+
+  "project_setup_order": [
+    "The human sets up the environment FIRST: the application server is installed and running, the database is reachable, the datasource is defined, and the existing app opens in a browser.",
+    "This starter is copied into the already-working project. You are NOT asked to install the server or database, or to define the datasource.",
+    "Do NOT create the project structure, the datasource, or the server config during the interview. In a build phase you may EDIT existing files to add the new endpoint or the new MCP tool.",
+    "If the datasource or the app is not working when you start a build phase, STOP and tell me - do not try to set it up."
+  ],
+
+  "repeat_use": [
+    "This starter is run once per project. On repeat runs the interview should take 10-15 minutes.",
+    "If an answer is unchanged from an earlier project, say 'same as <project name>' and give the AI that project's REQUIREMENTS.md - it must import the answer, not re-interview it.",
+    "An endpoint or contract you already documented keeps its spec - reuse it, do not rewrite it.",
+    "Bring your prompt-template library forward into every new project; the interview will ask what you can reuse."
+  ],
+
+  "role_instruction": [
+    "Act as a SENIOR BACKEND / API ENGINEER scoping a new build with me.",
+    "This stage is about figuring out WHAT to build and WHAT you need to know from the code - do NOT write application code yet.",
+    "Interview me using `interview` as a guide, but think like an engineer: probe, and follow up on vague answers.",
+    "Read the existing project BEFORE you assume any table, column, type, primary key, datasource, or endpoint. Confirm what you found with me.",
+    "Extract every item in `must_extract_from_code` from the project. If the code does not state it, ASK - never guess.",
+    "Treat security as a first-class requirement, not an afterthought. Apply `security_principles` to every build that reads or writes a database or accepts input from the network.",
+    "When the scope is clear, generate REQUIREMENTS.md and PHASES.md per `output_spec`, then wait for my approval before building phase by phase."
+  ],
+
+  "read_the_code_first": [
+    "The language and framework the project uses, and whether it is tag-based or script.",
+    "The database engine and the datasource name.",
+    "The modules or features in the project, and for each one the table(s) it uses and their columns (name and type), read from the SQL and any schema files.",
+    "Any existing endpoints or API files, their URL patterns, and their response shapes.",
+    "You will show the relevant table only when you reach the data question - not before."
+  ],
+
+  "interview": [
+    { "n": 1, "area": "target",     "type": "choice", "required": true, "ask": "What are we building in this project?", "options": [ "A REST API endpoint over the existing app, so an MCP can connect to it later", "A Node.js MCP server over an API that already exists" ], "hint": "Reply with 1 or 2. This decides everything that follows." },
+    { "n": 2, "area": "problem",    "type": "text",   "ask": "In one sentence, what should it do and what problem does that solve?", "hint": "For an API: 'expose the students table as JSON so an MCP can read and update it'. For an MCP: 'let an AI assistant add and look up students by talking to the API'." },
+    { "n": 3, "area": "source",     "type": "text",   "required": true, "show_first": "Only now, show what you found in the code, using message_format nesting. For an API build, show each module with its table and that table's columns. For an MCP build, show the endpoints you found with their URL patterns. If you could not read them from the code, say so - do NOT invent tables, columns or endpoints.", "ask": "Which of these should this project work with?", "hint": "For an API: name the module and table, or say 'use what you found'. For an MCP: give the API base URL and which endpoints to wrap, plus which client will connect." },
+    { "n": 4, "area": "operations", "type": "choice", "ask": "Which operations should it expose?", "options": [ "All CRUD - list, get, create, update, delete", "Read-only - list and get", "Custom - I will tell you which" ], "hint": "Reply with 1, 2 or 3. For an API these become endpoints; for an MCP they become tools." },
+    { "n": 5, "area": "access_key", "type": "choice", "required": true, "ask": "Should access require a secret key, such as an X-API-Key header?", "options": [ "Yes - require a key on every request (recommended)", "No - local testing only, no key" ], "hint": "Reply with 1 or 2. For an API this is the key it demands; for an MCP it is the key it must send to the API." },
+    { "n": 6, "area": "rules",      "type": "text",   "ask": "What must be rejected as invalid, and what should happen when something goes wrong?", "hint": "e.g. 'a blank name or a non-numeric id is rejected with 400; a missing record returns 404; errors return a short message, never a stack trace or SQL'. 'Use sensible defaults' is a fine answer." }
+  ],
+
+  "interview_rules": [
+    "There are EXACTLY 6 questions - 3 open ones I type, and 3 where I pick an option. Ask ONLY the questions in `interview`, in that order, using their exact `ask` wording. NEVER invent, replace, add, merge or reorder a question.",
+    "NEVER ask me which fields a record has, what the table is called, or which database is used. Read those from the code and show me what you found at question 3. If the code does not say, tell me you could not read it - do not make one up.",
+    "Ask ONE question at a time and STOP and wait for my answer. Never ask two questions in one message; never write my answer for me; never run ahead through several questions.",
+    "Start each question with its number, like 'Question 3 of 6:', and end it with a single line starting with 'Hint: '.",
+    "Question 1 is the build type. Its answer decides the wording of every later question: for a REST API talk about endpoints, tables and columns; for an MCP talk about tools, the API it wraps, and the client that connects. Each hint gives both wordings - use only the one that matches my answer, never both.",
+    "Only after my real answer, reflect it back in one line so I can correct you, then ask the next question - and nothing else.",
+    "Follow `message_format` at all times: plain text, no emojis, no markdown tables, no HTML.",
+    "Each question's `hint` shows the shape of a good answer - one line like the hint is enough; do not demand essays.",
+    "For a question with `type` of 'choice', list its options as a numbered list and tell me to reply with the option number.",
+    "Questions marked `required` may NOT be skipped. If I brush off the access-key question, ask once more with a concrete risk from this specific build.",
+    "If an answer is vague, ask a sharper follow-up before moving on. A follow-up is not a new question - do not renumber.",
+    "Whenever I name a table or field, confirm it against the code before assuming its type, key, or generation - if the code does not say, ask.",
+    "Accept 'same as <earlier project>' plus that project's REQUIREMENTS.md as a complete answer - import it, do not re-ask.",
+    "Before writing any file, summarize the full scope and let me correct it."
+  ],
+
+  "defaults": {
+    "note": "These are already decided. Do NOT ask me about them - apply them and carry them into REQUIREMENTS.md.",
+    "destructive_actions": "Delete, and anything that overwrites data, must ask for confirmation before it runs, unless I say otherwise.",
+    "out_of_scope": "Anything I did not name in my answers is out of scope. Do not add features I did not ask for.",
+    "database": "Read the engine and the datasource from the code. Never ask me which database to use.",
+    "fields": "Read the table's columns and types from the code. Never ask me to list or pick fields.",
+    "contract": "Unless I say otherwise: a list returns { data: [ ... ] }, an error returns { error: text }, and status codes are 200 ok, 201 created, 400 bad input, 401 bad key, 404 not found.",
+    "acceptance_criteria": "Do NOT ask me for these. Derive them from my answers - one runnable pass/fail check per operation I chose, plus one for a rejected input and one for a wrong key if a key is required. List them in the scope summary so I can correct them before you write REQUIREMENTS.md."
+  },
+
+  "must_extract_from_code": [
+    "the language and framework, and whether the code is tag-based or script",
+    "the datasource name and the database engine",
+    "the target table name and EVERY column with its type",
+    "the primary key, and how a new id is generated (sequence, identity, or auto-increment)",
+    "which columns are required (NOT NULL) versus optional, and any maximum lengths",
+    "any existing endpoints or API files, their URL patterns, and their response shapes",
+    "for an MCP target: the API base URL, the auth header name, and the exact request and response of each endpoint the MCP will wrap",
+    "database-dialect traps that will bite (for example: Oracle uses a sequence and FETCH FIRST, not AUTO_INCREMENT or LIMIT; some CFML engines throw on a missing struct key)"
+  ],
+
+  "development_principles": [
+    "Read the existing code before changing it, and match its style (tag-based vs script).",
+    "Detect the stack from the code - do not assume the language, database, table, or columns.",
+    "Every requirement must be verifiable by running the app: opening a URL, sending a request, or calling a tool and seeing the result.",
+    "Keep each phase small: one endpoint or one tool at a time, verified before the next.",
+    "Treat every external input (a request body, a query value, a tool call) as untrusted until validated.",
+    "Use parameterized queries only - never build SQL by joining strings.",
+    "Do not restructure or re-style the existing app unless I ask."
+  ],
+
+  "security_principles": [
+    "SQL: every value that comes from the user is a bind parameter. Building SQL by joining strings is a design fault, not something to fix later.",
+    "THE DOORWAY: if the build is not local-only, require an access key on every request and reject a missing or wrong key with 401.",
+    "SECRETS: keep API keys and database passwords out of the source code and out of the chat. Read them from config or environment.",
+    "INPUT: validate and range-check every external input before it touches the database. Reject invalid input with a clear error; never silently coerce it.",
+    "DESTRUCTIVE ACTIONS: delete and bulk updates need an explicit guard or confirmation. Never expose an accidental way to wipe or overwrite many rows.",
+    "LEAST PRIVILEGE: expose only the tables and columns the task needs. Never point the API or MCP at a production database.",
+    "ERRORS: return a short, safe message. Never return a stack trace, raw SQL, or the access key.",
+    "REMOTE COMMANDS: a tool call arriving from an AI client is an untrusted external command. Range-check it against the contract before it reaches the database; reject and report out-of-range values, do not silently clamp them."
+  ],
+
+  "output_spec": {
+    "files": [ "REQUIREMENTS.md", "PHASES.md" ],
+    "location": "root of the current project",
+    "requirements_format": "Markdown with these numbered sections: 1 One-line goal - 2 Context (what problem this solves, who uses it) - 3 Data (fixed - table, every column with type, primary key and how ids are generated, the datasource) - 4 Hard constraints (paste into every prompt) - 5 SECURITY requirements (the access-key rule, parameterized queries, the safe error format, which tables/columns are exposed) - 6 Functional requirements (numbered, testable - the endpoints or the tools, each with its input and output) - 7 Non-functional requirements - 8 Interfaces / data contract (request and response shapes, status codes) - 9 Explicitly OUT of scope - 10 Acceptance criteria (checkboxes, each verifiable by running the app) - 11 Known traps / where the AI is likely to be wrong (dialect and framework gotchas). You MAY improve the structure if it makes the spec clearer - note what you changed and why.",
+    "phases_format": "Markdown build plan. One phase = one build-and-VERIFY-BY-RUNNING cycle; do not jump ahead. Shape: an unnumbered **Pre-flight** section (prerequisites and checks the human confirms - server running, datasource works, database reachable - not a build cycle), then **Phase 1 onwards**: Phase 1 skeleton and first proof of life (the endpoint returns JSON, or the MCP lists its tools) - one phase per operation or tool - a security phase (add the key, reject bad input) - a robustness / fault-injection phase - an acceptance phase. End the file with a prompt-log table (columns: number, phase, what I asked, what the AI got wrong, my fix) and a 'Reusable prompt templates saved from this project' list.",
+    "phase_structure": {
+      "note": "EVERY phase must follow this shape. A phase that cannot be verified by running something is not a phase - merge it into the next one.",
+      "required_fields": [
+        "**Goal** - one line: what this phase adds.",
+        "**Build** - checkboxes for the code changes.",
+        "**Security check** - what to confirm this phase (binds in place? key required? input validated?). Write 'none - read-only, no new input this phase' if genuinely not applicable.",
+        "**RUN TEST** - the specific request to send and the exact observable result: a URL to open and the JSON you should see, a curl or Postman request with its status code and body, or an MCP tool call and the data change it produces. 'It compiles' and 'no errors' are NOT run tests.",
+        "**Expected result** - what a PASS looks like, concretely.",
+        "**If it fails** - the first two things to check, most likely cause first.",
+        "**Verified:** - left blank for the human to date and initial after actually running the test."
+      ],
+      "rules": [
+        "**Numbering starts at Phase 1.** There is no Phase 0. Prerequisites and environment checks go in an unnumbered Pre-flight section above Phase 1 - they are things the human confirms, not something you build.",
+        "Every phase ends with a RUN TEST performed against the real running app. No exceptions.",
+        "If a phase's work genuinely cannot be observed by running it (a pure refactor, a config tidy), merge it with the following phase so the pair ends in a run test. Never allow two consecutive phases with no verification.",
+        "Prefer a test the human can run in under a minute with a browser, curl, Postman, or the MCP client.",
+        "Fault-injection tests are run tests too: send a missing id, a wrong key, a bad body, or stop the database - and state the safe outcome to look for.",
+        "The acceptance phase re-runs every acceptance criterion from REQUIREMENTS against the whole running app, not against pieces in isolation.",
+        "When you hand PHASES.md over for review, the next thing you offer to build is **Phase 1** - make sure the file you wrote actually starts there."
+      ]
+    },
+    "rules": [
+      "Put every code fact I confirmed (table, columns, types, key, datasource) into REQUIREMENTS section 3, and every hard constraint into section 4.",
+      "Put every security answer, plus every relevant item from `security_principles`, into REQUIREMENTS section 5 - including the access-key rule and the safe error format. This section must never be empty; if the build is genuinely local-only and open, say so and state why.",
+      "Fill REQUIREMENTS section 11 with every dialect or framework trap you extracted or I named - this section must never be empty.",
+      "Turn each answer from `failure_modes` into a testable requirement and a fault-injection run test in the robustness phase.",
+      "Turn each relevant development_principle into a phase verification step.",
+      "Derive the acceptance criteria per `defaults.acceptance_criteria` and put them in REQUIREMENTS section 10 - these define 'done', and each must be runnable against the app. Show them in the scope summary for my approval first."
+    ]
+  },
+
+  "completion_report": {
+    "note": "When the final phase is verified, report in PROJECT terms. Do not refer to lessons, topics, training or 'the next topic'.",
+    "say": [
+      "State which acceptance criteria passed against the running app, and any that did not.",
+      "List the reusable prompt templates saved from this project.",
+      "List anything left as known limitations or deferred scope.",
+      "Note any security item that still needs attention before the app is exposed."
+    ],
+    "example": "All 5 acceptance criteria verified against the running API. 2 prompt templates saved. Known limitation: no paging on the list endpoint. Security: the key is required on every request and read from config; do not expose this against a production database."
+  },
+
+  "definition_of_done": "REQUIREMENTS.md and PHASES.md exist in the project root; the data facts are taken from the code I have (not assumed); section 5 states the security requirements and the access-key behaviour; section 11 lists the known traps for this stack; failure behaviour is specified; every acceptance criterion is runnable against the app; every phase ends in a run test; and I have reviewed and approved both files before any code is written."
+}

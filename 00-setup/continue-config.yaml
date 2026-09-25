@@ -1,0 +1,31 @@
+# Continue config for the course. Copy to  %USERPROFILE%\.continue\config.yaml  (00-setup/SETUP.md, step 8).
+# The models run on Ollama Cloud through the Ollama app on your laptop (after `ollama signin`),
+# so there is no API key in this file.
+name: MCP Course
+version: 1.0.0
+schema: v1
+
+models:
+  - name: Gemma 4 31B (Ollama Cloud)
+    provider: ollama
+    model: gemma4:31b-cloud
+    roles: [chat, edit, apply]
+    capabilities: [tool_use]
+
+  # Backup if Gemma is slow or misbehaves on the day.
+  - name: gpt-oss 120B (Ollama Cloud)
+    provider: ollama
+    model: gpt-oss:120b-cloud
+    roles: [chat, edit, apply]
+    capabilities: [tool_use]
+
+# Optional (Module 06): Continue can also use your MCP server, in Agent mode.
+# Uncomment and fill in the same values as the Claude Desktop config.
+# mcpServers:
+#   - name: murid
+#     command: node
+#     args:
+#       - C:\ColdFusion2021\cfusion\wwwroot\cf-mcp-course\05-mcp-server\reference\index.js
+#     env:
+#       API_BASE_URL: http://localhost:8500/cf-mcp-course/04-rest-api/reference/murid.cfm
+#       API_KEY: paste-your-key-here
