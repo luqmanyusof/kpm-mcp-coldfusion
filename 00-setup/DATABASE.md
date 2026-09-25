@@ -2,13 +2,14 @@
 
 Oracle schema `cfapp` with two tables. DDL source of truth: [`db/schema.sql`](db/schema.sql).
 
-- **Engine:** Oracle 21c XE in Docker (`docker-compose.yml`); the SQL is also valid on 19c
+- **Engine:** Oracle Database 21c Express Edition, installed on Windows; the SQL is also valid on 19c
+- **Viewer:** DBeaver (setup step 5)
 - **Connection:** `localhost:1521`, service `XEPDB1`, user `cfapp` - via datasource `cf_test_crud` in the ColdFusion Administrator
 
 Apply / reset it any time:
 
 ```powershell
-docker exec cf-oracle sqlplus -s cfapp/cfapp123@//localhost:1521/XEPDB1 @/db/schema.sql
+cd 00-setup\db; sqlplus -s 'cfapp/cfapp123@//localhost:1521/XEPDB1' '@schema.sql'
 ```
 
 ---

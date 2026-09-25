@@ -17,7 +17,7 @@ Work through the folders in number order. Each has a `NOTES.md` - that is your s
 
 | Day | Session | Folder | What you do |
 |-----|---------|--------|-------------|
-| before | at home | [00-setup](00-setup/SETUP.md) | Install Docker, ColdFusion, Oracle, VS Code + Continue, Node.js, Postman, Claude Desktop |
+| before | at home | [00-setup](00-setup/SETUP.md) | Install Oracle XE, ColdFusion, DBeaver, VS Code + Continue, Node.js, Postman, Claude Desktop |
 | **1** | morning | [01-cf-basics](01-cf-basics/NOTES.md) | ColdFusion basics - follow the trainer's demo |
 | 1 | afternoon | [02-crud-app](02-crud-app/NOTES.md) | Run the existing student-records app and understand it |
 | 1 | afternoon | [03-ai-framework](03-ai-framework/NOTES.md) | The AI interviews you and writes the plan for your REST API |
@@ -37,14 +37,14 @@ Work through the folders in number order. Each has a `NOTES.md` - that is your s
                                              v
  Web pages (02) ----------------------> REST API (ColdFusion)         <- 04, built by the AI
         |                                    |
-        +----------------> Oracle 21c XE (Docker) <------------------+   <- 00
+        +----------------> Oracle 21c XE (Windows) <-----------------+   <- 00  (view it in DBeaver)
 ```
 
 ## What is in the repo
 
 | Path | What |
 |------|------|
-| `00-setup/` | setup guide, Oracle `docker-compose.yml`, `db/schema.sql`, Continue config, [DATABASE.md](00-setup/DATABASE.md) |
+| `00-setup/` | setup guide, `db/create_user.sql` + `db/schema.sql`, Continue config, [DATABASE.md](00-setup/DATABASE.md) |
 | `01-cf-basics/basics/` | plain CFML demo pages |
 | `02-crud-app/crud/` | the existing app: CRUD for the `murid` table |
 | `03-ai-framework/` | `START_PROMPT.md` + `project_starter.json` - the AI framework |

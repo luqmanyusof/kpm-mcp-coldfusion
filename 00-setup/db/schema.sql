@@ -1,8 +1,9 @@
 -- =====================================================================
 --  cf-learn-cfml - Oracle schema (Oracle 21c XE, also valid on 19c)
 --
---  Run / reset any time (container from docker-compose.yml must be up):
---    docker exec cf-oracle sqlplus -s cfapp/cfapp123@//localhost:1521/XEPDB1 @/db/schema.sql
+--  Run / reset any time (Oracle XE running, user cfapp created by create_user.sql):
+--    cd 00-setup\db
+--    sqlplus -s 'cfapp/cfapp123@//localhost:1521/XEPDB1' '@schema.sql'
 --
 --  Two tables:
 --    pelajar - simple 3-column table (id, name, email) used by the

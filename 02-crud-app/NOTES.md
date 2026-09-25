@@ -21,7 +21,7 @@ Bootstrap UI.
 2. **The shared layout** - `includes/_header.cfm` and `_footer.cfm` hold the page top (with the
    Bootstrap CDN link + nav) and bottom. Each page pulls them in with
    `<cfinclude template="includes/_header.cfm">`, so the look is consistent.
-3. **The database** - created by `00-setup/db/schema.sql` ([setup](../00-setup/SETUP.md) step 5). Nothing else to configure.
+3. **The database** - created by `00-setup/db/schema.sql` ([setup](../00-setup/SETUP.md) step 4). Open **DBeaver** next to the browser: every add, edit and delete should show up in the `MURID` table (press F5). Nothing else to configure.
 
 Try it: add a student, click a name to view, edit it, delete it. Then read how each page works.
 

@@ -8,7 +8,8 @@ of a plain per-app REST API and the interview framework.
 | Layer | Choice | Why |
 |-------|--------|-----|
 | App server | Adobe ColdFusion 2021, Developer Edition, built-in server :8500 | course target; free for localhost |
-| Database | Oracle 21c XE in Docker (`gvenzl/oracle-xe:21-slim-faststart`) | free, ~2 GB, 1-minute start; the SQL is valid on 19c |
+| Database | Oracle Database 21c XE, native Windows install (`OracleXE213_Win64.zip`), PDB `XEPDB1` | free, no account needed, no Docker/virtualization; the SQL is valid on 19c |
+| DB viewer | DBeaver Community | free; shows what the app and the AI changed |
 | Build AI | Continue (VS Code) Agent mode -> Ollama Cloud, `gemma4:31b-cloud`; backup `gpt-oss:120b-cloud`; second provider Token Harbor (OpenAI-compatible, `https://tokenharbor.ai/v1`) | edits files directly; Ollama via `ollama signin`, Token Harbor key in `~/.continue/.env`, never in the config |
 | MCP server | Node.js, `@modelcontextprotocol/sdk` + `zod`, stdio | the official SDK; stdio needs no port |
 | MCP client | Claude Desktop; Continue Agent mode as the alternative | the finale runs in a mainstream AI app |
@@ -44,4 +45,4 @@ of a plain per-app REST API and the interview framework.
 - No generic "any table" gateway - too large a safety surface for a course.
 - No Gemini CLI, no copy-paste-from-chat build loop.
 - No HTTP/remote MCP transport - stdio only, local only.
-- No Oracle 19c enterprise image, no shared DB server - Docker XE on every laptop.
+- No Docker, no Oracle 19c, no shared DB server - Oracle XE installed on every laptop.
