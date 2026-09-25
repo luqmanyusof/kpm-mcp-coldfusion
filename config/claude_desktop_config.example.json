@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "murid": {
+      "command": "node",
+      "args": [
+        "C:\\ColdFusion2021\\cfusion\\wwwroot\\kpm-mcp-coldfusion\\workspace\\mcp-server\\index.js"
+      ],
+      "env": {
+        "API_BASE_URL": "http://localhost:8500/kpm-mcp-coldfusion/workspace/rest-api/api/murid.cfm",
+        "API_KEY": "paste-your-key-from-C:\\course-secrets\\api-key.txt"
+      }
+    }
+  }
+}

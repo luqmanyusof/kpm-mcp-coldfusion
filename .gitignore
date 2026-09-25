@@ -9,7 +9,7 @@ node_modules/
 api-key.txt
 .env
 
-# The CF installer is downloaded from Adobe (SETUP step 2), never committed: too big for git, and Adobe's licence does not allow redistribution
+# The CF installer is downloaded from Adobe (day1.md, Topic 1.2), never committed: too big for git, and Adobe's licence does not allow redistribution
 *.exe
 
 # Old / local-only material

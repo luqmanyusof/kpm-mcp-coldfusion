@@ -18,16 +18,16 @@ of a plain per-app REST API and the interview framework.
 ## Flow
 
 ```
-02 existing app (murid) --copy--> 04 workspace --interview--> REQUIREMENTS.md + PHASES.md
-                                        |  build phase by phase, RUN TEST each
-                                        v
-                                  REST API + API.md (the contract)
-                                        |  API.md copied into
-                                        v
-                              05 workspace --interview--> plan --> Node MCP server (5 tools)
-                                        |
-                                        v
-                              06 Claude Desktop: plain English -> tool -> API -> Oracle
+crud/ (existing app, murid) --copy--> workspace/rest-api --interview--> REQUIREMENTS.md + PHASES.md   (Day 1)
+                                             |  build phase by phase, RUN TEST each                       (Day 2 AM)
+                                             v
+                                       REST API + API.md (the contract)
+                                             |  API.md copied into
+                                             v
+                                   workspace/mcp-server --interview--> plan --> Node MCP server (5 tools)  (Day 2 PM - Day 3 AM)
+                                             |
+                                             v
+                                   Claude Desktop: plain English -> tool -> API -> Oracle                  (Day 3)
 ```
 
 ## Security decisions

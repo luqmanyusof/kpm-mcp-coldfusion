@@ -1,0 +1,42 @@
+# Continue config for the course. Copy to  %USERPROFILE%\.continue\config.yaml  (day1.md, Topic 7.3).
+# Ollama Cloud models run through the Ollama app on your laptop (after `ollama signin`) - no key here.
+# Token Harbor needs a key: it is read from  %USERPROFILE%\.continue\.env  (TOKEN_HARBOR_API_KEY=...),
+# so the key itself is never written in this file.
+name: MCP Course
+version: 1.0.0
+schema: v1
+
+models:
+  - name: Gemma 4 31B (Ollama Cloud)
+    provider: ollama
+    model: gemma4:31b-cloud
+    roles: [chat, edit, apply]
+    capabilities: [tool_use]
+
+  # Backup if Gemma is slow or misbehaves on the day.
+  - name: gpt-oss 120B (Ollama Cloud)
+    provider: ollama
+    model: gpt-oss:120b-cloud
+    roles: [chat, edit, apply]
+    capabilities: [tool_use]
+
+  # Second provider: Token Harbor - one key, many models (GPT, Claude, DeepSeek, Qwen...), pay per use.
+  # To use another model, copy its exact ID from https://tokenharbor.ai/models into `model:`.
+  - name: Token Harbor (backup)
+    provider: openai
+    model: deepseek-v4-flash
+    apiBase: https://tokenharbor.ai/v1
+    apiKey: ${{ secrets.TOKEN_HARBOR_API_KEY }}
+    roles: [chat, edit, apply]
+    capabilities: [tool_use]
+
+# Optional (Day 3, Topic 6): Continue can also use your MCP server, in Agent mode.
+# Uncomment and fill in the same values as the Claude Desktop config.
+# mcpServers:
+#   - name: murid
+#     command: node
+#     args:
+#       - C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\reference\mcp\index.js
+#     env:
+#       API_BASE_URL: http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm
+#       API_KEY: paste-your-key-here
