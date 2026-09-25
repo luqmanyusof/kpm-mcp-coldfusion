@@ -38,9 +38,11 @@ by then is fixed together.
 
 ## 2. Adobe ColdFusion 2021
 
-1. Get `ColdFusion_2021_GUI_WWEJ_win64.exe` (1.2 GB) from the **download link your trainer sends you**
-   (or the trainer's USB stick). It is not in the GitHub repo - it is too big for git, and Adobe's
-   licence does not allow it to be shared publicly. **Do not upload it anywhere.**
+1. Download the installer (1.2 GB, from Adobe's own server - ColdFusion 2021 Update 5):
+
+   <https://cfdownload.adobe.com/pub/adobe/coldfusion/2021/cfinstaller/cf2021u5/ColdFusion_2021_GUI_WWEJ_win64.exe>
+
+   Slow or blocked download? Ask your trainer for the USB copy.
 2. Run it **as administrator**. At each screen:
 
    | Screen | Choose |
@@ -87,7 +89,9 @@ cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\00-setup
 docker compose up -d
 ```
 
-The first run downloads about 2 GB. Wait until `docker ps` shows **(healthy)** for `cf-oracle`
+The first run downloads the Oracle image (about 2 GB) by itself - there is nothing to download by hand.
+It is Oracle Database 21c Express Edition (free), packaged by [gvenzl/oracle-xe](https://hub.docker.com/r/gvenzl/oracle-xe).
+Wait until `docker ps` shows **(healthy)** for `cf-oracle`
 (about 1 minute after the download).
 
 ## 5. Load the tables
@@ -99,6 +103,11 @@ docker exec cf-oracle sqlplus -s cfapp/cfapp123@//localhost:1521/XEPDB1 @/db/sch
 Expected last lines: `pelajar rows: 5` and `murid rows: 6`.
 Run the same command any time to **reset** the data to the starting state.
 The tables are described in [DATABASE.md](DATABASE.md).
+
+**Optional - see the tables in a window:** install Oracle SQL Developer
+(<https://www.oracle.com/database/sqldeveloper/technologies/download/>, Windows 64-bit with JDK),
+then **New Connection**: user `cfapp`, password `cfapp123`, host `localhost`, port `1521`,
+**Service name** `XEPDB1`. Handy for checking what the AI changed - not required.
 
 ## 6. The datasource (ColdFusion -> Oracle)
 

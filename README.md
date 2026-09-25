@@ -55,8 +55,8 @@ Work through the folders in number order. Each has a `NOTES.md` - that is your s
 | `instructor/` | run sheet, fallbacks, original outline, architecture notes |
 | `*/workspace/` | **your own work** (created during the course, ignored by git) |
 
-The Adobe ColdFusion 2021 installer (1.2 GB) is **not** in this repo - your trainer sends a download link.
-It must not be uploaded here: this repo is public, and Adobe's licence does not allow public redistribution.
+The Adobe ColdFusion 2021 installer (1.2 GB) is **not** in this repo - download it from Adobe (link in
+[SETUP.md](00-setup/SETUP.md), step 2). Never upload it here: Adobe's licence does not allow redistribution.
 
 ## Notes
 

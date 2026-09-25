@@ -8,8 +8,8 @@ Timings assume 09:00-17:00, lunch 13:00-14:00, breaks at 10:30 and 15:30.
       code. These are **untested on real Adobe CF + Oracle** and must be checked first:
       the datasource "Service Name" screen, `04-rest-api/reference/murid.cfm` (JSON numbers and dates),
       and `api-demo/pelajar.reference.cfm`.
-- [ ] Upload `ColdFusion_2021_GUI_WWEJ_win64.exe` to a **private** Drive/OneDrive folder, shared only with
-      the participants (the repo is public - never attach it to a GitHub Release). Put it on the USB kit too.
+- [ ] Participants download CF from Adobe's link in SETUP step 2. **Check it still works** a week before -
+      Adobe has moved old installers before. Keep a copy on the USB kit (never on the public repo).
       Give participants access (private repo = add them, or share a download link).
 - [ ] Send `SETUP.md` **one week before**. Ask each participant for a screenshot of the section 12 table.
 - [ ] Each participant makes a free **Ollama** account (`ollama signin`). Check the free tier's usage
