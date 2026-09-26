@@ -110,7 +110,7 @@ the database you will use (a *pluggable database*, PDB, inside Oracle).
    | Web server | **Built-in web server** (port **8500** — keep it; every link in these notes uses it) |
    | Performance Monitoring Toolset | leave the default hostname — **Next** (not used in this course) |
    | Administrator Password | **`KPM@2026`** (type it in both boxes) — the course password, so the trainer can help you log in. You need it in steps 4–5 and in 1.6. |
-   | RDS (Remote Development Services) | Off / leave blank — not used in this course |
+   | Enable RDS | **Untick "Enable RDS"** (the password boxes grey out) — it is for Adobe's own editors; we use VS Code |
 
 3. **Install the Oracle driver** — **administrator** PowerShell (if it is already there, it just says so):
 
