@@ -109,7 +109,7 @@ the database you will use (a *pluggable database*, PDB, inside Oracle).
    | Select ColdFusion Server Profile | **Development Profile** (leave "IP Addresses allowed" empty) |
    | Web server | **Built-in web server** (port **8500** — keep it; every link in these notes uses it) |
    | Performance Monitoring Toolset | leave the default hostname — **Next** (not used in this course) |
-   | Admin password | Pick one and write it down |
+   | Administrator Password | **Required.** 8+ characters with an upper-case letter, a lower-case letter, a number and a symbol (e.g. `Training#2026` — choose your own). **Write it down** — you need it in steps 4–5 and in 1.6, and a lost one means reinstalling. Never reuse a real password. |
    | RDS (Remote Development Services) | Off / leave blank — not used in this course |
 
 3. **Install the Oracle driver** — **administrator** PowerShell (if it is already there, it just says so):
