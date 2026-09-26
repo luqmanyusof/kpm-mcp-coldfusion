@@ -103,14 +103,36 @@ the database you will use (a *pluggable database*, PDB, inside Oracle).
    |---|---|
    | Serial number | **Leave blank — Developer Edition** (free, localhost only) |
    | Installer configuration | **Server configuration** |
-   | Sub-components Installation | **Untick all four** (Solr, PDFG, Remote Start/Stop, .NET) — not used, and each one uses memory |
+   | Select ColdFusion Server Profile | **Development Profile** (leave "IP Addresses allowed" empty) — screenshot A |
+   | Sub-components Installation | **Untick all four** (Solr, PDFG, Remote Start/Stop, .NET) — not used, and each one uses memory — screenshot B |
    | Packages (if this screen appears) | tick **`oracle`** (the database driver) |
    | Install folder | `C:\ColdFusion2021` (default) |
-   | Select ColdFusion Server Profile | **Development Profile** (leave "IP Addresses allowed" empty) |
    | Web server | **Built-in web server** (port **8500** — keep it; every link in these notes uses it) |
-   | Performance Monitoring Toolset | leave the default hostname — **Next** (not used in this course) |
-   | Administrator Password | **`KPM@2026`** (type it in both boxes) — the course password, so the trainer can help you log in. You need it in steps 4–5 and in 1.6. |
-   | Enable RDS | **Untick "Enable RDS"** (the password boxes grey out) — it is for Adobe's own editors; we use VS Code |
+   | Performance Monitoring Toolset | leave the default hostname — **Next** (not used in this course) — screenshot C |
+   | Administrator Password | **`KPM@2026`** (type it in both boxes) — the course password, so the trainer can help you log in. You need it in steps 4–5 and in 1.6 — screenshot D |
+   | Enable RDS | **Untick "Enable RDS"** (the password boxes grey out) — it is for Adobe's own editors; we use VS Code — screenshot E |
+
+   **The screens that need a decision**
+
+   **A — Select ColdFusion Server Profile:** keep **Development Profile**, leave the IP box empty, **Next**.
+
+   ![ColdFusion installer: Select ColdFusion Server Profile, Development Profile selected](images/day1/cf-install-1-server-profile.png)
+
+   **B — Sub-components Installation:** **untick all four** boxes, then **Next**.
+
+   ![ColdFusion installer: Sub-components Installation, four boxes to untick](images/day1/cf-install-2-sub-components.png)
+
+   **C — Performance Monitoring Toolset:** leave the hostname as it is, **Next**.
+
+   ![ColdFusion installer: Performance Monitoring Toolset, default hostname](images/day1/cf-install-3-performance-monitoring.png)
+
+   **D — Administrator Password:** type **`KPM@2026`** in both boxes, **Next**.
+
+   ![ColdFusion installer: Administrator Password](images/day1/cf-install-4-admin-password.png)
+
+   **E — Enable RDS:** **untick "Enable RDS"** — the password boxes grey out — **Next**.
+
+   ![ColdFusion installer: Enable RDS, untick the box](images/day1/cf-install-5-rds.png)
 
 3. **Install the Oracle driver** — **administrator** PowerShell (if it is already there, it just says so):
 
@@ -120,13 +142,13 @@ the database you will use (a *pluggable database*, PDB, inside Oracle).
    ```
 
 4. Open **`http://localhost:8500/CFIDE/administrator/`** and log in with **`KPM@2026`**.
+5. **Turn off debug output** (important for Day 2): **Debugging & Logging → Debug Output Settings** →
+   untick **Enable Request Debugging Output** → **Submit Changes**.
 
 > **Windows Firewall asks to allow ColdFusion / Java?** Click **Cancel** (or untick every network).
 > Everything in this course runs on your own laptop, so ColdFusion does not need to be reachable from the
 > network — and since everyone uses the same course password, keeping it local stops classmates from
 > opening your Administrator.
-5. **Turn off debug output** (important for Day 2): **Debugging & Logging → Debug Output Settings** →
-   untick **Enable Request Debugging Output** → **Submit Changes**.
 
 > **Why step 5?** The Development Profile adds a block of debug HTML to the bottom of every page —
 > including API answers. JSON with HTML stuck on the end is broken JSON: Postman and the MCP server
