@@ -249,7 +249,7 @@ Stop after it and tell me exactly how to run its RUN TEST.
 - *Every request gets 401* → the API reads the key from the wrong place, or Postman sends it under a
   different header name — compare with `X-API-Key`.
 - *The JSON has a block of HTML (a debug table) stuck on the end* → ColdFusion's debug output is on.
-  Turn it off: Day 1, Topic 1.2, step 4.
+  Turn it off: Day 1, Topic 1.2, step 5.
 - *`Datasource cf_test_crud could not be found`* → the AI created an `Application.cfc` without
   `this.datasource = "cf_test_crud"`; tell it.
 
