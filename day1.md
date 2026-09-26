@@ -107,7 +107,8 @@ the database you will use (a *pluggable database*, PDB, inside Oracle).
    | Packages (if this screen appears) | tick **`oracle`** (the database driver) |
    | Install folder | `C:\ColdFusion2021` (default) |
    | Select ColdFusion Server Profile | **Development Profile** (leave "IP Addresses allowed" empty) |
-   | Web server | **Built-in web server** (port 8500) |
+   | Web server | **Built-in web server** (port **8500** — keep it; every link in these notes uses it) |
+   | Performance Monitoring Toolset | leave the default hostname — **Next** (not used in this course) |
    | Admin password | Pick one and write it down |
    | RDS (Remote Development Services) | Off / leave blank — not used in this course |
 
