@@ -141,7 +141,32 @@ the database you will use (a *pluggable database*, PDB, inside Oracle).
    Restart-Service "ColdFusion 2021 Application Server"
    ```
 
-4. Open **`http://localhost:8500/CFIDE/administrator/`** and log in with **`KPM@2026`**.
+4. Open **`http://localhost:8500/CFIDE/administrator/`** and log in with **`KPM@2026`**. You land on
+   the **ColdFusion Administrator** — the control panel for the whole server:
+
+   ![ColdFusion Administrator home page with eleven tiles](images/day1/cf-admin-home.png)
+
+   **A quick tour — what each tile is for.** You only need **three** of them in this course.
+
+   | Tile | What it is for, in plain words | In this course |
+   |---|---|---|
+   | **Data & Services** | the list of **database connections** (datasources) the pages may use | **Used** — you create `cf_test_crud` here (1.6) |
+   | **Debugging & Logging** | extra debug information on pages, and the server's **log files** (its diary of errors) | **Used** — step 5 below; later, **Log Files** shows errors such as `murid-api.log` |
+   | **Package Manager** | add or remove optional parts of ColdFusion, such as the **Oracle driver** | **Optional** — a click-button way to do step 3: find **oracle** → **Install** |
+   | Server Settings | general server options: memory, time limits, mail, caching | not needed |
+   | Security | the Administrator password, and who may open the Administrator | not needed (password set during install) |
+   | Performance Monitoring Toolset | a link to Adobe's separate monitoring product | not used |
+   | Extensions | add-ons written in other languages (custom tags, Java) | not used |
+   | Event Gateways | lets ColdFusion react to things other than web pages (messages, SMS) | not used |
+   | Packaging & Deployment | pack an app into one file to move it to another server | not used |
+   | Enterprise Manager | manage several ColdFusion servers together | not used |
+   | Licensing and Activation | enter a serial number to turn the free edition into a paid one | **ignore** |
+
+   > **The blue banner** — *"Your ColdFusion server is running in Developer mode…"* — is expected. Developer
+   > Edition is free and works only on this laptop, which is all the course needs. Close it with **×**; do
+   > **not** activate anything. (The address may show `127.0.0.1` instead of `localhost` — they are the same:
+   > "this computer".)
+
 5. **Turn off debug output** (important for Day 2): **Debugging & Logging → Debug Output Settings** →
    untick **Enable Request Debugging Output** → **Submit Changes**.
 
