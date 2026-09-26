@@ -105,12 +105,18 @@ the database you will use (a *pluggable database*, PDB, inside Oracle).
    | Installer configuration | **Server configuration** |
    | Packages / sub-components | Keep the defaults **and tick `Oracle`** (the database driver) |
    | Install folder | `C:\ColdFusion2021` (default) |
+   | Select ColdFusion Server Profile | **Development Profile** (leave "IP Addresses allowed" empty) |
    | Web server | **Built-in web server** (port 8500) |
    | Admin password | Pick one and write it down |
-   | RDS | Off |
-   | Secure profile | Off (this is a local training machine) |
+   | RDS (Remote Development Services) | Off / leave blank — not used in this course |
 
 3. Open **`http://localhost:8500/CFIDE/administrator/`** and log in with the admin password.
+4. **Turn off debug output** (important for Day 2): **Debugging & Logging → Debug Output Settings** →
+   untick **Enable Request Debugging Output** → **Submit Changes**.
+
+> **Why step 4?** The Development Profile adds a block of debug HTML to the bottom of every page —
+> including API answers. JSON with HTML stuck on the end is broken JSON: Postman and the MCP server
+> cannot read it.
 
 > **Forgot to tick Oracle?** In an **administrator** PowerShell run
 > `C:\ColdFusion2021\cfusion\bin\cfpm.bat install oracle`, then restart the Windows service
