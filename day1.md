@@ -109,7 +109,7 @@ the database you will use (a *pluggable database*, PDB, inside Oracle).
    | Select ColdFusion Server Profile | **Development Profile** (leave "IP Addresses allowed" empty) |
    | Web server | **Built-in web server** (port **8500** — keep it; every link in these notes uses it) |
    | Performance Monitoring Toolset | leave the default hostname — **Next** (not used in this course) |
-   | Administrator Password | **Required.** 8+ characters with an upper-case letter, a lower-case letter, a number and a symbol (e.g. `Training#2026` — choose your own). **Write it down** — you need it in steps 4–5 and in 1.6, and a lost one means reinstalling. Never reuse a real password. |
+   | Administrator Password | **`KPM@2026`** (type it in both boxes) — the course password, so the trainer can help you log in. You need it in steps 4–5 and in 1.6. |
    | RDS (Remote Development Services) | Off / leave blank — not used in this course |
 
 3. **Install the Oracle driver** — **administrator** PowerShell (if it is already there, it just says so):
@@ -119,7 +119,12 @@ the database you will use (a *pluggable database*, PDB, inside Oracle).
    Restart-Service "ColdFusion 2021 Application Server"
    ```
 
-4. Open **`http://localhost:8500/CFIDE/administrator/`** and log in with the admin password.
+4. Open **`http://localhost:8500/CFIDE/administrator/`** and log in with **`KPM@2026`**.
+
+> **Windows Firewall asks to allow ColdFusion / Java?** Click **Cancel** (or untick every network).
+> Everything in this course runs on your own laptop, so ColdFusion does not need to be reachable from the
+> network — and since everyone uses the same course password, keeping it local stops classmates from
+> opening your Administrator.
 5. **Turn off debug output** (important for Day 2): **Debugging & Logging → Debug Output Settings** →
    untick **Enable Request Debugging Output** → **Submit Changes**.
 
