@@ -87,11 +87,22 @@ is needed.
    | Database passwords (SYS, SYSTEM, PDBADMIN) | Pick one, **letters and numbers only**, write it down — you need it once, in 1.4 |
    | Summary | Install |
 
-3. Wait **15–30 minutes**. The last screen shows the connection `localhost:1521/XEPDB1`. Click
-   **Finish**.
+3. Wait **15–30 minutes**. The last screen says **Oracle Database Installed Successfully**:
 
-Oracle now runs as Windows services and **starts by itself** with Windows. `XEPDB1` is the name of
-the database you will use (a *pluggable database*, PDB, inside Oracle).
+   ![Oracle Database 21c Express Edition: installed successfully, with the connection information](images/day1/oracle-install-finished.png)
+
+   **What the three lines mean.** Think of Oracle as an **apartment building**:
+
+   | Line on the screen | In plain words | Do you use it? |
+   |---|---|---|
+   | **Multitenant container database:** `localhost:1521` | the **whole building** — Oracle itself. `localhost` = this laptop; `1521` = Oracle's door number (port) | not directly |
+   | **Pluggable database:** `localhost:1521/XEPDB1` | **your apartment** inside the building — the database named `XEPDB1`, where the course tables live | **yes — everywhere**: `sqlplus` (1.4), DBeaver (1.5), the ColdFusion datasource (1.6) |
+   | **EM Express URL:** `https://localhost:5500/em` | Oracle's own web control panel (EM = Enterprise Manager) | **no** — DBeaver does this job. If you open it, the browser warns about the certificate; that is expected on a laptop |
+
+   Remember **`localhost` · `1521` · `XEPDB1`** — the same three values appear in 1.4, 1.5 and 1.6.
+   Click **Finish**.
+
+Oracle now runs as Windows services and **starts by itself** with Windows.
 
 ### 1.2 — Install Adobe ColdFusion 2021
 
