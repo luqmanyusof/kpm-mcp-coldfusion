@@ -164,7 +164,7 @@ From now on, **"the course folder"** means `C:\ColdFusion2021\cfusion\wwwroot\kp
 This is the one install step that needs typed commands — Oracle's setup scripts only run in its own
 tool, `sqlplus`.
 
-1. **File Explorer** — open the course folder → **`db`**. Click the address bar at the top, type
+1. **File Explorer** — open the course folder → **`code`** → **`db`**. Click the address bar at the top, type
    `powershell`, press **Enter**. A PowerShell window opens, already in the `db` folder.
 2. Create the course user — paste this, press **Enter**:
 
@@ -237,8 +237,8 @@ A **datasource** is a named database connection, saved once in ColdFusion. Pages
 |---|---|
 | **Services** window (Start → `Services`) | `OracleServiceXE` and `Oracle…TNSListener`: **Running** |
 | **DBeaver:** CFAPP → Tables → MURID → **Data** tab | **6** students |
-| **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/basics/03-database.cfm` | a table of **5** rows |
-| **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/crud/` | a list of **6** students |
+| **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/code/basics/03-database.cfm` | a table of **5** rows |
+| **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/code/crud/` | a list of **6** students |
 
 **Common problems**
 
@@ -303,8 +303,8 @@ a step is finished?
 `cf` tags and sends plain HTML to the browser.
 
 **Set up your screen** — put the two side by side:
-- **VS Code:** left panel → `basics` → open `01-syntax.cfm`.
-- **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/basics/01-syntax.cfm`
+- **VS Code:** left panel → `code` → `basics` → open `01-syntax.cfm`.
+- **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/code/basics/01-syntax.cfm`
 
 > Each lesson page shows its code twice: once as text for you to read (lines with `&lt;`), and once as
 > real code. **Always edit the real one** — the line numbers below point to it.
@@ -325,7 +325,7 @@ a step is finished?
 
 ### 3.2 — Decisions, loops and lists (`02-logic.cfm`)
 
-Open `basics/02-logic.cfm` in VS Code, and `…/basics/02-logic.cfm` in the browser.
+Open `code/basics/02-logic.cfm` in VS Code, and `…/basics/02-logic.cfm` in the browser.
 
 | Code | What it does |
 |---|---|
@@ -349,7 +349,7 @@ Open `basics/02-logic.cfm` in VS Code, and `…/basics/02-logic.cfm` in the brow
 
 **Goal:** see how a page reads Oracle. Every page in the app, and the API tomorrow, uses this pattern.
 
-**Open:** `basics/03-database.cfm` in VS Code, and `…/basics/03-database.cfm` in the browser (5 rows).
+**Open:** `code/basics/03-database.cfm` in VS Code, and `…/basics/03-database.cfm` in the browser (5 rows).
 
 **The three pieces** (a short version of what is in the file):
 
@@ -431,13 +431,13 @@ The small `pelajar` table (`id`, `name`, `email`) is only for the lessons.
 
 **Goal:** use the app like a normal user, then see which file does what. You don't write any code here.
 
-**Try it** — **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/crud/`
+**Try it** — **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/code/crud/`
 1. **Add** a student. Then **DBeaver:** **F5** on MURID → the new row is there.
 2. **Open** the student.
 3. **Edit** the class. **DBeaver:** **F5** → changed.
 4. **Delete** the student. **DBeaver:** **F5** → gone.
 
-**Which file does what** (in the `crud/` folder)
+**Which file does what** (in the `code/crud/` folder)
 
 | File | Does |
 |---|---|
@@ -582,7 +582,8 @@ You use them **twice**: for the REST API (today) and for the MCP server (Day 2).
 **Step 1 — make your workspace** (a copy of the student app, plus the two framework files).
 In **File Explorer**, open the course folder, then:
 1. Right-click an empty space → **New → Folder** → name it **`workspace`**.
-2. Right-click the **`crud`** folder → **Copy**. Open `workspace` → right-click → **Paste**.
+2. Open **`code`** → right-click the **`crud`** folder → **Copy**. Go back to the course folder →
+   open `workspace` → right-click → **Paste**.
 3. Rename the pasted folder from `crud` to **`rest-api`**.
 4. Go back to the course folder → open **`framework`** → select **`START_PROMPT.md`** and
    **`project_starter.json`** (hold **Ctrl** to pick both) → **Copy**. Open `workspace\rest-api` →
@@ -636,7 +637,7 @@ Anything wrong? Say so in plain words. All good? Type **approved**.
 - **Oracle XE** running, with the `cfapp` user and the `murid` + `pelajar` tables.
 - **ColdFusion 2021** at `http://localhost:8500`, datasource `cf_test_crud` **OK**.
 - **DBeaver** connected as `cfapp`.
-- The course folder, with `basics/` and `crud/` working in the browser.
+- The course folder, with `code/basics/` and `code/crud/` working in the browser.
 - **Continue** in VS Code, answering from Gemma 4 and Token Harbor.
 - `workspace\rest-api\` — a copy of the app, plus your approved **`REQUIREMENTS.md`** and **`PHASES.md`**.
 

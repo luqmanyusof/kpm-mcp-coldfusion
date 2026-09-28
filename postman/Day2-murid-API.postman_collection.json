@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Day 2 - murid API (reference)",
-    "description": "Tests for reference/api/murid.cfm (day2.md, Topic 5). Set apiKey in the collection Variables tab (Current value only - never commit it). Run top to bottom with the Collection Runner.",
+    "description": "Tests for code/reference/api/murid.cfm (day2.md, Topic 5). Set apiKey in the collection Variables tab (Current value only - never commit it). Run top to bottom with the Collection Runner.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -27,7 +27,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm"
+      "value": "http://localhost:8500/kpm-mcp-coldfusion/code/reference/api/murid.cfm"
     },
     {
       "key": "apiKey",

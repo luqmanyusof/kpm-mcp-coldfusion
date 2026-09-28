@@ -59,8 +59,8 @@ shown in it. Put the right key back.
 > **Where MCP quality lives:** in the tool **descriptions** and **input schemas**. Read what the AI
 > wrote. Would *you* know when to use each tool from its description alone?
 
-**Stuck? Use the answer key.** `reference/mcp/` is a finished server with the same 5 tools.
-1. **VS Code:** **File → Open Folder…** → the course folder → `reference\mcp` → **Select Folder**.
+**Stuck? Use the answer key.** `code/reference/mcp/` is a finished server with the same 5 tools.
+1. **VS Code:** **File → Open Folder…** → the course folder → `code\reference\mcp` → **Select Folder**.
 2. **Terminal → New Terminal**. Type `npm install` → **Enter**. Then `npm test` → **Enter**.
 
 It ends with **ALL PASSED** (12 checks). Still not working by 10:30? Use the reference server for the
@@ -96,7 +96,7 @@ showing the key.
            "C:\\ColdFusion2021\\cfusion\\wwwroot\\kpm-mcp-coldfusion\\workspace\\mcp-server\\index.js"
          ],
          "env": {
-           "API_BASE_URL": "http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm",
+           "API_BASE_URL": "http://localhost:8500/kpm-mcp-coldfusion/code/reference/api/murid.cfm",
            "API_KEY": "paste-your-key-here"
          }
        }
@@ -110,7 +110,7 @@ showing the key.
    |---|---|
    | `API_KEY` | **always** — paste your key from `C:\course-secrets\api-key.txt` |
    | `API_BASE_URL` | you use **your own** API — put its URL |
-   | `args` | the AI named the main file something other than `index.js`, or you use the **reference server**: `C:\\ColdFusion2021\\cfusion\\wwwroot\\kpm-mcp-coldfusion\\reference\\mcp\\index.js` |
+   | `args` | the AI named the main file something other than `index.js`, or you use the **reference server**: `C:\\ColdFusion2021\\cfusion\\wwwroot\\kpm-mcp-coldfusion\\code\\reference\\mcp\\index.js` |
 
    In this file every `\` is written **twice** (`\\`).
 4. Save the file.
@@ -264,5 +264,5 @@ description, or Claude Desktop.
 - Add a **read-only** mode: an environment variable that hides the create/update/delete tools.
 - Improve one tool description. Does Claude pick the tool more reliably?
 
-**After the course:** keep the course folder. The notes, `reference/api/`, `reference/mcp/` and the
+**After the course:** keep the course folder. The notes, `code/reference/api/`, `code/reference/mcp/` and the
 framework are yours to reuse.

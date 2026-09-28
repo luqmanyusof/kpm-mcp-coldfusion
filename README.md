@@ -54,7 +54,7 @@ code today; you only change a few lines in the lesson pages.*
 
 | # | Topic | Objective | Outcome |
 |---|---|---|---|
-| 1 | [Install & check your tools](day1.md#topic-1--install-and-check-your-tools) | Install Oracle XE, ColdFusion 2021, the course files, the course user and tables, DBeaver, the datasource and VS Code | Oracle services running; DBeaver shows 6 students; `basics/` and `crud/` load |
+| 1 | [Install & check your tools](day1.md#topic-1--install-and-check-your-tools) | Install Oracle XE, ColdFusion 2021, the course files, the course user and tables, DBeaver, the datasource and VS Code | Oracle services running; DBeaver shows 6 students; `code/basics/` and `code/crud/` load |
 | 2 | [What MCP is & how this course works](day1.md#topic-2--what-mcp-is-and-how-this-course-works-concept) | Understand the "staff entrance" idea and who does what — human vs AI | Can explain what an MCP server is for, and why the human decides "done" |
 | 3 | [Your first ColdFusion code](day1.md#topic-3--your-first-coldfusion-code) | Change variables, conditions, loops and arrays; save, refresh, see the result | Changed a value in each lesson page and saw it after F5 |
 | 4 | [Read the database with ColdFusion](day1.md#topic-4--read-the-database-with-coldfusion) | Change a `<cfquery>` (sort, filter, wrong datasource) and learn the `<cfqueryparam>` safety rule | Changed the query, saw the result, put the page back |
@@ -108,16 +108,17 @@ present a final group project.*
 |---|---|
 | `day1.md` · `day2.md` · `day3.md` | the lab notes |
 | `mcp-theory.md` | MCP theory in plain words — read alongside the days |
-| `basics/` | three plain CFML lesson pages (Day 1) |
-| `crud/` | the existing student-records app (Day 1) |
-| `api-demo/` | small `pelajar` API the trainer builds live (Day 2) |
-| `db/` | `create_user.sql` + `schema.sql` (reset the data any time) |
+| **`code/`** | **all the course code:** |
+| `code/basics/` | three plain CFML lesson pages (Day 1) |
+| `code/crud/` | the existing student-records app (Day 1) |
+| `code/db/` | `create_user.sql` + `schema.sql` (reset the data any time) |
+| `code/api-demo/` | small `pelajar` API the trainer builds live (Day 2) |
+| `code/reference/api/` | answer key: `murid` REST API + `API.md` contract |
+| `code/reference/mcp/` | answer key: Node.js MCP server with 5 tools + a self-test |
 | `framework/` | `START_PROMPT.md` + `project_starter.json` — the AI framework |
 | `config/` | Continue config, Claude Desktop config example |
 | `postman/` | `Day2-murid-API.postman_collection.json` (tests the reference API) |
-| `reference/api/` | answer key: `murid` REST API + `API.md` contract |
-| `reference/mcp/` | answer key: Node.js MCP server with 5 tools + a self-test |
-| `instructor/` | run sheet, fallbacks, architecture notes |
+| `images/` | screenshots used in the notes |
 | `workspace/` | **your own work** — created during the course, ignored by git |
 
 The Adobe ColdFusion 2021 installer (1.2 GB) is **not** in this repo — download it from Adobe (link in

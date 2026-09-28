@@ -66,7 +66,7 @@ the AI chat**.
 | Check | You should see |
 |---|---|
 | **File Explorer:** open `C:\course-secrets\api-key.txt` | your key, on one line |
-| **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm` | `{"error":"Missing or wrong API key."}` — **correct!** The browser sends no key |
+| **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/code/reference/api/murid.cfm` | `{"error":"Missing or wrong API key."}` — **correct!** The browser sends no key |
 | Postman | opens |
 | **PowerShell:** `node -v` | `v20` or higher |
 
@@ -118,8 +118,8 @@ You check the AI's API against these ideas, so learn the words first.
 **Goal:** see what API code looks like, so you know what to check in the AI's code later.
 **The trainer types — you watch.**
 
-**Open:** `api-demo/pelajar.cfm` in VS Code, and
-`http://localhost:8500/kpm-mcp-coldfusion/api-demo/pelajar.cfm` in the browser. The browser says
+**Open:** `code/api-demo/pelajar.cfm` in VS Code, and
+`http://localhost:8500/kpm-mcp-coldfusion/code/api-demo/pelajar.cfm` in the browser. The browser says
 `"GET not implemented yet"`.
 
 The file already has three helpers:
@@ -199,7 +199,7 @@ respond({ "deleted": true, "id": val(url.id) });
 ```
 
 The browser can only send GET. The trainer tests TODO 2–4 in Postman. The finished file is
-`api-demo/pelajar.reference.cfm`.
+`code/api-demo/pelajar.reference.cfm`.
 
 **Three things to check in the AI's API later**
 1. **JSON** in and out.
@@ -316,7 +316,7 @@ input.
    Do not include the key itself.
    ```
 
-2. Compare it with `reference/api/API.md`. Tick each:
+2. Compare it with `code/reference/api/API.md`. Tick each:
    - [ ] the base URL
    - [ ] the `X-API-Key` header
    - [ ] the five operations
@@ -331,7 +331,7 @@ input.
 - [ ] the web pages still work
 
 > **Not finished by lunch?** No problem. This afternoon, use the **reference API** instead:
-> `http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm` and `reference/api/API.md`.
+> `http://localhost:8500/kpm-mcp-coldfusion/code/reference/api/murid.cfm` and `code/reference/api/API.md`.
 
 **Checkpoint ✅** `workspace\rest-api\API.md` exists and matches what your API really does.
 
@@ -381,7 +381,7 @@ allowed**.
 2. Open `framework` → select **`START_PROMPT.md`** and **`project_starter.json`** (hold **Ctrl**) →
    **Copy** → open `workspace\mcp-server` → **Paste**.
 3. Copy **`API.md`** into `workspace\mcp-server` too — from `workspace\rest-api`, or, if you use the
-   reference API, from `reference\api`.
+   reference API, from `code\reference\api`.
 4. **VS Code:** **File → Open Folder…** → `workspace\mcp-server` → **Select Folder**.
 
 **Step 2 — run the interview.** New Continue chat → **Agent** → paste all of `START_PROMPT.md` → send.
@@ -434,7 +434,7 @@ allowed**.
 
    | Key | Value |
    |---|---|
-   | `API_BASE_URL` | `http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm` — or **your own** API's URL |
+   | `API_BASE_URL` | `http://localhost:8500/kpm-mcp-coldfusion/code/reference/api/murid.cfm` — or **your own** API's URL |
    | `API_KEY` | your key — open `C:\course-secrets\api-key.txt`, copy it, paste it here |
 
 6. Click **Connect** → **Tools** → **List Tools** → **`list_murid`** → **Run Tool**.
@@ -469,7 +469,7 @@ allowed**.
 **Extra, if you finish early**
 - Ask the AI to add a filter (e.g. `?kelas=Bestari`) as a new phase, with its own RUN TEST and Postman test.
 - Build `get_murid` ahead of tomorrow.
-- Compare your tool descriptions with `reference/mcp/index.js`.
+- Compare your tool descriptions with `code/reference/mcp/index.js`.
 
 **Tomorrow (Day 3):** the other four MCP tools, Claude Desktop, running the app in plain English —
 then breaking it on purpose, and a final project.

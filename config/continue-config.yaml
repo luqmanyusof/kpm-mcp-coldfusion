@@ -36,7 +36,7 @@ models:
 #   - name: murid
 #     command: node
 #     args:
-#       - C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\reference\mcp\index.js
+#       - C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\code\reference\mcp\index.js
 #     env:
-#       API_BASE_URL: http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm
+#       API_BASE_URL: http://localhost:8500/kpm-mcp-coldfusion/code/reference/api/murid.cfm
 #       API_KEY: paste-your-key-here

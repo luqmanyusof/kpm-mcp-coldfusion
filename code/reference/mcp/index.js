@@ -6,7 +6,7 @@
  * ColdFusion REST API from Day 2. The AI never touches the database directly.
  *
  * Settings come from environment variables (set in the MCP client's config, never in code):
- *   API_BASE_URL  e.g. http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm
+ *   API_BASE_URL  e.g. http://localhost:8500/kpm-mcp-coldfusion/code/reference/api/murid.cfm
  *   API_KEY       the key from C:\course-secrets\api-key.txt
  *
  * Transport is stdio: the client starts this file and talks to it over stdin/stdout.
@@ -24,7 +24,7 @@ if (!API_BASE_URL || !API_KEY) {
   process.exit(1);
 }
 
-// ---- the contract (same rules as reference/api/API.md) ----------------------------
+// ---- the contract (same rules as code/reference/api/API.md) ----------------------------
 // Checked here too, so a bad tool call is rejected before it ever reaches the app.
 const fields = {
   nama: z.string().min(1).max(100).describe("Full name"),
