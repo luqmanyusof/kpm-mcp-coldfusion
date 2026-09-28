@@ -54,7 +54,7 @@ code today; you only change a few lines in the lesson pages.*
 
 | # | Topic | Objective | Outcome |
 |---|---|---|---|
-| 1 | [Install & check your tools](day1.md#topic-1--install-and-check-your-tools) | Install Oracle XE, ColdFusion 2021, Git + the repo, the course user and tables, DBeaver, the datasource and VS Code | Oracle services running; DBeaver shows 6 students; `basics/` and `crud/` load |
+| 1 | [Install & check your tools](day1.md#topic-1--install-and-check-your-tools) | Install Oracle XE, ColdFusion 2021, the course files, the course user and tables, DBeaver, the datasource and VS Code | Oracle services running; DBeaver shows 6 students; `basics/` and `crud/` load |
 | 2 | [What MCP is & how this course works](day1.md#topic-2--what-mcp-is-and-how-this-course-works-concept) | Understand the "staff entrance" idea and who does what — human vs AI | Can explain what an MCP server is for, and why the human decides "done" |
 | 3 | [Your first ColdFusion code](day1.md#topic-3--your-first-coldfusion-code) | Change variables, conditions, loops and arrays; save, refresh, see the result | Changed a value in each lesson page and saw it after F5 |
 | 4 | [Read the database with ColdFusion](day1.md#topic-4--read-the-database-with-coldfusion) | Change a `<cfquery>` (sort, filter, wrong datasource) and learn the `<cfqueryparam>` safety rule | Changed the query, saw the result, put the page back |

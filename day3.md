@@ -29,8 +29,8 @@ user logins inside the MCP, putting anything on a real server.
 
 1. **Browser:** download Claude Desktop from `https://claude.ai/download` and install it.
 2. Sign in (a free account is enough). Don't configure anything yet — that is Topic 3.
-3. **Check yesterday's tool still works:** run the three Inspector steps from **Day 2 Topic 9, step 2**
-   again, then run `list_murid`.
+3. **Check yesterday's tool still works:** open `workspace\mcp-server` in VS Code and redo **Day 2
+   Topic 9, steps 2–6** (skip `npm install`).
 
 **Checkpoint ✅** Claude Desktop opens and you are signed in. `list_murid` still returns the students.
 
@@ -60,13 +60,8 @@ shown in it. Put the right key back.
 > wrote. Would *you* know when to use each tool from its description alone?
 
 **Stuck? Use the answer key.** `reference/mcp/` is a finished server with the same 5 tools.
-**PowerShell:**
-
-```powershell
-cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\reference\mcp
-npm install
-npm test
-```
+1. **VS Code:** **File → Open Folder…** → the course folder → `reference\mcp` → **Select Folder**.
+2. **Terminal → New Terminal**. Type `npm install` → **Enter**. Then `npm test` → **Enter**.
 
 It ends with **ALL PASSED** (12 checks). Still not working by 10:30? Use the reference server for the
 rest of today.

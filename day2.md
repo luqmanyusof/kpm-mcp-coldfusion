@@ -36,16 +36,14 @@ putting anything on a real server.
 The API only answers requests that carry this key. It is kept **outside** the course folder, so it
 is never in the code, in git, or seen by the AI.
 
-**PowerShell** — paste all three lines:
+1. **File Explorer** → **This PC** → **Local Disk (C:)** → right-click an empty space → **New →
+   Folder** → name it **`course-secrets`**.
+2. Open **Notepad**. Make up a key: **at least 20 random letters and numbers**, no spaces — for
+   example `k7Qm2xRt9vLp4sWz8nBc` (don't use this one — make your own).
+3. **File → Save as** → go to `C:\course-secrets` → File name **`api-key.txt`** → **Save**.
 
-```powershell
-New-Item -ItemType Directory -Force C:\course-secrets | Out-Null
-[guid]::NewGuid().ToString("N") | Set-Content -NoNewline C:\course-secrets\api-key.txt
-Get-Content C:\course-secrets\api-key.txt
-```
-
-The last line prints your key (32 letters and numbers). You paste it into **Postman** today and
-**Claude Desktop** on Day 3 — **never into the AI chat**.
+This is your key. You paste it into **Postman** today and **Claude Desktop** on Day 3 — **never into
+the AI chat**.
 
 ### 1.2 — Install Postman (to test the API)
 
@@ -67,7 +65,7 @@ The last line prints your key (32 letters and numbers). You paste it into **Post
 
 | Check | You should see |
 |---|---|
-| **PowerShell:** `Get-Content C:\course-secrets\api-key.txt` | a 32-character key |
+| **File Explorer:** open `C:\course-secrets\api-key.txt` | your key, on one line |
 | **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm` | `{"error":"Missing or wrong API key."}` — **correct!** The browser sends no key |
 | Postman | opens |
 | **PowerShell:** `node -v` | `v20` or higher |
@@ -219,12 +217,7 @@ This demo has **no key check and no input checks**. Yours will have both.
 **Goal:** the AI builds `PHASES.md`. You prove each phase works before the next one starts.
 
 **Start**
-1. **PowerShell:**
-
-   ```powershell
-   code C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\workspace\rest-api
-   ```
-
+1. **VS Code:** **File → Open Folder…** → the course folder → `workspace\rest-api` → **Select Folder**.
 2. Open Continue → **Agent** mode. Use **yesterday's chat** if you still have it. If not, start a new
    chat and paste:
 
@@ -383,17 +376,13 @@ allowed**.
 
 **Goal:** the same interview as Day 1 — this time you pick **MCP** at Question 1.
 
-**Step 1 — make the workspace.** **PowerShell** — paste all five lines:
-
-```powershell
-cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion
-New-Item -ItemType Directory -Force workspace\mcp-server | Out-Null
-Copy-Item framework\START_PROMPT.md, framework\project_starter.json workspace\mcp-server
-Copy-Item workspace\rest-api\API.md workspace\mcp-server
-code workspace\mcp-server
-```
-
-> Using the reference API? Replace line 4 with: `Copy-Item reference\api\API.md workspace\mcp-server`
+**Step 1 — make the workspace.** In **File Explorer**, open the course folder, then:
+1. Open `workspace` → right-click → **New → Folder** → name it **`mcp-server`**.
+2. Open `framework` → select **`START_PROMPT.md`** and **`project_starter.json`** (hold **Ctrl**) →
+   **Copy** → open `workspace\mcp-server` → **Paste**.
+3. Copy **`API.md`** into `workspace\mcp-server` too — from `workspace\rest-api`, or, if you use the
+   reference API, from `reference\api`.
+4. **VS Code:** **File → Open Folder…** → `workspace\mcp-server` → **Select Folder**.
 
 **Step 2 — run the interview.** New Continue chat → **Agent** → paste all of `START_PROMPT.md` → send.
 
@@ -424,29 +413,32 @@ code workspace\mcp-server
 
 1. **Continue:** build the phases up to the first tool (usually: the project skeleton, then
    `list_murid`). Use the same loop as Topic 4.
-2. **PowerShell** — test it with the **MCP Inspector**, a web page that runs your tools without any AI.
-   Paste the lines one by one:
+2. **Open a terminal inside VS Code:** menu **Terminal → New Terminal**. It opens at the bottom,
+   already in `workspace\mcp-server`.
+3. Type this → **Enter**. It downloads what the server needs (about a minute):
 
-   ```powershell
-   cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\workspace\mcp-server
+   ```
    npm install
    ```
 
-   ```powershell
-   $key = Get-Content C:\course-secrets\api-key.txt
-   $url = "http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm"
+4. Start the **MCP Inspector** — a web page that runs your tools without any AI. Type → **Enter**:
+
+   ```
+   npx @modelcontextprotocol/inspector node index.js
    ```
 
-   Using **your own** API? Put its URL in `$url` instead.
+   (If the AI named the main file something other than `index.js`, use that name.) The Inspector
+   opens in the browser — if not, click the link it prints.
+5. **In the Inspector's left panel**, open **Environment Variables** → **Add Environment Variable**
+   twice, and fill in:
 
-   ```powershell
-   npx @modelcontextprotocol/inspector -e "API_BASE_URL=$url" -e "API_KEY=$key" node index.js
-   ```
+   | Key | Value |
+   |---|---|
+   | `API_BASE_URL` | `http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm` — or **your own** API's URL |
+   | `API_KEY` | your key — open `C:\course-secrets\api-key.txt`, copy it, paste it here |
 
-   (If the AI named the main file something other than `index.js`, use that name.)
-3. The Inspector opens in the browser (if not, open the link it prints). Click **Connect** →
-   **Tools** → **List Tools** → **`list_murid`** → **Run Tool**.
-4. You see the **6 students** from Oracle.
+6. Click **Connect** → **Tools** → **List Tools** → **`list_murid`** → **Run Tool**.
+7. You see the **6 students** from Oracle.
 
 **Checkpoint ✅** `list_murid` returns the 6 students in the Inspector.
 
@@ -454,9 +446,9 @@ code workspace\mcp-server
 
 | You see | Do this |
 |---|---|
-| Inspector says the server disconnected | The server crashed. Run `node index.js` alone and paste the error to the AI |
-| `Cannot reach the app` | `$url` is wrong, or ColdFusion is stopped |
-| `401` | The key was not passed. Run the `$key = …` line again, then the `npx` line |
+| Inspector says the server disconnected | The server crashed. In the VS Code terminal press **Ctrl+C**, type `node index.js` → **Enter**, and paste the error to the AI |
+| `Cannot reach the app` | `API_BASE_URL` is wrong, or ColdFusion is stopped |
+| `401` | `API_KEY` is empty or wrong. Paste it again from `api-key.txt` → **Connect** |
 
 ---
 

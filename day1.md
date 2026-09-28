@@ -43,10 +43,11 @@ Desktop (Day 3).
 
 | The notes say | You do |
 |---|---|
-| **PowerShell (Admin)** | Start → type `PowerShell` → right-click it → **Run as administrator** |
-| **PowerShell** | Start → type `PowerShell` → **Enter** |
+| **File Explorer** | the yellow folder icon on the taskbar |
 | **Browser** | Chrome or Edge |
 | **VS Code** | the code editor (installed in 1.7) |
+| **Services** | Start → type `Services` → open it. Starts and restarts Oracle and ColdFusion |
+| **PowerShell** | used only twice today (1.4 and 7.1) — the notes say how to open it |
 
 **To run a command:** copy the grey box → right-click inside PowerShell (this pastes) → **Enter**.
 
@@ -119,26 +120,17 @@ Do the steps **in order**.
    > **Windows Firewall asks about ColdFusion or Java?** Click **Cancel**. Everything runs on your
    > laptop only — and it stops classmates from opening your Administrator.
 
-3. **PowerShell (Admin)** — install the Oracle driver:
-
-   ```powershell
-   C:\ColdFusion2021\cfusion\bin\cfpm.bat install oracle
-   ```
-
-   It installs the driver, or says it is already there. Both are fine. Now restart ColdFusion:
-
-   ```powershell
-   Restart-Service "ColdFusion 2021 Application Server"
-   ```
-
-4. **Browser** — open `http://localhost:8500/CFIDE/administrator/` → password **`KPM@2026`** → Login.
+3. **Browser** — open `http://localhost:8500/CFIDE/administrator/` → password **`KPM@2026`** → Login.
    You see the **ColdFusion Administrator**, the control panel for the server:
 
    ![ColdFusion Administrator home page with eleven tiles](images/day1/cf-admin-home.png)
 
-   You only use **two** tiles: **Data & Services** (database connections, step 1.6) and **Debugging &
-   Logging** (next step, and error logs later). Ignore the others. Close the blue *"Developer
-   mode"* banner with **×** — do **not** activate anything.
+   You only use **three** tiles: **Package Manager** (next step), **Debugging & Logging** (step 5)
+   and **Data & Services** (1.6). Ignore the others. Close the blue *"Developer mode"* banner with
+   **×** — do **not** activate anything.
+
+4. **Install the Oracle driver:** **Package Manager** → **Packages** → find **oracle** → **Install**.
+   Already under *Installed packages*? Nothing to do.
 
 5. **Turn off debug output:** **Debugging & Logging** → **Debug Output Settings** → untick **Enable
    Request Debugging Output** → **Submit Changes**.
@@ -146,36 +138,35 @@ Do the steps **in order**.
    > **Why?** Otherwise ColdFusion adds a block of debug HTML to the end of every page. On Day 2
    > that breaks the API's JSON answers.
 
+6. **Restart ColdFusion:** Start → type `Services` → open it (click **Yes** if Windows asks). Find
+   **ColdFusion 2021 Application Server** → right-click → **Restart**. You use this same window
+   whenever the notes say "start" or "restart" a service.
+
 ### 1.3 — Get the course files
 
-1. **Browser** — install Git from `https://git-scm.com/download/win`. Click **Next** on every screen.
-2. **PowerShell (Admin)** — let your account save files in ColdFusion's web folder:
+1. **Let your account save files in ColdFusion's web folder** (otherwise VS Code says "Access denied"
+   later):
+   - **File Explorer** → go to `C:\ColdFusion2021\cfusion`.
+   - Right-click the **`wwwroot`** folder → **Properties** → **Security** tab → **Edit…**
+   - Click **Users** in the list. (Not there? **Add…** → type `Users` → **OK**.)
+   - In the **Allow** column, tick **Modify** → **OK** → **OK**.
+2. **Browser** — open `https://github.com/luqmanyusof/kpm-mcp-coldfusion` → green **Code** button →
+   **Download ZIP**.
+3. **File Explorer** — double-click the downloaded ZIP. Inside is one folder,
+   `kpm-mcp-coldfusion-main`. Drag it into `C:\ColdFusion2021\cfusion\wwwroot`.
+4. Rename that folder to **`kpm-mcp-coldfusion`** (right-click → **Rename**). The name must be exactly
+   this — every link in these notes uses it.
 
-   ```powershell
-   icacls C:\ColdFusion2021\cfusion\wwwroot /grant "${env:USERNAME}:(OI)(CI)M"
-   ```
-
-   You see: `Successfully processed 1 files`.
-
-3. **PowerShell** — open a **new**, normal one. Download the course:
-
-   ```powershell
-   git clone https://github.com/luqmanyusof/kpm-mcp-coldfusion.git C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion
-   ```
-
-   It ends with `done.` The folder name **must** stay `kpm-mcp-coldfusion`. Every link in these
-   notes uses it.
+From now on, **"the course folder"** means `C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion`.
 
 ### 1.4 — Create the database user and tables
 
-1. **PowerShell** — open a **new** one (so it finds `sqlplus`, which came with Oracle). Go to the
-   course's `db` folder:
+This is the one install step that needs typed commands — Oracle's setup scripts only run in its own
+tool, `sqlplus`.
 
-   ```powershell
-   cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\db
-   ```
-
-2. Create the course user:
+1. **File Explorer** — open the course folder → **`db`**. Click the address bar at the top, type
+   `powershell`, press **Enter**. A PowerShell window opens, already in the `db` folder.
+2. Create the course user — paste this, press **Enter**:
 
    ```powershell
    sqlplus 'sys@//localhost:1521/XEPDB1' as sysdba '@create_user.sql'
@@ -184,7 +175,7 @@ Do the steps **in order**.
    It asks for a password: type **your Oracle password from 1.1** (nothing shows while you type) →
    Enter. You see: `user cfapp ready`.
 
-3. Create the tables and sample data:
+3. Create the tables and sample data — paste, **Enter**:
 
    ```powershell
    sqlplus -s 'cfapp/cfapp123@//localhost:1521/XEPDB1' '@schema.sql'
@@ -192,7 +183,7 @@ Do the steps **in order**.
 
    The last lines say: `pelajar rows: 5` and `murid rows: 6`.
 
-> **Data got messy later in the course?** Run step 3 again. It resets both tables.
+> **Data got messy later in the course?** Do steps 1 and 3 again. It resets both tables.
 
 ### 1.5 — Install DBeaver (to look inside the database)
 
@@ -244,7 +235,7 @@ A **datasource** is a named database connection, saved once in ColdFusion. Pages
 
 | Check | You should see |
 |---|---|
-| **PowerShell:** `Get-Service Oracle*` | `OracleServiceXE` and the `…TNSListener` service: **Running** |
+| **Services** window (Start → `Services`) | `OracleServiceXE` and `Oracle…TNSListener`: **Running** |
 | **DBeaver:** CFAPP → Tables → MURID → **Data** tab | **6** students |
 | **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/basics/03-database.cfm` | a table of **5** rows |
 | **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/crud/` | a list of **6** students |
@@ -254,7 +245,7 @@ A **datasource** is a named database connection, saved once in ColdFusion. Pages
 | You see | Do this |
 |---|---|
 | Oracle installer fails half way | Uninstall it (Settings → Apps), restart Windows, install again to `C:\oraclexe\` as administrator |
-| `sqlplus` is not recognised | Open a **new** PowerShell. Still missing? Use `C:\oraclexe\dbhomeXE\bin\sqlplus.exe` |
+| `sqlplus` is not recognised | Restart Windows, then redo 1.4. Still missing? Type `C:\oraclexe\dbhomeXE\bin\sqlplus.exe` instead of `sqlplus` |
 | `ORA-12541: no listener` | Windows **Services** → start the `Oracle…TNSListener` service |
 | `ORA-12514: listener does not currently know of service` | Oracle is still starting. Wait 2 minutes. Still failing? Restart `OracleServiceXE` |
 | `ORA-01017: invalid username/password` | Step 1.4-2 needs **your** Oracle password. Everything else is `cfapp` / `cfapp123` |
@@ -263,7 +254,7 @@ A **datasource** is a named database connection, saved once in ColdFusion. Pages
 | `Datasource cf_test_crud could not be found` | Redo 1.6. Check the spelling |
 | `localhost:8500` does not open | Windows **Services** → start **ColdFusion 2021 Application Server** |
 | `404` on a course page | The folder is not called `kpm-mcp-coldfusion`, or is not inside `wwwroot` |
-| "Access denied" in `git clone` or when saving in VS Code | You skipped step 1.3-2 (`icacls`) |
+| "Access denied" when copying into `wwwroot` or saving in VS Code | Redo step 1.3-1 (tick **Modify** for **Users**) |
 
 ---
 
@@ -387,13 +378,8 @@ Open `basics/02-logic.cfm` in VS Code, and `…/basics/02-logic.cfm` in the brow
    The page now says **3 rows**.
 3. **Break it on purpose.** Line 28: change `cf_test_crud` to `cf_test_crudX`. You get an error:
    *Datasource cf_test_crudX could not be found*. Now you know what that error means.
-4. **Put everything back** — **PowerShell:**
-
-   ```powershell
-   git -C C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion checkout -- basics
-   ```
-
-   This restores all three lesson pages. **F5** shows 5 rows again.
+4. **Put everything back.** In VS Code press **Ctrl+Z** until line 28 says `cf_test_crud` and line 29
+   says `SELECT id, name, email FROM pelajar ORDER BY name` again. Save, **F5** → 5 rows.
 
 **The one safety rule.** When a query uses a value typed by a user (like `url.id`), never paste it into
 the SQL. Wrap it in `<cfqueryparam>` — this stops **SQL injection**:
@@ -484,60 +470,58 @@ The small `pelajar` table (`id`, `name`, `email`) is only for the lessons.
 | **Ollama Cloud** (main AI) | Gemma 4 — free account with usage limits |
 | **Token Harbor** (backup AI) | many models, pay per use — free account, top up **only** if the trainer says so |
 
-### 7.1 — Ollama
+### 7.1 — Ollama (main AI)
 
 1. **Browser:** `https://ollama.com` → **Sign up** → confirm the email.
 2. **Browser:** install the app from `https://ollama.com/download`.
-3. **PowerShell** — open a **new** one:
+3. Link this laptop to your account. Start → type `PowerShell` → **Enter**. Type this one command →
+   **Enter**:
 
    ```powershell
    ollama signin
    ```
 
-   The browser opens → log in → **Connect**.
-4. Test it:
+   The browser opens → log in → **Connect**. Close PowerShell.
 
-   ```powershell
-   ollama run gemma4:31b-cloud "Say hello in five words"
-   ```
-
-   A short reply = done.
-
-### 7.2 — Token Harbor key
+### 7.2 — Token Harbor (backup AI)
 
 1. **Browser:** `https://tokenharbor.ai` → **Sign up** (free, no card).
-2. Dashboard → **API keys** → copy the **Universal Key** (`thk_live_…`) **now** — it is shown only once.
-3. **PowerShell** — open a private settings file for Continue:
+2. Dashboard → **API keys** → copy the **Universal Key** (`thk_live_…`) and paste it into Notepad for
+   now — it is shown **only once**.
 
-   ```powershell
-   New-Item -ItemType Directory -Force $HOME\.continue | Out-Null
-   notepad $HOME\.continue\.env
+> **Never** put this key in the course folder, in the AI chat, or in a screenshot — it spends real
+> money. Leaked it? Dashboard → API keys → delete it and make a new one.
+
+### 7.3 — Continue (the AI inside VS Code)
+
+1. **VS Code:** **Extensions** (**Ctrl+Shift+X**) → search **Continue** → **Install**.
+2. Click the Continue icon on the left bar once. (This creates its settings folder.)
+3. **Copy the course settings.** VS Code → left panel → `config` → open `continue-config.yaml` →
+   **Ctrl+A** → **Ctrl+C**.
+4. **Open Continue's settings file.** Press **Windows key + R**, type this, press **Enter**:
+
+   ```
+   notepad %USERPROFILE%\.continue\config.yaml
    ```
 
-   Notepad asks to create the file → **Yes**. Type **one line** (your key after the `=`, no spaces):
+   Notepad opens it (asked to create it? → **Yes**). **Ctrl+A** → **Ctrl+V** → **Ctrl+S** → close.
+5. **Add your Token Harbor key.** **Windows key + R** again:
+
+   ```
+   notepad %USERPROFILE%\.continue\.env
+   ```
+
+   Asked to create it → **Yes**. Type **one line** — your key after the `=`, no spaces, no quotes:
 
    ```
    TOKEN_HARBOR_API_KEY=thk_live_your-key-here
    ```
 
-   Save (**Ctrl+S**) and close Notepad.
-
-> **Never** put this key in the course folder, in the AI chat, or in a screenshot — it spends real
-> money. Leaked it? Dashboard → API keys → delete it and make a new one.
-
-### 7.3 — Continue
-
-1. **VS Code:** **Extensions** (**Ctrl+Shift+X**) → search **Continue** → **Install**.
-2. **PowerShell** — give Continue the course settings:
-
-   ```powershell
-   Copy-Item C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\config\continue-config.yaml $HOME\.continue\config.yaml
-   ```
-
-3. **VS Code:** **Ctrl+Shift+P** → type `Reload Window` → **Enter**.
-4. Open Continue (its icon on the left bar). Set the mode to **Agent**.
-5. Pick **Gemma 4 31B (Ollama Cloud)** → type `hello` → it replies.
-6. Pick **Token Harbor (backup)** → type `hello` → it replies.
+   **Ctrl+S** → close. (Continue reads the key from here, so it is never in the course folder.)
+6. **VS Code:** **Ctrl+Shift+P** → type `Reload Window` → **Enter**.
+7. Open Continue. Set the mode to **Agent**.
+8. Pick **Gemma 4 31B (Ollama Cloud)** → type `hello` → it replies.
+9. Pick **Token Harbor (backup)** → type `hello` → it replies.
 
 **Checkpoint ✅** Both models reply to `hello` in Agent mode.
 
@@ -545,10 +529,10 @@ The small `pelajar` table (`id`, `name`, `email`) is only for the lessons.
 
 | You see | Do this |
 |---|---|
-| `ollama` is not recognised | Close PowerShell and open a new one |
-| No Gemma / Token Harbor in Continue | Redo 7.3 step 2, then Reload Window |
-| Gemma: `unauthorized` or no reply | Run `ollama signin` again; check your limits at `https://ollama.com/settings` |
-| Token Harbor `401` / `invalid api key` | Fix the `.env` line: `TOKEN_HARBOR_API_KEY=…`, no quotes, no spaces. Reload Window |
+| `ollama` is not recognised | Close PowerShell, open a new one. Still not? Restart Windows |
+| No Gemma / Token Harbor in Continue | Redo 7.3 steps 3–4, then Reload Window |
+| Gemma: `unauthorized` or no reply | Redo 7.1 step 3; check your limits at `https://ollama.com/settings` |
+| Token Harbor `401` / `invalid api key` | Redo 7.3 step 5: `TOKEN_HARBOR_API_KEY=…`, no quotes, no spaces. Reload Window |
 | Token Harbor `402` / `insufficient balance` | That model needs credit. Ask the trainer |
 
 ---
@@ -596,20 +580,17 @@ You use them **twice**: for the REST API (today) and for the MCP server (Day 2).
 **Goal:** the AI interviews you and writes the plan. **No code today.**
 
 **Step 1 — make your workspace** (a copy of the student app, plus the two framework files).
-**PowerShell** — paste all five lines at once:
+In **File Explorer**, open the course folder, then:
+1. Right-click an empty space → **New → Folder** → name it **`workspace`**.
+2. Right-click the **`crud`** folder → **Copy**. Open `workspace` → right-click → **Paste**.
+3. Rename the pasted folder from `crud` to **`rest-api`**.
+4. Go back to the course folder → open **`framework`** → select **`START_PROMPT.md`** and
+   **`project_starter.json`** (hold **Ctrl** to pick both) → **Copy**. Open `workspace\rest-api` →
+   **Paste**.
+5. **VS Code:** **File → Open Folder…** → choose `workspace\rest-api` → **Select Folder**.
+6. **Browser:** check the copy works — `http://localhost:8500/kpm-mcp-coldfusion/workspace/rest-api/`
 
-```powershell
-cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion
-New-Item -ItemType Directory -Force workspace | Out-Null
-Copy-Item crud workspace\rest-api -Recurse
-Copy-Item framework\START_PROMPT.md, framework\project_starter.json workspace\rest-api
-code workspace\rest-api
-```
-
-A new VS Code window opens on `workspace\rest-api`. **Browser:** check the copy works —
-`http://localhost:8500/kpm-mcp-coldfusion/workspace/rest-api/`
-
-**Step 2 — start.** In the new VS Code window:
+**Step 2 — start.** In VS Code:
 1. Open Continue → pick **Gemma 4 31B** → mode **Agent**.
 2. Open `START_PROMPT.md` → **Ctrl+A**, **Ctrl+C**.
 3. Paste into Continue → send.
