@@ -111,7 +111,7 @@ present a final group project.*
 | **`code/`** | **all the course code:** |
 | `code/basics/` | three plain CFML lesson pages (Day 1) |
 | `code/crud/` | the existing student-records app (Day 1) |
-| `code/db/` | `create_user.sql` + `schema.sql` (reset the data any time) |
+| `code/db/` | `create_user.sql` + `schema.sql`, run in DBeaver (re-run `schema.sql` to reset the data) |
 | `code/api-demo/` | small `pelajar` API the trainer builds live (Day 2) |
 | `code/reference/api/` | answer key: `murid` REST API + `API.md` contract |
 | `code/reference/mcp/` | answer key: Node.js MCP server with 5 tools + a self-test |

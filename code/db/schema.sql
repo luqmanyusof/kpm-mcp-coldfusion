@@ -1,38 +1,23 @@
 -- =====================================================================
---  cf-learn-cfml - Oracle schema (Oracle 21c XE, also valid on 19c)
+--  Course tables for the `cfapp` user (Oracle 21c XE).
+--  Run in DBeaver on the `cfapp` connection: paste the whole file into a
+--  SQL editor and press Alt+X (Execute SQL Script).  day1.md, step 1.5.
 --
---  Run / reset any time (Oracle XE running, user cfapp created by create_user.sql):
---    cd <course folder>\db
---    sqlplus -s "cfapp/cfapp123@//localhost:1521/XEPDB1" "@schema.sql"
+--  This is plain SQL only (no PL/SQL), so DBeaver runs it cleanly.
+--
+--  TO RESET THE DATA later: first run these four lines on the `cfapp`
+--  connection, then run this whole file again:
+--      DROP TABLE  murid   CASCADE CONSTRAINTS PURGE;
+--      DROP TABLE  pelajar CASCADE CONSTRAINTS PURGE;
+--      DROP SEQUENCE murid_seq;
+--      DROP SEQUENCE pelajar_seq;
 --
 --  Two tables:
---    pelajar - simple 3-column table (id, name, email) used by the
---              BASICS module (read) and the API module (learner CRUD).
---    murid   - full student record used by the pre-built CRUD module.
---
---  Oracle vs MySQL, for readers of the old version:
---    AUTO_INCREMENT -> a SEQUENCE used as the column DEFAULT
---    ENUM(...)      -> VARCHAR2 + CHECK constraint
---    TINYINT        -> NUMBER(3)
---    ON UPDATE      -> a BEFORE UPDATE trigger
+--    pelajar - simple 3-column table (id, name, email): BASICS + API demo.
+--    murid   - full student record: the pre-built CRUD app + the REST API.
 -- =====================================================================
 
-SET DEFINE OFF
-SET FEEDBACK OFF
-
--- ---- Drop old objects (ignore "does not exist") ----------------------
-BEGIN
-    FOR o IN (SELECT 'TABLE' t, table_name n FROM user_tables
-               WHERE table_name IN ('PELAJAR', 'MURID')
-              UNION ALL
-              SELECT 'SEQUENCE', sequence_name FROM user_sequences
-               WHERE sequence_name IN ('PELAJAR_SEQ', 'MURID_SEQ')) LOOP
-        EXECUTE IMMEDIATE 'DROP ' || o.t || ' ' || o.n || CASE o.t WHEN 'TABLE' THEN ' PURGE' END;
-    END LOOP;
-END;
-/
-
--- ---- Simple table (basics + api) ------------------------------------
+-- ---- Simple table (basics + api demo) -------------------------------
 CREATE SEQUENCE pelajar_seq START WITH 1 NOCACHE;
 
 CREATE TABLE pelajar (
@@ -48,7 +33,7 @@ INSERT INTO pelajar (name, email) VALUES ('Tan Wei Jie',  'weijie.tan@example.co
 INSERT INTO pelajar (name, email) VALUES ('Priya Suresh', 'priya.suresh@example.com');
 INSERT INTO pelajar (name, email) VALUES ('Lim Mei Ling', 'meiling.lim@example.com');
 
--- ---- Full table (crud module) ---------------------------------------
+-- ---- Full table (crud app + rest api) -------------------------------
 CREATE SEQUENCE murid_seq START WITH 1 NOCACHE;
 
 CREATE TABLE murid (
@@ -75,15 +60,6 @@ CREATE TABLE murid (
 CREATE INDEX idx_murid_tingkatan ON murid (tingkatan);
 CREATE INDEX idx_murid_nama      ON murid (nama);
 
--- Keeps updated_at current (MySQL did this with ON UPDATE CURRENT_TIMESTAMP).
-CREATE OR REPLACE TRIGGER trg_murid_updated
-BEFORE UPDATE ON murid
-FOR EACH ROW
-BEGIN
-    :NEW.updated_at := SYSTIMESTAMP;
-END;
-/
-
 INSERT INTO murid (nama, no_kp, jantina, tingkatan, kelas, tarikh_lahir, bangsa, agama, pendapatan_isi_rumah, bilangan_adik_beradik)
 VALUES ('Ahmad Danish bin Rosli',   '090312-10-5217', 'Lelaki',    5, 'Bestari', DATE '2009-03-12', 'Melayu', 'Islam',     3500.00, 2);
 INSERT INTO murid (nama, no_kp, jantina, tingkatan, kelas, tarikh_lahir, bangsa, agama, pendapatan_isi_rumah, bilangan_adik_beradik)
@@ -101,5 +77,3 @@ COMMIT;
 
 SELECT 'pelajar rows: ' || COUNT(*) AS result FROM pelajar;
 SELECT 'murid rows: '   || COUNT(*) AS result FROM murid;
-
-EXIT

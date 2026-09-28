@@ -34,7 +34,7 @@ Desktop (Day 3).
 | Oracle password | the one **you** choose in 1.1 — write it down |
 | ColdFusion Administrator password | `KPM@2026` |
 | Database user / password | `cfapp` / `cfapp123` |
-| Database address | host `localhost` · port `1521` · service name `XEPDB1` |
+| Database address | host `127.0.0.1` · port `1521` · service name `XEPDB1` |
 | Datasource name | `cf_test_crud` |
 | Course folder | `C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion` |
 | Course in the browser | `http://localhost:8500/kpm-mcp-coldfusion/` |
@@ -47,7 +47,7 @@ Desktop (Day 3).
 | **Browser** | Chrome or Edge |
 | **VS Code** | the code editor (installed in 1.7) |
 | **Services** | Start → type `Services` → open it. Starts and restarts Oracle and ColdFusion |
-| **Command Prompt** | Start → type `cmd` → **Enter**. Used only twice today (1.4 and 7.1) |
+| **Command Prompt** | Start → type `cmd` → **Enter**. Used only once today (7.1) |
 
 **To run a command:** copy the grey box → click inside Command Prompt → **Ctrl+V** (or right-click) to paste → **Enter**.
 
@@ -69,7 +69,7 @@ Do the steps **in order**.
    - **License** → Accept
    - **Destination folder** → type **`C:\oraclexe\`** (the default breaks if your Windows user name has
      a space)
-   - **Password** → choose one, **letters and numbers only** → write it down
+   - **Password** → choose one, **letters and numbers only** → write it down (you need it in 1.4)
    - **Summary** → Install
 4. Wait **15–30 minutes**. The last screen says **Oracle Database Installed Successfully**:
 
@@ -77,13 +77,15 @@ Do the steps **in order**.
 
 5. Click **Finish**. Oracle now starts by itself every time Windows starts.
 
-**What the screen means.** Think of Oracle as a building, and `XEPDB1` as your apartment in it:
+**What the screen means.** Think of Oracle as a building, and `XEPDB1` as your apartment in it.
+You don't need to copy anything from this screen — its addresses differ from laptop to laptop. The
+course always uses the same three values:
 
-| Line on the screen | In plain words | Do you use it? |
-|---|---|---|
-| `localhost:1521` | Oracle itself, on this laptop (`1521` is its door number) | no |
-| `localhost:1521/XEPDB1` | the database where the course tables live | **yes** — in 1.4, 1.5 and 1.6 |
-| `https://localhost:5500/em` | Oracle's own web control panel | no — DBeaver does this job |
+| Value | In plain words |
+|---|---|
+| `127.0.0.1` | "this computer" (the same as `localhost`, but works on every laptop) |
+| `1521` | Oracle's door number (port) |
+| `XEPDB1` | the database where the course tables live |
 
 ### 1.2 — Install ColdFusion 2021 (the web server)
 
@@ -159,35 +161,10 @@ Do the steps **in order**.
 
 From now on, **"the course folder"** means `C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion`.
 
-### 1.4 — Create the database user and tables
+### 1.4 — Install DBeaver and connect as the database admin
 
-This is the one install step that needs typed commands — Oracle's setup scripts only run in its own
-tool, `sqlplus`.
-
-1. **File Explorer** — open the course folder → **`code`** → **`db`**. Click the address bar at the top, type
-   `cmd`, press **Enter**. A Command Prompt window opens, already in the `db` folder.
-2. Create the course user — paste this, press **Enter**:
-
-   ```
-   sqlplus "sys@//localhost:1521/XEPDB1" as sysdba "@create_user.sql"
-   ```
-
-   It asks for a password: type **your Oracle password from 1.1** (nothing shows while you type) →
-   Enter. You see: `user cfapp ready`.
-
-3. Create the tables and sample data — paste, **Enter**:
-
-   ```
-   sqlplus -s "cfapp/cfapp123@//localhost:1521/XEPDB1" "@schema.sql"
-   ```
-
-   The last lines say: `pelajar rows: 5` and `murid rows: 6`.
-
-> **Data got messy later in the course?** Do steps 1 and 3 again. It resets both tables.
-
-### 1.5 — Install DBeaver (to look inside the database)
-
-You use DBeaver all course to check what the app, and later the AI, **really** changed.
+DBeaver shows what is inside the database. You use it now to create the course database, and all
+course to check what the app — and later the AI — **really** changed.
 
 1. **Browser** — download DBeaver Community (free) from
    `https://dbeaver.io/files/dbeaver-ce-latest-windows-x86_64.exe`. Install with the defaults.
@@ -195,19 +172,100 @@ You use DBeaver all course to check what the app, and later the AI, **really** c
 
    | Field | Value |
    |---|---|
-   | Host | `localhost` |
+   | Host | `127.0.0.1` |
    | Port | `1521` |
    | Database | `XEPDB1` — and pick **Service Name** (not SID) |
    | Authentication | Oracle Database Native |
-   | Username / Password | `cfapp` / `cfapp123` — tick **Save password** |
+   | Username | `sys` |
+   | Role | **SYSDBA** |
+   | Password | your Oracle password from 1.1 |
 
-3. Click **Test Connection**. The first time it offers to download the Oracle driver → **Download**.
-   You see **Connected** → **Finish**.
+3. **Give DBeaver the Oracle driver.** Oracle installed its own driver in 1.1, so nothing needs to
+   download. Still in the same window:
+   - Click **Edit Driver Settings** (bottom of the window) → **Libraries** tab.
+   - Click each line in the list → **Delete**, until the list is empty.
+   - Click **Add File** → go to the driver folder → pick **`ojdbc8.jar`** → **Open**. The driver folder
+     is inside the Oracle folder from 1.1:
+
+     | Oracle installed to | Driver folder |
+     |---|---|
+     | `C:\oraclexe\` | `C:\oraclexe\dbhomeXE\jdbc\lib\` |
+     | the default folder | `C:\app\<your Windows user name>\product\21c\dbhomeXE\jdbc\lib\` |
+
+   - Click **Find Class** → pick **`oracle.jdbc.OracleDriver`** → **OK**.
+4. Click **Test Connection**. You see **Connected** → **Finish**. (DBeaver offers to download driver
+   files? Click **Cancel** — you already gave it the driver.)
+5. In the list on the left, right-click the new connection → **Rename** → type `admin` → **OK**.
+
+**Test Connection fails with `ORA-12541` or `ORA-12543`?** Oracle is not listening on `127.0.0.1` on
+this laptop. Fix it once:
+1. **Services** (Start → `Services`): `OracleServiceXE` and `Oracle…TNSListener` must say
+   **Running**. If not, right-click → **Start**, then test again.
+2. Still failing? Start → type `cmd` → right-click **Command Prompt** → **Run as administrator**.
+   Type `lsnrctl status` → **Enter**. The line **Listener Parameter File** shows where `listener.ora`
+   is.
+3. In the same window type `notepad "` + that path + `"` → **Enter**. For example:
+
+   ```
+   notepad "C:\app\Administrator\product\21c\homes\OraDB21Home1\network\admin\listener.ora"
+   ```
+
+   (Opened this way, Notepad can save the file. Opened normally, the save silently fails.)
+4. Find the line with `(PROTOCOL = TCP)` and `(PORT = 1521)`. Directly under it, add this line, then
+   save (**Ctrl+S**) and close Notepad:
+
+   ```
+         (ADDRESS = (PROTOCOL = TCP)(HOST = 127.0.0.1)(PORT = 1521))
+   ```
+
+   It must sit inside the same `(DESCRIPTION = … )` brackets, next to the other `ADDRESS` lines.
+5. Restart the listener — in the same window, one at a time:
+
+   ```
+   lsnrctl stop
+   ```
+   ```
+   lsnrctl start
+   ```
+
+   `lsnrctl start` must list a line with `(HOST=127.0.0.1)(PORT=1521)`.
+6. Wait **1 minute** (the database re-registers), then Test Connection again. `ORA-12514` or "service
+   is not available" now? Wait one more minute, and check **Database** is `XEPDB1` with **Service
+   Name** picked, not SID.
+
+### 1.5 — Create the course user and tables
+
+You run two ready-made SQL files from the course folder (`code\db`).
+
+1. **Copy the first file.** File Explorer → course folder → `code` → `db` → right-click
+   **`create_user.sql`** → **Open with** → **Notepad** → **Ctrl+A** → **Ctrl+C**.
+2. **Run it as admin.** DBeaver → click the **`admin`** connection → **Ctrl+]** (a new SQL editor
+   opens) → **Ctrl+V** → **Alt+X** (runs the whole script). Two result tabs show `User CFAPP created`
+   and `Grant succeeded`. (This one file both creates the user **and** gives it its privileges.)
+3. **Connect as the course user.** **Database → New Database Connection → Oracle → Next**. Fill in
+   the same as 1.4 step 2 (the driver from 1.4 step 3 is already set — skip it), except:
+
+   | Field | Value |
+   |---|---|
+   | Username | `cfapp` |
+   | Role | Normal |
+   | Password | `cfapp123` — tick **Save password** |
+
+   **Test Connection** → **Finish**. Right-click it → **Rename** → `cfapp`.
+4. **Create the tables.** Open **`schema.sql`** in Notepad the same way → **Ctrl+A** → **Ctrl+C**.
+   DBeaver → click the **`cfapp`** connection → **Ctrl+]** → **Ctrl+V** → **Alt+X**. The last two
+   result tabs show `pelajar rows: 5` and `murid rows: 6`.
+
+> **Data got messy later in the course?** In the `cfapp` editor, first run the four `DROP` lines from
+> the top of `schema.sql`, then run `schema.sql` again. That rebuilds both tables with the sample rows.
 
 ### 1.6 — Connect ColdFusion to the database (the datasource)
 
 A **datasource** is a named database connection, saved once in ColdFusion. Pages then only say
 `datasource="cf_test_crud"`, so the database password is never in the code.
+
+This step creates **nothing new in Oracle**. It tells ColdFusion to log in as the `cfapp` user you
+created in 1.5 — that is why the user name and password below are `cfapp` / `cfapp123`.
 
 1. **Browser** — ColdFusion Administrator → **Data & Services → Data Sources**.
 2. Data Source Name: `cf_test_crud` · Driver: **Oracle** → **Add**.
@@ -216,7 +274,7 @@ A **datasource** is a named database connection, saved once in ColdFusion. Pages
    | Field | Value |
    |---|---|
    | SID Name / Service Name | `XEPDB1` (pick "Service Name" if there is a choice) |
-   | Server | `localhost` |
+   | Server | `127.0.0.1` |
    | Port | `1521` |
    | User name / Password | `cfapp` / `cfapp123` |
 
@@ -245,13 +303,14 @@ A **datasource** is a named database connection, saved once in ColdFusion. Pages
 | You see | Do this |
 |---|---|
 | Oracle installer fails half way | Uninstall it (Settings → Apps), restart Windows, install again to `C:\oraclexe\` as administrator |
-| `sqlplus` is not recognised | Restart Windows, then redo 1.4. Still missing? Type `C:\oraclexe\dbhomeXE\bin\sqlplus.exe` instead of `sqlplus` |
-| sqlplus prints a long help page (`Usage 1: sqlplus -H \| -V`) | The command was mistyped. Copy it again exactly — with the **double** quotes |
-| `ORA-12541: no listener` | Windows **Services** → start the `Oracle…TNSListener` service |
-| `ORA-12514: listener does not currently know of service` | Oracle is still starting. Wait 2 minutes. Still failing? Restart `OracleServiceXE` |
-| `ORA-01017: invalid username/password` | Step 1.4-2 needs **your** Oracle password. Everything else is `cfapp` / `cfapp123` |
-| `ORA-00942: table or view does not exist` | You skipped step 1.4-3 |
-| DBeaver cannot download the driver | A company network blocks it. Ask the trainer for the USB copy |
+| DBeaver: `ORA-12541` or `ORA-12543` | See the box under 1.4 step 5 |
+| DBeaver: `ORA-12514: listener does not currently know of service` | Oracle is still starting. Wait 2 minutes. Still failing? **Services** → restart `OracleServiceXE` |
+| DBeaver as `admin`: `ORA-01017: invalid username/password` | Wrong Oracle password — use the one from 1.1. Everything else is `cfapp` / `cfapp123` |
+| DBeaver as `admin`: `ORA-01031: insufficient privileges` | **Role** must be **SYSDBA** (1.4 step 2). Right-click `admin` → **Edit Connection** |
+| DBeaver as `cfapp`: `ORA-01031` on `CREATE SEQUENCE`/`CREATE TABLE` | The grants from 1.5 didn't apply. On the **`admin`** connection run: `GRANT CREATE SESSION, CREATE TABLE, CREATE SEQUENCE, CREATE TRIGGER, CREATE VIEW TO cfapp;` then redo 1.5 step 4 |
+| `ORA-00955: name is already used` when running `schema.sql` | A half-finished run left objects behind. Run the four `DROP` lines from the top of `schema.sql` first, then run it again |
+| `ORA-00942: table or view does not exist` | You skipped 1.5 step 4 |
+| DBeaver: `Driver files are missing` / wants to download files | Redo 1.4 step 3 (use the `ojdbc8.jar` Oracle installed) |
 | `Datasource cf_test_crud could not be found` | Redo 1.6. Check the spelling |
 | `localhost:8500` does not open | Windows **Services** → start **ColdFusion 2021 Application Server** |
 | `404` on a course page | The folder is not called `kpm-mcp-coldfusion`, or is not inside `wwwroot` |
