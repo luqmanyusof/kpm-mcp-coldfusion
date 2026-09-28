@@ -3,258 +3,223 @@
 > *Part of **MCP Development for Web Applications** — AI-driven development with ColdFusion, Oracle
 > and Node.js (Day 1 of 3).*
 
-**Use case for the whole course:** a school's **student records** app. It already exists — a
-ColdFusion web app over an Oracle table of students (`murid`). Over three days you give it a
-**REST API** (Representational State Transfer Application Programming Interface) and then an
-**MCP server** (Model Context Protocol), so an AI (Artificial Intelligence) assistant can run the
-app in plain English: *"Who is in Form 4?"*, *"Add a new student…"*.
+**The course in one line:** a school already has a **student records** web app (ColdFusion + Oracle,
+table `murid`). In three days you give it a **REST API**, then an **MCP server**, so an AI assistant
+can run the app in plain English — *"Who is in Form 4?"*, *"Add a new student…"*.
 
-**The one rule of this course:** you own the **specification** and the **environment**; the AI owns
-the **code**, and the code is checked against your specification. You never have to write code —
-but you always decide what "done" means, and you always run the test.
+**The one rule:** the AI writes the code. **You** decide what "done" means, and **you** run every test.
 
-**Stack:** Adobe ColdFusion 2021 (Developer Edition), Oracle Database 21c Express Edition (XE),
-DBeaver, Visual Studio Code (VS Code) with the Continue AI extension, Ollama Cloud (Gemma 4) and
-Token Harbor as AI providers.
+**Today you will**
+- install the tools and check they work
+- change small ColdFusion pages and see the result
+- read the database from a ColdFusion page
+- use the existing student app
+- set up the AI in VS Code
+- let the AI interview you and write the plan for your REST API
 
-**New to ColdFusion? A 2-minute primer.** ColdFusion is an application server: it runs web pages
-written in **CFML** (ColdFusion Markup Language). A `.cfm` file is an ordinary HTML page with extra
-tags that start with `cf` — the server runs those tags and sends plain HTML to the browser.
+**Not today:** building the API (Day 2), MCP (Day 2 afternoon), Postman and Node.js (Day 2), Claude
+Desktop (Day 3).
 
-- **`.cfm`** — a page. HTML plus CFML tags like `<cfquery>` and `<cfoutput>`.
-- **`.cfc`** — a component (a class). `Application.cfc` is special: its settings apply to every page
-  in its folder.
-- **Datasource** — a named database connection, set up once in the **ColdFusion Administrator**, so
-  pages say `datasource="cf_test_crud"` and never contain the database password.
-
-**The request lifecycle in one line:** the browser asks for a `.cfm` page → ColdFusion runs its
-`cf` tags (for example a `<cfquery>` against Oracle through the datasource) → it sends back HTML
-(or, for an API, JSON — JavaScript Object Notation).
-
-**The folders you'll actually touch today:**
-
-| Folder / file | What lives there |
-|---|---|
-| `basics/` | three plain CFML lesson pages (no styling) |
-| `crud/` | the existing student-records app (CRUD — Create, Read, Update, Delete) |
-| `db/` | `create_user.sql` + `schema.sql` — the database user, the tables and the sample rows |
-| `framework/` | `START_PROMPT.md` + `project_starter.json` — the AI framework |
-| `config/` | ready-made settings for Continue and Claude Desktop |
-| `workspace/` | **your own work** — created today, ignored by git |
-
-**What you build today**
-- A working local stack: **Oracle XE**, **ColdFusion 2021**, the course repo, the datasource, **DBeaver**
-- A first feel for **CFML**: variables, logic, and reading a table
-- The **existing app** running — and understood page by page
-- An **AI assistant** in VS Code (Continue + Ollama Cloud + Token Harbor)
-- **Your REST API plan**, written by the AI after interviewing you: `REQUIREMENTS.md` + `PHASES.md`
-
-**What is NOT in scope today:** writing any code yourself, building the API (Day 2 morning), MCP
-(Day 2 afternoon onward), Postman and Node.js (installed on Day 2), Claude Desktop (Day 3).
-
-**How this day builds (each topic is a prerequisite for the next — easy first):**
-1. Install and verify the tools → 2. What MCP is and how this course works (concept) →
-3. ColdFusion basics: syntax and logic → 4. Read the database with ColdFusion → 5. Tour the `murid`
-table in DBeaver → 6. Run and understand the CRUD app → 7. Set up the AI assistant → 8. The AI
-framework (concept) → 9. **Plan your REST API with the AI.**
-
-> We build **bottom-up**: the database and server first, then the language, then the app, then the
-> AI. Nothing is "magic" later because you have seen each layer working on its own.
-
-> **Do Topic 1 before the course.** The downloads are big (Oracle 2 GB, ColdFusion 1.2 GB) and the
-> Oracle install alone takes 15–30 minutes. Day 1 starts by checking Topic 1's checkpoint together.
+> **Do Topic 1 at home, before the course.** The downloads are big (Oracle 2 GB, ColdFusion 1.2 GB)
+> and Oracle alone takes 15–30 minutes to install. Day 1 starts by checking Topic 1 together.
 
 ---
 
-## Topic 1 — Install and verify your tools
+## Before you start
 
-You need a Windows 10/11 64-bit laptop with **admin rights**, **8 GB RAM minimum** (16 GB is
-comfortable) and **20 GB free disk**, and no other Oracle database installed. Do the steps in order.
+**Your cheat sheet** — every value you type today:
 
-### 1.1 — Install Oracle Database 21c Express Edition (XE)
+| What | Value |
+|---|---|
+| Oracle password | the one **you** choose in 1.1 — write it down |
+| ColdFusion Administrator password | `KPM@2026` |
+| Database user / password | `cfapp` / `cfapp123` |
+| Database address | host `localhost` · port `1521` · service name `XEPDB1` |
+| Datasource name | `cf_test_crud` |
+| Course folder | `C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion` |
+| Course in the browser | `http://localhost:8500/kpm-mcp-coldfusion/` |
 
-Oracle XE is Oracle's free database edition. It comes from Oracle's own server; no Oracle account
-is needed.
+**The windows you use**
 
-1. Download (2 GB): **`https://download.oracle.com/otn-pub/otn_software/db-express/OracleXE213_Win64.zip`**
-   (official page: `https://www.oracle.com/database/technologies/xe-downloads.html`).
-2. Unzip it. Right-click `setup.exe` → **Run as administrator**. At each screen:
+| The notes say | You do |
+|---|---|
+| **PowerShell (Admin)** | Start → type `PowerShell` → right-click it → **Run as administrator** |
+| **PowerShell** | Start → type `PowerShell` → **Enter** |
+| **Browser** | Chrome or Edge |
+| **VS Code** | the code editor (installed in 1.7) |
 
-   | Screen | Choose |
-   |---|---|
-   | License | Accept |
-   | Destination folder | **`C:\oraclexe\`** — type it in (the default breaks if your Windows user name has a space) |
-   | Database passwords (SYS, SYSTEM, PDBADMIN) | Pick one, **letters and numbers only**, write it down — you need it once, in 1.4 |
-   | Summary | Install |
+**To run a command:** copy the grey box → right-click inside PowerShell (this pastes) → **Enter**.
 
-3. Wait **15–30 minutes**. The last screen says **Oracle Database Installed Successfully**:
+**You need:** Windows 10/11 64-bit, **admin rights**, **8 GB RAM** (16 GB is better), **20 GB free
+disk**, and no other Oracle database installed.
+
+---
+
+## Topic 1 — Install and check your tools
+
+Do the steps **in order**.
+
+### 1.1 — Install Oracle XE (the database)
+
+1. **Browser** — download (2 GB, no Oracle account needed):
+   `https://download.oracle.com/otn-pub/otn_software/db-express/OracleXE213_Win64.zip`
+2. Unzip it. Right-click **`setup.exe`** → **Run as administrator**.
+3. Go through the screens:
+   - **License** → Accept
+   - **Destination folder** → type **`C:\oraclexe\`** (the default breaks if your Windows user name has
+     a space)
+   - **Password** → choose one, **letters and numbers only** → write it down
+   - **Summary** → Install
+4. Wait **15–30 minutes**. The last screen says **Oracle Database Installed Successfully**:
 
    ![Oracle Database 21c Express Edition: installed successfully, with the connection information](images/day1/oracle-install-finished.png)
 
-   **What the three lines mean.** Think of Oracle as an **apartment building**:
+5. Click **Finish**. Oracle now starts by itself every time Windows starts.
 
-   | Line on the screen | In plain words | Do you use it? |
-   |---|---|---|
-   | **Multitenant container database:** `localhost:1521` | the **whole building** — Oracle itself. `localhost` = this laptop; `1521` = Oracle's door number (port) | not directly |
-   | **Pluggable database:** `localhost:1521/XEPDB1` | **your apartment** inside the building — the database named `XEPDB1`, where the course tables live | **yes — everywhere**: `sqlplus` (1.4), DBeaver (1.5), the ColdFusion datasource (1.6) |
-   | **EM Express URL:** `https://localhost:5500/em` | Oracle's own web control panel (EM = Enterprise Manager) | **no** — DBeaver does this job. If you open it, the browser warns about the certificate; that is expected on a laptop |
+**What the screen means.** Think of Oracle as a building, and `XEPDB1` as your apartment in it:
 
-   Remember **`localhost` · `1521` · `XEPDB1`** — the same three values appear in 1.4, 1.5 and 1.6.
-   Click **Finish**.
+| Line on the screen | In plain words | Do you use it? |
+|---|---|---|
+| `localhost:1521` | Oracle itself, on this laptop (`1521` is its door number) | no |
+| `localhost:1521/XEPDB1` | the database where the course tables live | **yes** — in 1.4, 1.5 and 1.6 |
+| `https://localhost:5500/em` | Oracle's own web control panel | no — DBeaver does this job |
 
-Oracle now runs as Windows services and **starts by itself** with Windows.
+### 1.2 — Install ColdFusion 2021 (the web server)
 
-### 1.2 — Install Adobe ColdFusion 2021
+1. **Browser** — download (1.2 GB):
+   `https://cfdownload.adobe.com/pub/adobe/coldfusion/2021/cfinstaller/cf2021u5/ColdFusion_2021_GUI_WWEJ_win64.exe`
+2. Right-click the file → **Run as administrator**. Go through the screens in this order:
+   - **Serial number** → leave it **blank** (free Developer Edition)
+   - **Installer configuration** → **Server configuration**
+   - **Server Profile** → **Development Profile**, leave the IP box empty → Next
 
-1. Download the installer (1.2 GB, from Adobe's own server — ColdFusion 2021 Update 5):
-   **`https://cfdownload.adobe.com/pub/adobe/coldfusion/2021/cfinstaller/cf2021u5/ColdFusion_2021_GUI_WWEJ_win64.exe`**
-2. Run it **as administrator**. At each screen:
+     ![ColdFusion installer: Select ColdFusion Server Profile, Development Profile selected](images/day1/cf-install-1-server-profile.png)
 
-   | Screen | Choose |
-   |---|---|
-   | Serial number | **Leave blank — Developer Edition** (free, localhost only) |
-   | Installer configuration | **Server configuration** |
-   | Select ColdFusion Server Profile | **Development Profile** (leave "IP Addresses allowed" empty) — screenshot A |
-   | Sub-components Installation | **Untick all four** (Solr, PDFG, Remote Start/Stop, .NET) — not used, and each one uses memory — screenshot B |
-   | Packages (if this screen appears) | tick **`oracle`** (the database driver) |
-   | Install folder | `C:\ColdFusion2021` (default) |
-   | Web server | **Built-in web server** (port **8500** — keep it; every link in these notes uses it) |
-   | Performance Monitoring Toolset | leave the default hostname — **Next** (not used in this course) — screenshot C |
-   | Administrator Password | **`KPM@2026`** (type it in both boxes) — the course password, so the trainer can help you log in. You need it in steps 4–5 and in 1.6 — screenshot D |
-   | Enable RDS | **Untick "Enable RDS"** (the password boxes grey out) — it is for Adobe's own editors; we use VS Code — screenshot E |
+   - **Sub-components** → **untick all four** → Next
 
-   **The screens that need a decision**
+     ![ColdFusion installer: Sub-components Installation, four boxes to untick](images/day1/cf-install-2-sub-components.png)
 
-   **A — Select ColdFusion Server Profile:** keep **Development Profile**, leave the IP box empty, **Next**.
+   - **Packages** (only if this screen appears) → tick **`oracle`**
+   - **Install folder** → keep `C:\ColdFusion2021`
+   - **Web server** → **Built-in web server**, port **8500**
+   - **Performance Monitoring Toolset** → change nothing → Next
 
-   ![ColdFusion installer: Select ColdFusion Server Profile, Development Profile selected](images/day1/cf-install-1-server-profile.png)
+     ![ColdFusion installer: Performance Monitoring Toolset, default hostname](images/day1/cf-install-3-performance-monitoring.png)
 
-   **B — Sub-components Installation:** **untick all four** boxes, then **Next**.
+   - **Administrator Password** → **`KPM@2026`** in both boxes → Next
 
-   ![ColdFusion installer: Sub-components Installation, four boxes to untick](images/day1/cf-install-2-sub-components.png)
+     ![ColdFusion installer: Administrator Password](images/day1/cf-install-4-admin-password.png)
 
-   **C — Performance Monitoring Toolset:** leave the hostname as it is, **Next**.
+   - **Enable RDS** → **untick** it (the boxes turn grey) → Next
 
-   ![ColdFusion installer: Performance Monitoring Toolset, default hostname](images/day1/cf-install-3-performance-monitoring.png)
+     ![ColdFusion installer: Enable RDS, untick the box](images/day1/cf-install-5-rds.png)
 
-   **D — Administrator Password:** type **`KPM@2026`** in both boxes, **Next**.
+   - Finish the installer.
 
-   ![ColdFusion installer: Administrator Password](images/day1/cf-install-4-admin-password.png)
+   > **Windows Firewall asks about ColdFusion or Java?** Click **Cancel**. Everything runs on your
+   > laptop only — and it stops classmates from opening your Administrator.
 
-   **E — Enable RDS:** **untick "Enable RDS"** — the password boxes grey out — **Next**.
-
-   ![ColdFusion installer: Enable RDS, untick the box](images/day1/cf-install-5-rds.png)
-
-3. **Install the Oracle driver** — **administrator** PowerShell (if it is already there, it just says so):
+3. **PowerShell (Admin)** — install the Oracle driver:
 
    ```powershell
    C:\ColdFusion2021\cfusion\bin\cfpm.bat install oracle
+   ```
+
+   It installs the driver, or says it is already there. Both are fine. Now restart ColdFusion:
+
+   ```powershell
    Restart-Service "ColdFusion 2021 Application Server"
    ```
 
-4. Open **`http://localhost:8500/CFIDE/administrator/`** and log in with **`KPM@2026`**. You land on
-   the **ColdFusion Administrator** — the control panel for the whole server:
+4. **Browser** — open `http://localhost:8500/CFIDE/administrator/` → password **`KPM@2026`** → Login.
+   You see the **ColdFusion Administrator**, the control panel for the server:
 
    ![ColdFusion Administrator home page with eleven tiles](images/day1/cf-admin-home.png)
 
-   **A quick tour — what each tile is for.** You only need **three** of them in this course.
+   You only use **two** tiles: **Data & Services** (database connections, step 1.6) and **Debugging &
+   Logging** (next step, and error logs later). Ignore the others. Close the blue *"Developer
+   mode"* banner with **×** — do **not** activate anything.
 
-   | Tile | What it is for, in plain words | In this course |
-   |---|---|---|
-   | **Data & Services** | the list of **database connections** (datasources) the pages may use | **Used** — you create `cf_test_crud` here (1.6) |
-   | **Debugging & Logging** | extra debug information on pages, and the server's **log files** (its diary of errors) | **Used** — step 5 below; later, **Log Files** shows errors such as `murid-api.log` |
-   | **Package Manager** | add or remove optional parts of ColdFusion, such as the **Oracle driver** | **Optional** — a click-button way to do step 3: find **oracle** → **Install** |
-   | Server Settings | general server options: memory, time limits, mail, caching | not needed |
-   | Security | the Administrator password, and who may open the Administrator | not needed (password set during install) |
-   | Performance Monitoring Toolset | a link to Adobe's separate monitoring product | not used |
-   | Extensions | add-ons written in other languages (custom tags, Java) | not used |
-   | Event Gateways | lets ColdFusion react to things other than web pages (messages, SMS) | not used |
-   | Packaging & Deployment | pack an app into one file to move it to another server | not used |
-   | Enterprise Manager | manage several ColdFusion servers together | not used |
-   | Licensing and Activation | enter a serial number to turn the free edition into a paid one | **ignore** |
+5. **Turn off debug output:** **Debugging & Logging** → **Debug Output Settings** → untick **Enable
+   Request Debugging Output** → **Submit Changes**.
 
-   > **The blue banner** — *"Your ColdFusion server is running in Developer mode…"* — is expected. Developer
-   > Edition is free and works only on this laptop, which is all the course needs. Close it with **×**; do
-   > **not** activate anything. (The address may show `127.0.0.1` instead of `localhost` — they are the same:
-   > "this computer".)
+   > **Why?** Otherwise ColdFusion adds a block of debug HTML to the end of every page. On Day 2
+   > that breaks the API's JSON answers.
 
-5. **Turn off debug output** (important for Day 2): **Debugging & Logging → Debug Output Settings** →
-   untick **Enable Request Debugging Output** → **Submit Changes**.
+### 1.3 — Get the course files
 
-> **Windows Firewall asks to allow ColdFusion / Java?** Click **Cancel** (or untick every network).
-> Everything in this course runs on your own laptop, so ColdFusion does not need to be reachable from the
-> network — and since everyone uses the same course password, keeping it local stops classmates from
-> opening your Administrator.
-
-> **Why step 5?** The Development Profile adds a block of debug HTML to the bottom of every page —
-> including API answers. JSON with HTML stuck on the end is broken JSON: Postman and the MCP server
-> cannot read it.
-
-### 1.3 — Install Git and get the course repo
-
-1. Install Git from **`https://git-scm.com/download/win`** (all defaults).
-2. Let your own account write into ColdFusion's web folder — **administrator** PowerShell, once:
+1. **Browser** — install Git from `https://git-scm.com/download/win`. Click **Next** on every screen.
+2. **PowerShell (Admin)** — let your account save files in ColdFusion's web folder:
 
    ```powershell
    icacls C:\ColdFusion2021\cfusion\wwwroot /grant "${env:USERNAME}:(OI)(CI)M"
    ```
 
-3. Clone the course into that folder — **normal** PowerShell:
+   You see: `Successfully processed 1 files`.
+
+3. **PowerShell** — open a **new**, normal one. Download the course:
 
    ```powershell
    git clone https://github.com/luqmanyusof/kpm-mcp-coldfusion.git C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion
    ```
 
-The folder **must** be called `kpm-mcp-coldfusion` — every link in these notes uses that name.
-From now on, **"the course folder"** means `C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion`.
+   It ends with `done.` The folder name **must** stay `kpm-mcp-coldfusion`. Every link in these
+   notes uses it.
 
-### 1.4 — Create the course user and load the tables
+### 1.4 — Create the database user and tables
 
-Open a **new** PowerShell window (so it finds `sqlplus`, which came with Oracle):
+1. **PowerShell** — open a **new** one (so it finds `sqlplus`, which came with Oracle). Go to the
+   course's `db` folder:
 
-```powershell
-cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\db
-sqlplus 'sys@//localhost:1521/XEPDB1' as sysdba '@create_user.sql'
-```
+   ```powershell
+   cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\db
+   ```
 
-It asks for a password — type the one you chose in 1.1 (nothing shows while you type). Expected:
-`user cfapp ready`. Now load the tables and sample rows:
+2. Create the course user:
 
-```powershell
-sqlplus -s 'cfapp/cfapp123@//localhost:1521/XEPDB1' '@schema.sql'
-```
+   ```powershell
+   sqlplus 'sys@//localhost:1521/XEPDB1' as sysdba '@create_user.sql'
+   ```
 
-Expected last lines: `pelajar rows: 5` and `murid rows: 6`.
+   It asks for a password: type **your Oracle password from 1.1** (nothing shows while you type) →
+   Enter. You see: `user cfapp ready`.
 
-> **Reset any time.** That second command drops and reloads both tables — run it whenever the data
-> gets messy during the course.
+3. Create the tables and sample data:
 
-### 1.5 — Install DBeaver (see inside the database)
+   ```powershell
+   sqlplus -s 'cfapp/cfapp123@//localhost:1521/XEPDB1' '@schema.sql'
+   ```
 
-DBeaver shows tables and rows in a window. You use it all course to check what the app — and later
-the AI — **really** changed.
+   The last lines say: `pelajar rows: 5` and `murid rows: 6`.
 
-1. Download **DBeaver Community** (free): **`https://dbeaver.io/files/dbeaver-ce-latest-windows-x86_64.exe`**
-   (from `https://dbeaver.io/download/`). Install with the defaults.
-2. **Database → New Database Connection → Oracle → Next.** On the **Main** tab:
+> **Data got messy later in the course?** Run step 3 again. It resets both tables.
+
+### 1.5 — Install DBeaver (to look inside the database)
+
+You use DBeaver all course to check what the app, and later the AI, **really** changed.
+
+1. **Browser** — download DBeaver Community (free) from
+   `https://dbeaver.io/files/dbeaver-ce-latest-windows-x86_64.exe`. Install with the defaults.
+2. In DBeaver: **Database → New Database Connection → Oracle → Next**. On the **Main** tab fill in:
 
    | Field | Value |
    |---|---|
    | Host | `localhost` |
    | Port | `1521` |
-   | Database | `XEPDB1`, and choose **Service Name** (not SID) |
+   | Database | `XEPDB1` — and pick **Service Name** (not SID) |
    | Authentication | Oracle Database Native |
    | Username / Password | `cfapp` / `cfapp123` — tick **Save password** |
 
-3. **Test Connection.** The first time, DBeaver offers to **download the Oracle driver** — click
-   **Download**. You should see **Connected**. Click **Finish**.
+3. Click **Test Connection**. The first time it offers to download the Oracle driver → **Download**.
+   You see **Connected** → **Finish**.
 
-### 1.6 — Create the datasource (ColdFusion → Oracle)
+### 1.6 — Connect ColdFusion to the database (the datasource)
 
-The pages ask for a datasource called `cf_test_crud`. In the Administrator:
+A **datasource** is a named database connection, saved once in ColdFusion. Pages then only say
+`datasource="cf_test_crud"`, so the database password is never in the code.
 
-1. **Data & Services → Data Sources.**
-2. Data Source Name `cf_test_crud` — Driver **Oracle** — **Add**.
+1. **Browser** — ColdFusion Administrator → **Data & Services → Data Sources**.
+2. Data Source Name: `cf_test_crud` · Driver: **Oracle** → **Add**.
 3. Fill in:
 
    | Field | Value |
@@ -266,136 +231,136 @@ The pages ask for a datasource called `cf_test_crud`. In the Administrator:
 
 4. **Submit.** The list shows `cf_test_crud` with status **OK**.
 
-> **Error mentioning SID or listener?** `XEPDB1` is a *service name*, not a SID. Edit the datasource,
-> clear the SID field, open **Show Advanced Settings**, put `ServiceName=XEPDB1` in **Connection
-> String**, and submit again.
+> **Error about SID or listener?** Edit the datasource → clear the SID field → **Show Advanced
+> Settings** → type `ServiceName=XEPDB1` in **Connection String** → Submit.
 
-### 1.7 — Install VS Code (code editor)
+### 1.7 — Install VS Code (the code editor)
 
-1. Download from **`https://code.visualstudio.com/`** and install (tick **"Open with Code"** on the
-   "Select Additional Tasks" screen).
-2. Open the course folder: **File → Open Folder…** → the course folder.
+1. **Browser** — download from `https://code.visualstudio.com/` and install. On the "Select
+   Additional Tasks" screen, tick **"Open with Code"**.
+2. In VS Code: **File → Open Folder…** → choose the course folder.
 
 **Checkpoint ✅ (Topic 1 complete)**
-- PowerShell `Get-Service Oracle*` shows `OracleServiceXE` and the `…TNSListener` service **Running**.
-- DBeaver: **CFAPP → Tables → MURID → Data** shows **6 students**.
-- `http://localhost:8500/kpm-mcp-coldfusion/basics/03-database.cfm` shows a table of **5** `pelajar` rows.
-- `http://localhost:8500/kpm-mcp-coldfusion/crud/` shows the list of **6** students.
+
+| Check | You should see |
+|---|---|
+| **PowerShell:** `Get-Service Oracle*` | `OracleServiceXE` and the `…TNSListener` service: **Running** |
+| **DBeaver:** CFAPP → Tables → MURID → **Data** tab | **6** students |
+| **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/basics/03-database.cfm` | a table of **5** rows |
+| **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/crud/` | a list of **6** students |
 
 **Common problems**
-- *Oracle installer fails or stops half way* → uninstall it (Apps → Oracle Database 21c Express
-  Edition), restart, and install again to `C:\oraclexe\` as administrator.
-- *`sqlplus` is not recognised* → open a **new** PowerShell. Still missing: use
-  `C:\oraclexe\dbhomeXE\bin\sqlplus.exe`.
-- *`ORA-12541: no listener`* → Windows **Services** → start the `Oracle…TNSListener` service.
-- *`ORA-12514: listener does not currently know of service`* → Oracle is still starting; wait 2
-  minutes. Still failing: restart `OracleServiceXE`.
-- *`ORA-01017: invalid username/password`* → the first 1.4 command needs the SYS password from 1.1;
-  everything else is `cfapp` / `cfapp123`.
-- *`ORA-00942: table or view does not exist`* → the second 1.4 command was skipped.
-- *DBeaver cannot download the Oracle driver* → a company proxy blocks it; ask the trainer for the
-  USB copy.
-- *`Datasource cf_test_crud could not be found`* → 1.6 not done, or the name is spelled differently.
-- *`localhost:8500` does not open* → Windows **Services** → start **ColdFusion 2021 Application Server**.
-- *`404` on a course page* → the folder is not called `kpm-mcp-coldfusion`, or not inside `wwwroot`.
-- *`git clone` or saving in VS Code says "Access denied"* → the `icacls` step in 1.3 was skipped.
+
+| You see | Do this |
+|---|---|
+| Oracle installer fails half way | Uninstall it (Settings → Apps), restart Windows, install again to `C:\oraclexe\` as administrator |
+| `sqlplus` is not recognised | Open a **new** PowerShell. Still missing? Use `C:\oraclexe\dbhomeXE\bin\sqlplus.exe` |
+| `ORA-12541: no listener` | Windows **Services** → start the `Oracle…TNSListener` service |
+| `ORA-12514: listener does not currently know of service` | Oracle is still starting. Wait 2 minutes. Still failing? Restart `OracleServiceXE` |
+| `ORA-01017: invalid username/password` | Step 1.4-2 needs **your** Oracle password. Everything else is `cfapp` / `cfapp123` |
+| `ORA-00942: table or view does not exist` | You skipped step 1.4-3 |
+| DBeaver cannot download the driver | A company network blocks it. Ask the trainer for the USB copy |
+| `Datasource cf_test_crud could not be found` | Redo 1.6. Check the spelling |
+| `localhost:8500` does not open | Windows **Services** → start **ColdFusion 2021 Application Server** |
+| `404` on a course page | The folder is not called `kpm-mcp-coldfusion`, or is not inside `wwwroot` |
+| "Access denied" in `git clone` or when saving in VS Code | You skipped step 1.3-2 (`icacls`) |
 
 ---
 
 ## Topic 2 — What MCP is, and how this course works (concept)
 
-**Prerequisite:** none — read this while the class finishes Topic 1.
+**Read this while the class finishes Topic 1.** Full version: [mcp-theory.md](mcp-theory.md), parts 1–3.
 
-**Goal:** know *why* we are building each piece before building it.
+- **Web apps are built for people** — log in, click, fill forms.
+- An **MCP server** gives an AI assistant its own entrance — a **"staff entrance"** next to the front
+  door for humans.
+- The AI can then use the app when you ask in plain English. The app still keeps the data and the
+  rules.
 
-> **Theory:** the full plain-words explanation is in [mcp-theory.md](mcp-theory.md), parts 1–3 —
-> [the problem MCP solves](mcp-theory.md#1--the-problem-mcp-solves), [the players](mcp-theory.md#2--the-players)
-> and [what a server can offer](mcp-theory.md#3--what-an-mcp-server-can-offer). Read them with this topic.
-
-**Web apps are built for people.** You log in, click, fill forms. Nothing happens unless someone is
-there doing it. An **MCP server** gives an AI assistant its own entrance — a **"staff entrance"**
-next to the front door for humans. The AI can then operate the app on request, in plain English,
-while the app still holds the data and enforces the rules.
-
-**The pieces you will have by Day 3:**
+**What you will have by Day 3:**
 
 ```
  You, in plain English
         |
- Claude Desktop ---- MCP (stdio) ----> MCP server (Node.js)          <- Day 2 PM - Day 3, built by the AI
-                                             |  HTTP + X-API-Key
-                                             v
- Web pages (crud/) --------------------> REST API (ColdFusion)       <- Day 2 AM, built by the AI
-        |                                    |
-        +----------------> Oracle XE (murid table) <-----------------+   <- today
+ Claude Desktop ---- MCP ----> MCP server (Node.js)       <- Day 2 PM - Day 3, built by the AI
+                                    |  HTTP + key
+                                    v
+ Web pages (crud/) ----------> REST API (ColdFusion)      <- Day 2 AM, built by the AI
+        |                           |
+        +---------> Oracle (murid table) <-------+        <- today
 ```
 
 **Who does what**
 
-| You (the human) | The AI (Continue + Gemma 4) |
+| You | The AI |
 |---|---|
-| install and run the environment | reads the existing code |
-| answer the interview, approve the plan | writes `REQUIREMENTS.md` and `PHASES.md` |
-| run every test and report what you saw | writes and fixes the code, one phase at a time |
+| install and run the tools | reads the existing code |
+| answer its questions, approve the plan | writes the plan (`REQUIREMENTS.md`, `PHASES.md`) |
+| run every test, report what you saw | writes and fixes the code, one small step at a time |
 | decide when something is "done" | never marks its own work as tested |
 
-**Checkpoint ✅** You can explain, in one sentence each: what an MCP server is for, and why the AI
-does not get to decide when a phase is finished.
+**Checkpoint ✅** In one sentence each: what is an MCP server for, and why doesn't the AI decide when
+a step is finished?
 
 ---
 
-## Topic 3 — ColdFusion basics: syntax and logic
+## Topic 3 — Your first ColdFusion code
 
-**Prerequisite:** Topic 1 (the `basics/` pages load).
+**Goal:** change a page, save, refresh, see the change. That is how you work in ColdFusion.
 
-**Goal:** read CFML well enough to follow what the AI writes later. Trainer demo — you follow along
-in the browser (`http://localhost:8500/kpm-mcp-coldfusion/basics/`) and in VS Code (`basics/`).
+**How it works:** a `.cfm` file is an HTML page plus tags that start with `cf`. ColdFusion runs the
+`cf` tags and sends plain HTML to the browser.
 
-**How CFML works.** A `.cfm` file is an HTML file. The server runs any tag starting with `cf` and
-sends plain HTML to the browser. You freely mix CFML and HTML in the same file.
+**Set up your screen** — put the two side by side:
+- **VS Code:** left panel → `basics` → open `01-syntax.cfm`.
+- **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/basics/01-syntax.cfm`
 
-### 3.1 — Variables and output (`01-syntax.cfm`)
+> Each lesson page shows its code twice: once as text for you to read (lines with `&lt;`), and once as
+> real code. **Always edit the real one** — the line numbers below point to it.
 
-- `<cfset x = ...>` creates a variable (shows nothing).
-- `<cfoutput> … </cfoutput>` prints, and text between `#hashes#` inside it is read as a variable.
-- Outside `<cfoutput>`, a `#` is just a normal character.
+### 3.1 — Variables (`01-syntax.cfm`)
 
-```cfml
-<cfset name = "Ahmad Danish">
-<cfoutput>Name: #name#, uppercase: #ucase(name)#</cfoutput>
-```
+| Code | What it does |
+|---|---|
+| `<cfset name = "Ahmad Danish">` | stores a value. Shows nothing. |
+| `<cfoutput>Name: #name#</cfoutput>` | prints it. `#name#` means "the value of `name`". |
 
-> The most common beginner mistake is forgetting `<cfoutput>` — then `#name#` prints literally.
+**Try it**
+1. **VS Code**, line 24: change `"Ahmad Danish"` to your own name. Save (**Ctrl+S**).
+2. **Browser:** press **F5**. The *Output* line and the *Uppercase* line show your name.
+3. **Break it on purpose.** Line 27: delete `<cfoutput>` and `</cfoutput>`. Save, **F5**. The page
+   now shows `#name#` as plain text — the most common beginner mistake.
+4. Put them back (**Ctrl+Z**), save, **F5**.
 
-### 3.2 — Logic, loops and data (`02-logic.cfm`)
+### 3.2 — Decisions, loops and lists (`02-logic.cfm`)
 
-- `<cfif> / <cfelseif> / <cfelse>` with word operators: `EQ NEQ GT LT GTE LTE`.
-- `<cfloop index="i" from="1" to="5">` repeats.
-- Arrays `["a","b"]` (they **start at index 1**) and structs `{ key = "value" }`.
+Open `basics/02-logic.cfm` in VS Code, and `…/basics/02-logic.cfm` in the browser.
 
-A struct is a set of key/value pairs — the same shape as **one database row**, which leads into the
-next topic.
+| Code | What it does |
+|---|---|
+| `<cfif markah GTE 80>A<cfelseif markah GTE 60>B<cfelse>C</cfif>` | chooses. Compare with words: `EQ NEQ GT LT GTE LTE` |
+| `<cfloop index="i" from="1" to="5"> … </cfloop>` | repeats |
+| `["Bestari","Cerdik","Amanah"]` | an **array** (a list). The first item is `[1]`, not `[0]` |
+| `{ name="Nur Aisyah", email="…" }` | a **struct** — named values, like **one database row** |
 
-**Try it:** change a value in `01-syntax.cfm`, save, refresh the browser. `.cfm` changes show on the
-next refresh — no restart needed.
+**Try it** (save and **F5** after each change)
+1. Line 19: change `markah = 75` to `markah = 85`. The output changes from **B** to **A**.
+2. Line 29: change `to="5"` to `to="10"`. The loop now prints 1 to 10.
+3. Line 37: add `,"Dinamik"` after `"Amanah"`. The total changes to **4**.
 
-**Checkpoint ✅** You changed a variable in `01-syntax.cfm` and saw the new value in the browser.
+`.cfm` changes show on the next refresh — no restart needed.
+
+**Checkpoint ✅** You changed a value in each page and saw the new result after **F5**.
 
 ---
 
 ## Topic 4 — Read the database with ColdFusion
 
-**Prerequisite:** Topic 3, and the datasource from 1.6.
+**Goal:** see how a page reads Oracle. Every page in the app, and the API tomorrow, uses this pattern.
 
-**Goal:** see how a page reads Oracle — the pattern every page in the app (and the API) uses.
-Open `basics/03-database.cfm` in the browser and in VS Code.
+**Open:** `basics/03-database.cfm` in VS Code, and `…/basics/03-database.cfm` in the browser (5 rows).
 
-- The **datasource** `cf_test_crud` is defined once in the ColdFusion Administrator (1.6), so every
-  page can use it **without knowing the password**.
-- `<cfquery name="pelajar" datasource="cf_test_crud"> SELECT … </cfquery>` runs SQL (Structured
-  Query Language) and stores the result in `pelajar`.
-- `<cfoutput query="pelajar"> … </cfoutput>` repeats its body once per row; `pelajar.recordCount`
-  is the row count.
+**The three pieces** (a short version of what is in the file):
 
 ```cfml
 <cfquery name="pelajar" datasource="cf_test_crud">
@@ -405,255 +370,269 @@ Open `basics/03-database.cfm` in the browser and in VS Code.
 <cfoutput query="pelajar">#pelajar.name# - #pelajar.email#<br></cfoutput>
 ```
 
-**The one safety rule.** When a query uses a value from the user (like `url.id`), never paste it
-into the SQL. Wrap it in `<cfqueryparam>` so it cannot be abused (**SQL injection**):
+| Piece | What it does |
+|---|---|
+| `datasource="cf_test_crud"` | which database. The connection you made in 1.6 — the password stays there |
+| `<cfquery name="pelajar">` | runs the SQL and stores the rows in `pelajar` |
+| `<cfoutput query="pelajar">` | repeats once per row. `#pelajar.recordCount#` is the number of rows |
+
+**Try it** (edit line 29, save and **F5** after each change)
+1. **Sort the other way.** Change `ORDER BY name` to `ORDER BY name DESC`. The list flips.
+2. **Filter.** Change the line to:
+
+   ```sql
+   SELECT id, name, email FROM pelajar WHERE id <= 3 ORDER BY name
+   ```
+
+   The page now says **3 rows**.
+3. **Break it on purpose.** Line 28: change `cf_test_crud` to `cf_test_crudX`. You get an error:
+   *Datasource cf_test_crudX could not be found*. Now you know what that error means.
+4. **Put everything back** — **PowerShell:**
+
+   ```powershell
+   git -C C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion checkout -- basics
+   ```
+
+   This restores all three lesson pages. **F5** shows 5 rows again.
+
+**The one safety rule.** When a query uses a value typed by a user (like `url.id`), never paste it into
+the SQL. Wrap it in `<cfqueryparam>` — this stops **SQL injection**:
 
 ```cfml
 WHERE id = <cfqueryparam value="#url.id#" cfsqltype="cf_sql_integer">
 ```
 
-> This rule comes back on Day 2 as a line in the AI's security principles — and you will check the
-> AI's code for it.
+You will check the AI's code for this rule on Day 2.
 
-**Checkpoint ✅** You can point to the datasource name, the `<cfquery>`, and the `<cfqueryparam>` in
-`03-database.cfm`.
+**Checkpoint ✅** You changed the query, saw the result change, and put the page back.
 
 ---
 
-## Topic 5 — Tour the `murid` table in DBeaver
+## Topic 5 — Look at the `murid` table in DBeaver
 
-**Prerequisite:** DBeaver connected (1.5).
+**Goal:** know the data the course is about, and the rules the database already enforces.
 
-**Goal:** know the data the whole course is about, and the rules the database already enforces.
+1. **DBeaver:** open **CFAPP → Tables → MURID**.
+2. **Properties → Columns** tab shows the columns. The **Data** tab shows the 6 students.
 
-In DBeaver open **CFAPP → Tables → MURID**. The **Properties → Columns** tab shows the structure;
-the **Data** tab shows the 6 students.
-
-| Column | Type | Rule | Meaning |
-|---|---|---|---|
-| `id` | `NUMBER(10)` | primary key, from sequence `murid_seq` | set by the database |
-| `nama` | `VARCHAR2(100)` | required | full name |
-| `no_kp` | `VARCHAR2(14)` | required, **unique** | IC (identity card) number, e.g. `090312-10-5217` |
-| `jantina` | `VARCHAR2(10)` | `Lelaki` or `Perempuan` | gender |
-| `tingkatan` | `NUMBER(1)` | 1–5 | form (school year) |
-| `kelas` | `VARCHAR2(30)` | required | class name |
-| `tarikh_lahir` | `DATE` | required | date of birth |
-| `bangsa` | `VARCHAR2(10)` | `Melayu`, `Cina`, `India`, `Lain-lain`; default `Melayu` | ethnicity |
-| `agama` | `VARCHAR2(30)` | required | religion |
-| `pendapatan_isi_rumah` | `NUMBER(10,2)` | default 0 | household income, RM (Malaysian ringgit) per month |
-| `bilangan_adik_beradik` | `NUMBER(3)` | default 0 | number of siblings |
-| `created_at` / `updated_at` | `TIMESTAMP` | set automatically (a trigger keeps `updated_at` current) | audit times |
-
-The small `pelajar` table (`id`, `name`, `email`) is only for the lessons and the Day 2 demo.
-
-> **Oracle vs MySQL, if you know MySQL:** no `AUTO_INCREMENT` — ids come from a **sequence**; no
-> `ENUM` — allowed values are a **CHECK constraint**; column names come back in CAPITALS.
-
-**Tip:** DBeaver does not refresh by itself — click the table and press **F5**. Use DBeaver to
-**look**, not to edit: if you change rows by hand during a test, you cannot tell what the AI did.
-
-**Checkpoint ✅** You can name three rules the database enforces on `murid` (for example: unique
-`no_kp`, `tingkatan` 1–5, `jantina` only two values).
-
----
-
-## Topic 6 — Run and understand the CRUD app
-
-**Prerequisite:** Topics 4 and 5.
-
-**Goal:** use the existing app like a user, then see how each page works. This is the "existing
-app" the rest of the course connects an AI to — **nothing here is written by you**.
-
-Open **`http://localhost:8500/kpm-mcp-coldfusion/crud/`** (the home page redirects to the list).
-Add a student, open them, edit them, delete them — and after each step press **F5** in DBeaver.
-
-**How it runs**
-1. **The datasource** — `crud/Application.cfc` makes `cf_test_crud` this app's default.
-2. **The shared layout** — `includes/_header.cfm` and `_footer.cfm` hold the page top (Bootstrap +
-   navigation) and bottom; each page pulls them in with `<cfinclude template="includes/_header.cfm">`.
-
-**The five pages**
-
-| Page | Does | Worth noticing |
+| Column | Rule | Meaning |
 |---|---|---|
-| `list.cfm` | Read all | one `SELECT`, looped into a table; a green banner from `url.msg` after a change |
-| `view.cfm` | Read one | `<cfparam name="url.id" default="0">`; the id is guarded with `<cfqueryparam>`; "not found" + `<cfabort>` |
-| `create.cfm` | Create | acts only on `POST`; validates into an `errors` array; `INSERT` with every value in `<cfqueryparam>`; then **Post/Redirect/Get** (`<cflocation url="list.cfm?msg=created">`) |
-| `_form_fields.cfm` | the shared form | used by both create and edit; every value printed with `encodeForHTMLAttribute()` |
-| `edit.cfm` | Update | `GET` pre-fills the form from the row; `POST` validates and runs `UPDATE … WHERE id = <cfqueryparam …>` |
-| `delete.cfm` | Delete | `GET` shows what will be deleted; the delete itself is a **POST** button, never a link |
+| `id` | set by the database (sequence `murid_seq`) | student number |
+| `nama` | required | full name |
+| `no_kp` | required, **unique** | IC number, e.g. `090312-10-5217` |
+| `jantina` | `Lelaki` or `Perempuan` | gender |
+| `tingkatan` | 1–5 | form (school year) |
+| `kelas` | required | class name |
+| `tarikh_lahir` | required | date of birth |
+| `bangsa` | `Melayu`, `Cina`, `India`, `Lain-lain` (default `Melayu`) | ethnicity |
+| `agama` | required | religion |
+| `pendapatan_isi_rumah` | default 0 | household income, RM per month |
+| `bilangan_adik_beradik` | default 0 | number of siblings |
+| `created_at` / `updated_at` | set automatically | when the row was added / changed |
 
-**The ideas worth remembering**
-- **`cgi.request_method`** tells GET from POST — one page both shows a form and handles it.
-- **`<cfqueryparam>`** on every user value stops SQL injection — non-negotiable.
-- **Post/Redirect/Get** (`<cflocation>` after a write) stops double submits.
-- **`encodeForHTML()` / `encodeForHTMLAttribute()`** when printing user data stops broken pages and
-  XSS (cross-site scripting).
-- **Delete needs a confirmation step.** The MCP you build keeps this idea for the AI.
+The small `pelajar` table (`id`, `name`, `email`) is only for the lessons.
 
-**Checkpoint ✅** You added, edited and deleted a student in the app, and saw each change in DBeaver.
+**Two habits**
+- DBeaver does not refresh by itself: click the table, press **F5**.
+- Use DBeaver to **look**, not to edit. If you change rows by hand, you cannot tell what the AI did.
+
+**Checkpoint ✅** Name three rules the database enforces on `murid` (e.g. unique `no_kp`, `tingkatan`
+1–5, `jantina` only two values).
 
 ---
 
-## Topic 7 — Set up the AI assistant (Continue + Ollama Cloud + Token Harbor)
+## Topic 6 — Use the existing student app
 
-**Prerequisite:** VS Code (1.7).
+**Goal:** use the app like a normal user, then see which file does what. You don't write any code here.
 
-**Goal:** get an AI assistant inside VS Code that can read and edit the course files. **Continue**
-is the VS Code extension; it talks to two AI providers:
+**Try it** — **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/crud/`
+1. **Add** a student. Then **DBeaver:** **F5** on MURID → the new row is there.
+2. **Open** the student.
+3. **Edit** the class. **DBeaver:** **F5** → changed.
+4. **Delete** the student. **DBeaver:** **F5** → gone.
 
-| Provider | Models | Cost | Key needed in Continue? |
-|---|---|---|---|
-| **Ollama Cloud** (main) | Gemma 4, gpt-oss | free account, with usage limits | no — the Ollama app signs you in |
-| **Token Harbor** (backup) | GPT, Claude, Gemini, DeepSeek, Qwen… | pay per use; the account is free | yes — one `thk_live_…` key |
+**Which file does what** (in the `crud/` folder)
 
-### 7.1 — Ollama account and app
+| File | Does |
+|---|---|
+| `Application.cfc` | sets `cf_test_crud` as the datasource for every page in the folder |
+| `list.cfm` | shows all students |
+| `view.cfm` | shows one student |
+| `create.cfm` | the "Add" form, and saves the new student |
+| `edit.cfm` | the "Edit" form, and saves the changes |
+| `delete.cfm` | asks "are you sure?", then deletes |
+| `_form_fields.cfm` | the form fields, shared by create and edit |
+| `includes/_header.cfm`, `_footer.cfm` | the top and bottom of every page |
 
-1. Go to **`https://ollama.com`** → **Sign up** (work email or Google), confirm the email.
-2. Install the app from **`https://ollama.com/download`**.
-3. In a **new** PowerShell window run `ollama signin`. The browser opens — log in and click
-   **Connect** to link this laptop to your account.
-4. Test the cloud model (it runs on Ollama's servers, not your laptop):
+**Four ideas worth remembering** — the AI's code must follow them too:
+- **`<cfqueryparam>`** on every value from a user — stops SQL injection.
+- **`encodeForHTML()`** when printing user data — stops broken pages and XSS attacks.
+- After saving, the page **redirects** to the list (`<cflocation>`) — so F5 doesn't save twice.
+- **Delete asks first.** The MCP you build keeps this idea for the AI.
+
+**Checkpoint ✅** You added, edited and deleted a student, and saw each change in DBeaver.
+
+---
+
+## Topic 7 — Set up the AI in VS Code
+
+**Goal:** an AI assistant inside VS Code that can read and edit the course files.
+
+| Part | What it is |
+|---|---|
+| **Continue** | the VS Code extension you chat with |
+| **Ollama Cloud** (main AI) | Gemma 4 — free account with usage limits |
+| **Token Harbor** (backup AI) | many models, pay per use — free account, top up **only** if the trainer says so |
+
+### 7.1 — Ollama
+
+1. **Browser:** `https://ollama.com` → **Sign up** → confirm the email.
+2. **Browser:** install the app from `https://ollama.com/download`.
+3. **PowerShell** — open a **new** one:
+
+   ```powershell
+   ollama signin
+   ```
+
+   The browser opens → log in → **Connect**.
+4. Test it:
 
    ```powershell
    ollama run gemma4:31b-cloud "Say hello in five words"
    ```
 
-A short reply = done. Your usage is at `https://ollama.com/settings` — the free plan has hourly and
-weekly limits.
+   A short reply = done.
 
-### 7.2 — Token Harbor account and API key
+### 7.2 — Token Harbor key
 
-1. Go to **`https://tokenharbor.ai`** → **Sign up**. Free, no card; the wallet starts at $0.
-   **Top up only if your trainer says so** — the course runs on Ollama.
-2. Dashboard → **API keys**. Copy the **Universal Key** (`thk_live_…`) **straight away** — it is shown
-   only once.
-3. Store it where Continue can read it, but the AI and git cannot — Continue's own `.env` file:
+1. **Browser:** `https://tokenharbor.ai` → **Sign up** (free, no card).
+2. Dashboard → **API keys** → copy the **Universal Key** (`thk_live_…`) **now** — it is shown only once.
+3. **PowerShell** — open a private settings file for Continue:
 
    ```powershell
    New-Item -ItemType Directory -Force $HOME\.continue | Out-Null
-   Add-Content $HOME\.continue\.env "TOKEN_HARBOR_API_KEY=paste-your-thk_live-key-here"
-   notepad $HOME\.continue\.env      # check it: one line, no spaces around =
+   notepad $HOME\.continue\.env
    ```
 
-> **Never** put this key in the course folder, in a chat message, or in a screenshot — it spends real
-> money. If it leaks: dashboard → API keys → delete it, make a new one.
+   Notepad asks to create the file → **Yes**. Type **one line** (your key after the `=`, no spaces):
+
+   ```
+   TOKEN_HARBOR_API_KEY=thk_live_your-key-here
+   ```
+
+   Save (**Ctrl+S**) and close Notepad.
+
+> **Never** put this key in the course folder, in the AI chat, or in a screenshot — it spends real
+> money. Leaked it? Dashboard → API keys → delete it and make a new one.
 
 ### 7.3 — Continue
 
-1. VS Code → **Extensions** (Ctrl+Shift+X) → search **Continue** → **Install**.
-2. Give Continue the course models:
+1. **VS Code:** **Extensions** (**Ctrl+Shift+X**) → search **Continue** → **Install**.
+2. **PowerShell** — give Continue the course settings:
 
    ```powershell
    Copy-Item C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\config\continue-config.yaml $HOME\.continue\config.yaml
    ```
 
-   The config refers to the key as `${{ secrets.TOKEN_HARBOR_API_KEY }}` — Continue fills it in from
-   the `.env` file, so the key is never written in the config.
-3. **Ctrl+Shift+P → Reload Window.** Open the Continue panel (its icon on the left bar), set the mode
-   to **Agent**, and type `hello` once with **Gemma 4 31B (Ollama Cloud)** and once with **Token
-   Harbor (backup)**.
+3. **VS Code:** **Ctrl+Shift+P** → type `Reload Window` → **Enter**.
+4. Open Continue (its icon on the left bar). Set the mode to **Agent**.
+5. Pick **Gemma 4 31B (Ollama Cloud)** → type `hello` → it replies.
+6. Pick **Token Harbor (backup)** → type `hello` → it replies.
 
 **Checkpoint ✅** Both models reply to `hello` in Agent mode.
 
 **Common problems**
-- *`ollama` is not recognised* → close and reopen PowerShell after installing Ollama.
-- *No Gemma / Token Harbor model in Continue* → the config was not copied (7.3 step 2); Reload Window.
-- *Gemma: `unauthorized` or no reply* → run `ollama signin` again; check usage limits.
-- *Token Harbor `401` / `invalid api key`* → fix the `.env` line (`TOKEN_HARBOR_API_KEY=…`, no quotes
-  or spaces), Reload Window.
-- *Token Harbor `402` / `insufficient balance`* → that model needs credit; ask the trainer.
-- *Token Harbor `model not found`* → copy the exact model ID from `https://tokenharbor.ai/models`
-  into `config.yaml`.
+
+| You see | Do this |
+|---|---|
+| `ollama` is not recognised | Close PowerShell and open a new one |
+| No Gemma / Token Harbor in Continue | Redo 7.3 step 2, then Reload Window |
+| Gemma: `unauthorized` or no reply | Run `ollama signin` again; check your limits at `https://ollama.com/settings` |
+| Token Harbor `401` / `invalid api key` | Fix the `.env` line: `TOKEN_HARBOR_API_KEY=…`, no quotes, no spaces. Reload Window |
+| Token Harbor `402` / `insufficient balance` | That model needs credit. Ask the trainer |
 
 ---
 
-## Topic 8 — The AI framework (concept)
+## Topic 8 — How the AI plans before it builds (concept)
 
-**Prerequisite:** Topic 7 (the AI replies), Topic 6 (you know the app).
+Two files in `framework/` make the AI **plan first**, instead of rushing into code:
 
-**Goal:** understand the two files that make the AI **plan before it builds** — so it builds the
-project instead of just describing it.
-
-| File (in `framework/`) | What it is |
+| File | What it is |
 |---|---|
-| `START_PROMPT.md` | The short message you paste into Continue to begin. |
-| `project_starter.json` | The AI's **operating instructions**: the 6 interview questions, the rules, the security principles, and the format of the plan it must write. You do not edit it. |
+| `START_PROMPT.md` | the message you paste into Continue to begin |
+| `project_starter.json` | the AI's rules: 6 questions, safety rules, the plan format. **You don't edit it.** |
 
-The same two files are used **twice** — for the **REST API** (today) and for the **MCP server**
-(Day 2 afternoon). Question 1 of the interview is where you choose.
-
-**How the framework works**
+You use them **twice**: for the REST API (today) and for the MCP server (Day 2).
 
 ```
  you paste START_PROMPT.md
           |
-          v
- AI reads the project quietly  --->  asks 6 questions, ONE at a time  --->  you answer
+ AI reads the project  --->  asks 6 questions, ONE at a time  --->  you answer
           |
-          v
- AI shows a scope summary + acceptance checks  --->  you correct it  --->  you type "approved"
+ AI shows a summary  --->  you correct it  --->  you type "approved"
           |
-          v
  AI writes REQUIREMENTS.md (what)  +  PHASES.md (how, in small steps)
           |
-          v
- Day 2: one phase at a time  --->  RUN TEST  --->  you mark it Verified  --->  next phase
+ Day 2: one phase  --->  you run its test  --->  "Verified"  --->  next phase
 ```
 
-**The 6 questions (prepare your answers)**
+**Your answers for today** (your own words are fine — short beats long):
 
-| # | Question | Type | Suggested answer for the REST API |
-|---|---|---|---|
-| 1 | What are we building in this project? | pick | **1** — REST API endpoint |
-| 2 | In one sentence, what should it do and what problem does that solve? | type | "Let other programs — and later an AI — read and manage student records without using the web pages." |
-| 3 | Which of these should this project work with? | type | the `murid` table (the AI lists what it found in the code) |
-| 4 | Which operations should it expose? | pick | **1** — All CRUD |
-| 5 | Should access require a secret key, such as an X-API-Key header? | pick | **1** — Yes |
-| 6 | What must be rejected as invalid, and what should happen when something goes wrong? | type | "Reject missing required fields, a wrong IC format, tingkatan outside 1–5, and unknown fields. On any error return a short message — never SQL or a stack trace." |
+| # | The AI asks | You answer |
+|---|---|---|
+| 1 | What are we building? | **1** — REST API endpoint |
+| 2 | What should it do, and why? | "Let other programs — and later an AI — read and manage student records without using the web pages." |
+| 3 | Which data should it work with? | the `murid` table |
+| 4 | Which operations? | **1** — All CRUD |
+| 5 | Require a secret key? | **1** — Yes |
+| 6 | What must be rejected, and what happens on errors? | "Reject missing required fields, a wrong IC format, tingkatan outside 1–5, and unknown fields. On any error return a short message — never SQL or a stack trace." |
 
-Your own words are fine. Short and specific beats long.
-
-**Checkpoint ✅** You can say what `REQUIREMENTS.md` and `PHASES.md` are, and who approves them.
+**Checkpoint ✅** You can say what `REQUIREMENTS.md` and `PHASES.md` are, and who approves them (you).
 
 ---
 
 ## Topic 9 — Plan your REST API with the AI
 
-**Prerequisite:** Topic 8.
+**Goal:** the AI interviews you and writes the plan. **No code today.**
 
-**Goal:** let the AI interview you and write the plan for the REST API. **No code today.**
-
-**Step 1 — make your workspace** (a copy of the CRUD app with the framework dropped in):
+**Step 1 — make your workspace** (a copy of the student app, plus the two framework files).
+**PowerShell** — paste all five lines at once:
 
 ```powershell
 cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion
+New-Item -ItemType Directory -Force workspace | Out-Null
 Copy-Item crud workspace\rest-api -Recurse
 Copy-Item framework\START_PROMPT.md, framework\project_starter.json workspace\rest-api
 code workspace\rest-api
 ```
 
-Check the copy runs: `http://localhost:8500/kpm-mcp-coldfusion/workspace/rest-api/`.
+A new VS Code window opens on `workspace\rest-api`. **Browser:** check the copy works —
+`http://localhost:8500/kpm-mcp-coldfusion/workspace/rest-api/`
 
-**Step 2 — start the interview.** In the new VS Code window open Continue, pick **Gemma 4 31B**,
-mode **Agent**. Open `START_PROMPT.md`, copy all of it, paste it into Continue, send.
+**Step 2 — start.** In the new VS Code window:
+1. Open Continue → pick **Gemma 4 31B** → mode **Agent**.
+2. Open `START_PROMPT.md` → **Ctrl+A**, **Ctrl+C**.
+3. Paste into Continue → send.
 
-**Step 3 — answer the 6 questions**, one at a time. Expect `Question 3 of 6: …` followed by a
-`Hint:` line.
+**Step 3 — answer the 6 questions** (Topic 8), one at a time. Each looks like
+`Question 3 of 6: …` with a `Hint:` line under it.
 
-**Step 4 — check the scope summary before you approve:**
+**Step 4 — check the summary before you approve.** Tick each line:
 - [ ] only the `murid` table, and the operations you picked
 - [ ] every request needs the `X-API-Key` header; a wrong or missing key gets **401**
-- [ ] the key is read from **`C:\course-secrets\api-key.txt`** — if it says anything else, type:
+- [ ] the key is read from **`C:\course-secrets\api-key.txt`** — if not, type:
       *"The key must be read from the file C:\course-secrets\api-key.txt, never written in code."*
 - [ ] SQL uses bind parameters only (the `<cfqueryparam>` rule from Topic 4)
-- [ ] acceptance checks: one per operation, one rejected input, one wrong key
+- [ ] test checks: one per operation, one rejected input, one wrong key
 
-Fix anything wrong in plain words, then type **approved**.
+Anything wrong? Say so in plain words. All good? Type **approved**.
 
-**Step 5 — read the two files it writes.** `REQUIREMENTS.md` is *what* you agreed. `PHASES.md` is the
-build plan: every phase ends in a **RUN TEST** with an expected result. A phase with no test you can
-run? Ask the AI to merge it with the next one. **Do not let it start coding yet.**
+**Step 5 — read the two files it writes.**
+- `REQUIREMENTS.md` — *what* you agreed.
+- `PHASES.md` — the build plan. Every phase must end in a **RUN TEST** you can run. A phase with no
+  test? Ask the AI to merge it into the next one.
+
+**Do not let it start coding yet.**
 
 **When the AI misbehaves** (it will — correcting it is part of the skill)
 
@@ -662,42 +641,33 @@ run? Ask the AI to merge it with the next one. **Do not let it start coding yet.
 | asks several questions at once, or answers for you | `Stop. You answered for me. Ask Question 3 again and wait for my answer.` |
 | asks a question that is not one of the 6 | `That question is not in the interview array. Ask Question 4 from project_starter.json, word for word.` |
 | asks which database or which fields | `Do not ask me that - read it from the code, as the defaults say.` |
-| starts writing code or files before you approved | `Undo that. No code or files until I type approved.` |
+| writes code or files before you approved | `Undo that. No code or files until I type approved.` |
 | uses emojis, tables or strange symbols | `Plain text only, as message_format in the starter says.` |
-| goes round in circles or forgets the rules | start a **new chat** and paste `START_PROMPT.md` again |
-| is slow or keeps failing | switch to **gpt-oss 120B**, or to **Token Harbor (backup)**, and start a new chat |
+| goes round in circles | start a **new chat** and paste `START_PROMPT.md` again |
+| is slow or keeps failing | switch to **gpt-oss 120B** or **Token Harbor (backup)**, and start a new chat |
 
-> **Why this matters:** in real projects the AI makes the same mistakes. The framework does not make
-> it perfect — it makes its mistakes *visible and easy to correct*.
-
-**Checkpoint ✅** `workspace\rest-api` contains `REQUIREMENTS.md` and `PHASES.md`, and you agree with
-both.
+**Checkpoint ✅** `workspace\rest-api` has `REQUIREMENTS.md` and `PHASES.md`, and you agree with both.
 
 ---
 
-## End-of-Day 1 — final working state
+## End of Day 1 — what you should have
 
-You should now have:
-- **Oracle XE** running as a Windows service, with the `cfapp` user and the `murid` + `pelajar` tables.
-- **ColdFusion 2021** at `http://localhost:8500`, with the `cf_test_crud` datasource **OK**.
-- **DBeaver** connected to `XEPDB1` as `cfapp`.
-- The course repo in `C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion`, with `basics/` and
-  `crud/` working in the browser.
-- **Continue** in VS Code, answering from **Gemma 4** and **Token Harbor**.
-- `workspace\rest-api\` — a copy of the app, plus the approved **`REQUIREMENTS.md`** and
-  **`PHASES.md`** for your REST API.
+- **Oracle XE** running, with the `cfapp` user and the `murid` + `pelajar` tables.
+- **ColdFusion 2021** at `http://localhost:8500`, datasource `cf_test_crud` **OK**.
+- **DBeaver** connected as `cfapp`.
+- The course folder, with `basics/` and `crud/` working in the browser.
+- **Continue** in VS Code, answering from Gemma 4 and Token Harbor.
+- `workspace\rest-api\` — a copy of the app, plus your approved **`REQUIREMENTS.md`** and **`PHASES.md`**.
 
 **Security recap**
-- The database password lives in the **ColdFusion Administrator**, not in any `.cfm` or `.cfc` file.
-- The Token Harbor key lives in `%USERPROFILE%\.continue\.env` — outside the repo, outside anything
-  the AI reads.
+- The database password is in the ColdFusion Administrator — not in any code file.
+- The Token Harbor key is in `%USERPROFILE%\.continue\.env` — outside the course folder.
 - Every value from a user goes through **`<cfqueryparam>`**.
 
-**Stretch goals (if time remains)**
-- Add one new field to the lesson page `02-logic.cfm` (a struct with your own details) and print it.
-- In DBeaver, run `SELECT tingkatan, COUNT(*) FROM murid GROUP BY tingkatan` — what would a plain-English
-  question for this look like?
-- Read `framework/project_starter.json` → `security_principles`. Which one did the CRUD app already follow?
+**Extra, if you finish early**
+- In `02-logic.cfm`, add a struct with your own details and print it.
+- In DBeaver, run `SELECT tingkatan, COUNT(*) FROM murid GROUP BY tingkatan`. How would you ask
+  for this in plain English?
 
-**Tomorrow (Day 2):** the AI builds your REST API one phase at a time and you test it with Postman;
-in the afternoon you plan the MCP server and get its first tool working.
+**Tomorrow (Day 2):** the AI builds your REST API one phase at a time, you test it in Postman, then
+you plan the MCP server and get its first tool working.

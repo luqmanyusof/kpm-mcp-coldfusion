@@ -3,53 +3,40 @@
 > *Part of **MCP Development for Web Applications** — AI-driven development with ColdFusion, Oracle
 > and Node.js (Day 2 of 3).*
 
-This morning the AI **builds yesterday's plan** one phase at a time, you **test every phase**, and by
-lunch the student-records app has a second door: a **REST API** (Representational State Transfer
-Application Programming Interface) protected by a key. This afternoon you learn what an **MCP
-server** (Model Context Protocol) is, plan one with the same framework, and get its **first tool**
-working end to end.
+**Morning:** the AI builds yesterday's plan, one phase at a time, and you test every phase. By lunch
+the app has a **REST API** — a door for *programs*, protected by a key.
 
-**Why an API first?** The web pages are a door for *people*. An AI — through the MCP server — needs a
-door for *programs*: fixed URLs, JSON (JavaScript Object Notation) in and out, and a key. The MCP
-server never touches the database; it only knocks on this door, so all the app's rules still apply.
+**Afternoon:** you learn what an **MCP server** is, plan one with the same framework, and get its
+**first tool** working.
 
-**Stack:** Adobe ColdFusion 2021, Oracle XE, DBeaver, VS Code + Continue (Gemma 4 / Token Harbor),
-**Postman** (API testing), **Node.js** (runs the MCP server), the **MCP Inspector** (tests MCP tools
-without an AI app).
+**Why an API first?** The web pages are a door for people. An AI needs a door for programs: fixed
+URLs, JSON in and out, and a key. The MCP server only knocks on this door — it never touches the
+database — so all the app's rules still apply.
 
-**What you build today**
-- A **secret API key** in a file outside the web folder
-- **Your REST API** over `murid` — list, get, create, update, delete — every call needs the key
-- A **Postman collection** (written by the AI) that tests every acceptance check
-- **`API.md`** — how the API works, the blueprint for the MCP server
-- **Your MCP plan** — `REQUIREMENTS.md` + `PHASES.md` for a Node.js MCP server
-- The **first MCP tool** (`list_murid`) working end to end in the MCP Inspector
+**Today you will**
+- make a secret API key
+- let the AI build **your REST API** (list, get, add, change, delete students)
+- test it in **Postman**
+- write **`API.md`** — how the API works
+- plan the **MCP server** with the AI
+- get the first MCP tool, **`list_murid`**, working
 
-**What is NOT in scope today:** writing code yourself, the other four MCP tools (Day 3 morning),
-Claude Desktop (Day 3), authentication beyond one shared key, deploying anything off your laptop.
+**Not today:** writing code yourself, the other four MCP tools (Day 3), Claude Desktop (Day 3),
+putting anything on a real server.
 
-**How this day builds (prerequisites first, easy first):**
-1. Ready the Day 2 tools → 2. REST fundamentals (concept) → 3. What an API looks like inside
-(trainer demo) → 4. **Build the API** phase by phase with the AI → 5. **Test everything in Postman**
-→ 6. Write down how it works (`API.md`) → 7. MCP architecture (concept) → 8. **Plan the MCP** with
-the AI → 9. **First tool end to end.**
-
-> **See it before the AI builds it:** Topic 3 shows a tiny API built by hand, so the one the AI builds
-> in Topic 4 holds no surprises — you know what to look for in its code.
-
-> **Carry-over:** you need Day 1's `workspace\rest-api\` with the approved `REQUIREMENTS.md` and
-> `PHASES.md`. Missing them? Redo **Day 1 Topic 9** (about 20 minutes), or copy a neighbour's two files.
+> **Need from Day 1:** `workspace\rest-api\` with the approved `REQUIREMENTS.md` and `PHASES.md`.
+> Missing? Redo **Day 1 Topic 9** (about 20 minutes), or copy a neighbour's two files.
 
 ---
 
-## Topic 1 — Ready your Day 2 tools
+## Topic 1 — Get today's tools ready
 
-Three quick jobs.
+### 1.1 — Make the API key
 
-### 1.1 — Create the API key file
+The API only answers requests that carry this key. It is kept **outside** the course folder, so it
+is never in the code, in git, or seen by the AI.
 
-The REST API only answers requests that carry this key. It lives **outside** the web folder, so it is
-never in the code, in git, or in anything the AI reads.
+**PowerShell** — paste all three lines:
 
 ```powershell
 New-Item -ItemType Directory -Force C:\course-secrets | Out-Null
@@ -57,84 +44,95 @@ New-Item -ItemType Directory -Force C:\course-secrets | Out-Null
 Get-Content C:\course-secrets\api-key.txt
 ```
 
-The last line prints your key. You paste it into **Postman** and (on Day 3) **Claude Desktop** only —
-**never into the AI chat**.
+The last line prints your key (32 letters and numbers). You paste it into **Postman** today and
+**Claude Desktop** on Day 3 — **never into the AI chat**.
 
-### 1.2 — Install Postman (API testing)
+### 1.2 — Install Postman (to test the API)
 
-1. Download from **`https://www.postman.com/downloads/`** (Windows 64-bit) and run it.
-2. Sign in with a free account (recommended — it saves your work), or choose the lightweight client
-   without an account.
+1. **Browser:** download from `https://www.postman.com/downloads/` (Windows 64-bit) and install.
+2. Sign in with a free account (it saves your work), or use it without an account.
 
-### 1.3 — Install Node.js (runs the MCP server, this afternoon)
+### 1.3 — Install Node.js (runs the MCP server this afternoon)
 
-Install the **LTS** version from **`https://nodejs.org/`** (all defaults). In a **new** PowerShell:
+1. **Browser:** install the **LTS** version from `https://nodejs.org/`. Keep all defaults.
+2. **PowerShell** — open a **new** one:
 
-```powershell
-node -v      # v20 or newer
-npm -v
-```
+   ```powershell
+   node -v
+   ```
+
+   You see `v20` or higher.
 
 **Checkpoint ✅ (Topic 1 complete)**
-- `Get-Content C:\course-secrets\api-key.txt` prints a 32-character key.
-- `http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm` in the browser says
-  `{"error":"Missing or wrong API key."}` — **correct!** The browser sends no key.
-- Postman opens; `node -v` prints v20 or newer.
+
+| Check | You should see |
+|---|---|
+| **PowerShell:** `Get-Content C:\course-secrets\api-key.txt` | a 32-character key |
+| **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm` | `{"error":"Missing or wrong API key."}` — **correct!** The browser sends no key |
+| Postman | opens |
+| **PowerShell:** `node -v` | `v20` or higher |
 
 **Common problems**
-- *The reference URL says `Server key is not configured` / 500* → the key file is missing or in a
-  different folder; redo 1.1.
-- *`node` is not recognised* → open a **new** PowerShell after installing Node.js.
+
+| You see | Do this |
+|---|---|
+| `Server key is not configured` / 500 | The key file is missing or in another folder. Redo 1.1 |
+| `node` is not recognised | Open a **new** PowerShell |
 
 ---
 
-## Topic 2 — REST fundamentals (concept)
+## Topic 2 — How a REST API works (concept)
 
-**Prerequisite:** none. **Why this comes first:** you check the AI's API against these ideas — you need
-the vocabulary before Topic 4.
+You check the AI's API against these ideas, so learn the words first.
 
-**A "resource"** is a thing the API exposes. Ours is **murid** (students). REST maps HTTP (Hypertext
-Transfer Protocol) verbs to actions on that resource, each at a URL (Uniform Resource Locator):
+**Each action = a verb + a URL.** Our API is about **murid** (students):
 
-| Verb | URL | Action | Success status |
+| Verb | URL | Does | Success code |
 |---|---|---|---|
-| GET | `murid.cfm` | list all students | 200 OK |
-| GET | `murid.cfm?id=3` | show one student | 200 OK |
-| POST | `murid.cfm` | add a student | 201 Created |
-| PUT | `murid.cfm?id=3` | change student 3 | 200 OK |
-| DELETE | `murid.cfm?id=3` | delete student 3 | 200 OK |
+| GET | `murid.cfm` | list all students | 200 |
+| GET | `murid.cfm?id=3` | show student 3 | 200 |
+| POST | `murid.cfm` | add a student | **201** |
+| PUT | `murid.cfm?id=3` | change student 3 | 200 |
+| DELETE | `murid.cfm?id=3` | delete student 3 | 200 |
 
-**Status codes you should know**
-- **2xx success:** 200 OK, 201 Created.
-- **4xx the caller got it wrong:** 400 bad input, **401 missing or wrong key**, 404 not found.
-- **5xx the server broke:** 500 — the details go to a log, never to the caller.
+**Status codes to know**
 
-**The key is the doorway.** Every request carries a header `X-API-Key: <key>`. No key, wrong key →
-**401**, and nothing else happens. The web pages don't need it (they are the human door); programs —
-Postman today, the MCP server later — do.
+| Code | Means |
+|---|---|
+| **200** / **201** | OK / created |
+| **400** | bad input — e.g. `tingkatan: 7` |
+| **401** | missing or wrong key |
+| **404** | not found |
+| **500** | the server broke — details go to a log, never to the caller |
 
-**Rules of thumb**
-- Responses are **JSON**, always with a sensible status code. Errors look like `{ "error": "text" }`.
-- Bad input is **rejected, never silently fixed**: `tingkatan: 7` is a 400 error, not "changed to 5".
+**Three rules**
+- Every request sends the key in a header: `X-API-Key: <key>`. No key or wrong key → **401**, nothing
+  else happens.
+- Answers are **JSON**. Errors look like `{ "error": "text" }`.
+- Bad input is **rejected, never quietly fixed**: `tingkatan: 7` is a 400, not "changed to 5".
 
-**Checkpoint ✅** You can say which verb and status you would expect for "add a student" (POST → 201)
-and for "wrong key" (any verb → 401).
+**Checkpoint ✅** Which verb and code for "add a student"? (POST → 201.) For "wrong key"? (401.)
 
 ---
 
-## Topic 3 — What an API looks like inside (trainer demo)
+## Topic 3 — See a tiny API built by hand (trainer demo)
 
-**Prerequisite:** Topic 2.
+**Goal:** see what API code looks like, so you know what to check in the AI's code later.
+**The trainer types — you watch.**
 
-**Goal:** see a tiny API built by hand in 20 minutes, so you know what to look for when the AI builds
-yours. **Trainer demo — you do not have to type this.** Open `api-demo/pelajar.cfm` in VS Code and
-`http://localhost:8500/kpm-mcp-coldfusion/api-demo/` in the browser.
+**Open:** `api-demo/pelajar.cfm` in VS Code, and
+`http://localhost:8500/kpm-mcp-coldfusion/api-demo/pelajar.cfm` in the browser. The browser says
+`"GET not implemented yet"`.
 
-`pelajar.cfm` is a skeleton for the small `pelajar` table (`id`, `name`, `email`) with four `TODO`s.
-It already has three helpers: `respond(body, status)` turns a struct into JSON and stops;
-`readBody()` reads the JSON request body; `rows(query)` turns a query into a plain array.
+The file already has three helpers:
+- `respond(body, status)` — sends JSON back, with a status code
+- `readBody()` — reads the JSON the caller sent
+- `rows(query)` — turns query results into a list
 
-**TODO 1 — GET (list all, or one by id)**
+The trainer fills in the four `TODO`s. Each time: **replace the `respond({ "todo": … })` line under
+the TODO** with the code below.
+
+**TODO 1 — GET: list all, or one by id**
 
 ```cfml
 if (hasId) {
@@ -150,10 +148,11 @@ all = queryExecute('SELECT id AS "id", name AS "name", email AS "email" FROM pel
 respond({ "data": rows(all) });
 ```
 
-> **Why `AS "id"`?** Oracle returns column names in CAPITALS, so the JSON would say `"ID"`. The quoted
-> alias keeps it lowercase.
+Save → **F5** in the browser → you see `{"data":[…]}` with 5 rows. Add `?id=1` to the URL → one row.
 
-**TODO 2 — POST (create)** — Oracle hands out ids from a **sequence**: take the next number, insert
+> **Why `AS "id"`?** Oracle returns column names in CAPITALS (`"ID"`). The alias keeps them lowercase.
+
+**TODO 2 — POST: add a row.** Oracle gives out ids from a **sequence**: take the next number, insert
 with it, read the new row back.
 
 ```cfml
@@ -174,7 +173,7 @@ created = queryExecute(
 respond(rows(created)[1], 201);
 ```
 
-**TODO 3 — PUT (update)**
+**TODO 3 — PUT: change a row**
 
 ```cfml
 if (!hasId) respond({ "error": "id required" }, 400);
@@ -189,7 +188,7 @@ queryExecute(
 respond({ "updated": true, "id": val(url.id) });
 ```
 
-**TODO 4 — DELETE**
+**TODO 4 — DELETE: remove a row**
 
 ```cfml
 if (!hasId) respond({ "error": "id required" }, 400);
@@ -201,209 +200,204 @@ queryExecute(
 respond({ "deleted": true, "id": val(url.id) });
 ```
 
-**Three things to check in the AI's API later:** JSON in and out; **every value in a bind parameter**
-(`:id`, `:name` — the script version of `<cfqueryparam>`); a **status code for every answer**. And one
-thing this demo deliberately lacks: **no key and no validation** — yours has both.
+The browser can only send GET. The trainer tests TODO 2–4 in Postman. The finished file is
+`api-demo/pelajar.reference.cfm`.
 
-**Checkpoint ✅** `http://localhost:8500/kpm-mcp-coldfusion/api-demo/pelajar.cfm` returns
-`{"data":[…]}` after the trainer fills in TODO 1. (The finished file is `api-demo/pelajar.reference.cfm`.)
+**Three things to check in the AI's API later**
+1. **JSON** in and out.
+2. **Every value is a bind parameter** (`:id`, `:name`) — the script version of `<cfqueryparam>`.
+3. **A status code on every answer.**
+
+This demo has **no key check and no input checks**. Yours will have both.
+
+**Checkpoint ✅** `…/api-demo/pelajar.cfm` returns `{"data":[…]}`.
 
 ---
 
 ## Topic 4 — Build the REST API, one phase at a time
 
-**Prerequisite:** Topics 1–3, and Day 1's approved plan.
+**Goal:** the AI builds `PHASES.md`. You prove each phase works before the next one starts.
 
-**Goal:** let the AI build `PHASES.md` — and prove each phase works before the next one starts.
+**Start**
+1. **PowerShell:**
 
-Open your workspace (`code workspace\rest-api`), Continue in **Agent** mode — the **same chat as
-yesterday** if you still have it. If not, start a new chat and paste:
+   ```powershell
+   code C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\workspace\rest-api
+   ```
 
-```
-REQUIREMENTS.md and PHASES.md in this folder are approved. Read them, then build Phase 1 only.
-Stop after it and tell me exactly how to run its RUN TEST.
-```
+2. Open Continue → **Agent** mode. Use **yesterday's chat** if you still have it. If not, start a new
+   chat and paste:
 
-**The loop — repeat for every phase:**
+   ```
+   REQUIREMENTS.md and PHASES.md in this folder are approved. Read them, then build Phase 1 only.
+   Stop after it and tell me exactly how to run its RUN TEST.
+   ```
 
-| Step | You type (or do) |
+**Repeat for every phase**
+
+| Step | You do |
 |---|---|
-| 1. Build | *(the AI edits files — read and approve each change it asks about)* |
-| 2. Test | run the RUN TEST yourself — browser, Postman, or DBeaver (F5) |
-| 3a. Passed | `RUN TEST passed: <what you saw>. Mark Phase 1 Verified in PHASES.md, then build Phase 2 only.` |
-| 3b. Failed | `RUN TEST failed. Expected <x>. Got <paste the response or error>. Fix Phase 1 only.` |
+| 1. Build | The AI edits files. Read each change it asks about, then accept it. |
+| 2. Test | Run the phase's RUN TEST yourself — in the browser, Postman or DBeaver (**F5**). |
+| 3a. Passed | Type: `RUN TEST passed: <what you saw>. Mark Phase 1 Verified in PHASES.md, then build Phase 2 only.` |
+| 3b. Failed | Type: `RUN TEST failed. Expected <x>. Got <paste the answer or error>. Fix Phase 1 only.` |
 
-**Rules that save you time**
-- **One phase at a time.** If it builds two: `Stop. Only one phase at a time. Which phase is done?`
+**Rules**
+- **One phase at a time.** If it builds two, type: `Stop. Only one phase at a time. Which phase is done?`
 - **You run the test, not the AI.** "It should work" is not a test result.
-- **Never paste the API key into the chat.** Paste responses and errors — not the key.
-- **Check the code for the Topic 3 things:** binds (`:name`), status codes, and the key check first.
-- `.cfm` changes work on the next refresh. A change to `Application.cfc` seems ignored? Ask the trainer
-  to restart ColdFusion.
+- **Never paste the API key into the chat.** Paste answers and errors only.
+- **Check the code** for the three things from Topic 3, and that the **key is checked first**.
+- `.cfm` changes show after **F5**. A change to `Application.cfc` seems ignored? Ask the trainer to
+  restart ColdFusion.
 
-**Checkpoint ✅** Every phase in `PHASES.md` is marked **Verified**, and the CRUD web pages at
-`…/workspace/rest-api/` still work (the API did not break the app).
+**Checkpoint ✅** Every phase in `PHASES.md` says **Verified**, and the web pages at
+`…/workspace/rest-api/` still work.
 
 **Common problems**
-- *The AI says "done" but nothing changed* → ask: `Which files did you change? Show me the diff.`
-- *Every request gets 401* → the API reads the key from the wrong place, or Postman sends it under a
-  different header name — compare with `X-API-Key`.
-- *The JSON has a block of HTML (a debug table) stuck on the end* → ColdFusion's debug output is on.
-  Turn it off: Day 1, Topic 1.2, step 5.
-- *`Datasource cf_test_crud could not be found`* → the AI created an `Application.cfc` without
-  `this.datasource = "cf_test_crud"`; tell it.
+
+| You see | Do this |
+|---|---|
+| The AI says "done" but nothing changed | Type: `Which files did you change? Show me the diff.` |
+| Every request gets 401 | The API reads the key from the wrong place, or the header is not named `X-API-Key` |
+| A block of HTML stuck on the end of the JSON | Debug output is on. Turn it off: Day 1, Topic 1.2, step 5 |
+| `Datasource cf_test_crud could not be found` | Type: `Application.cfc must set this.datasource = "cf_test_crud".` |
 
 ---
 
 ## Topic 5 — Test everything in Postman
 
-**Prerequisite:** Topic 4 (the API works phase by phase).
+**Goal:** run every test in one go — including a wrong key and bad input.
 
-**Goal:** run every acceptance check in one go — and see that the wrong key and bad input are
-rejected.
+1. **Continue** — ask for a test file:
 
-**Step 1 — ask the AI for a test collection:**
+   ```
+   Write a Postman collection (v2.1 JSON) to postman_collection.json that runs every acceptance check
+   in REQUIREMENTS.md, in order. Use collection variables baseUrl and apiKey. Leave apiKey empty.
+   ```
 
-```
-Write a Postman collection (v2.1 JSON) to postman_collection.json that runs every acceptance check
-in REQUIREMENTS.md, in order. Use collection variables baseUrl and apiKey. Leave apiKey empty.
-```
+2. **Postman:** **Import** → choose `workspace\rest-api\postman_collection.json`.
+3. **Add your key:** click the collection → **Variables** tab → `apiKey` → paste your key into
+   **Current value** → **Save**. (Current values stay on your laptop. They are never shared.)
+4. Check `baseUrl` points to **your** API.
+5. Click the collection → **Run** → **Run**. Every test should be green.
 
-**Step 2 — import it.** Postman → **Import** → choose `workspace\rest-api\postman_collection.json`.
+**Compare with the reference tests.** Import `postman/Day2-murid-API.postman_collection.json` too, set
+its `apiKey` the same way, and run it. It tests the reference API:
 
-**Step 3 — add your key.** Open the collection → **Variables** → paste the key into the **Current
-value** of `apiKey` (from `C:\course-secrets\api-key.txt`). Current values stay on your laptop — they
-are never shared or exported. Check `baseUrl` points at **your** API.
-
-**Step 4 — run it.** Collection → **Run** (the Runner). Every test should pass.
-
-**Step 5 — compare with the reference collection.** Import
-**`postman/Day2-murid-API.postman_collection.json`** too (set its `apiKey` the same way). It tests the
-**reference API** (`reference/api/murid.cfm`):
-
-| # | Request | Expect |
+| # | Test | Expect |
 |---|---|---|
-| 1 | List all | **200**, `data` is a list |
-| 2 | List — Form 4 only (`?tingkatan=4`) | **200**, every row has `tingkatan` 4 |
-| 3 | Get one (`?id=1`) | **200**, `id` 1 |
-| 4 | Create | **201**, the new record (the IC number is made unique each run) |
-| 5 | Update the new record | **200**, `kelas` changed |
-| 6 | Delete the new record | **200**, `deleted: true` |
-| 7 | Reject — wrong key | **401** |
-| 8 | Reject — bad input (`tingkatan` 7, bad IC) | **400**, the error names `tingkatan` |
-| 9 | Reject — not found (`?id=999999`) | **404** |
+| 1 | List all | **200** |
+| 2 | List Form 4 only (`?tingkatan=4`) | **200**, every row is Form 4 |
+| 3 | Get one (`?id=1`) | **200**, id 1 |
+| 4 | Create | **201** |
+| 5 | Update the new student | **200**, `kelas` changed |
+| 6 | Delete the new student | **200**, `deleted: true` |
+| 7 | Wrong key | **401** |
+| 8 | Bad input (`tingkatan` 7, bad IC) | **400** |
+| 9 | Not found (`?id=999999`) | **404** |
 
-Did **your** AI's collection test the wrong-key and bad-input cases? If not:
+Did **your** collection test a wrong key and bad input? If not, type:
 `Add Postman tests for a wrong key (401) and for bad input (400).`
 
-**Checkpoint ✅** Your collection runs all green, including a **401 for a wrong key** and a **400 for
-bad input**.
+**Checkpoint ✅** Your collection runs all green, including **401** for a wrong key and **400** for bad
+input.
 
 **Common problems**
-- *A test fails* → that is the build-and-check rhythm working. Paste the failing request and response to
-  the AI: `This Postman test failed: ... Fix the API, not the test.`
-- *Everything is 401* → the `apiKey` **Current value** is empty (the Initial value alone is not used).
+
+| You see | Do this |
+|---|---|
+| A test fails | Good — that is what tests are for. Type: `This Postman test failed: <request and answer>. Fix the API, not the test.` |
+| Everything is 401 | The `apiKey` **Current value** is empty. Fill it in and **Save** |
 
 ---
 
 ## Topic 6 — Write down how the API works (`API.md`)
 
-**Prerequisite:** Topic 5.
+**Goal:** the document the MCP server is built from this afternoon. If it is wrong, the MCP will be wrong.
 
-**Goal:** produce the document the MCP server is built from this afternoon. If it is wrong, the MCP
-will be wrong.
+1. **Continue** — type:
 
-```
-Write API.md for a developer who will call this API from another program: base URL, the key header,
-every method and URL, body fields with their rules, example responses, and every error code.
-Do not include the key itself.
-```
+   ```
+   Write API.md for a developer who will call this API from another program: base URL, the key header,
+   every method and URL, body fields with their rules, example responses, and every error code.
+   Do not include the key itself.
+   ```
 
-Compare it with **`reference/api/API.md`**. Check it has: the base URL, `X-API-Key`, the five
-operations, every field with its rule, and the error table (400/401/404).
+2. Compare it with `reference/api/API.md`. Tick each:
+   - [ ] the base URL
+   - [ ] the `X-API-Key` header
+   - [ ] the five operations
+   - [ ] every field, with its rule
+   - [ ] the error codes (400, 401, 404)
+   - [ ] **no key** written in it
 
-**Milestone — end of the application block (1.5 days)**
+**Milestone — end of the morning**
 - [ ] every phase in `PHASES.md` is **Verified**
-- [ ] the Postman run is all green, including **401** and **400**
-- [ ] `API.md` describes the API correctly, with **no key in it**
-- [ ] the CRUD web pages still work
+- [ ] Postman is all green, including **401** and **400**
+- [ ] `API.md` is correct, with no key in it
+- [ ] the web pages still work
 
-> **Not finished by lunch?** No problem — the afternoon uses the **reference API** instead:
-> `http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm` with `reference/api/API.md`.
-> Everyone starts the MCP on equal footing.
+> **Not finished by lunch?** No problem. This afternoon, use the **reference API** instead:
+> `http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm` and `reference/api/API.md`.
 
 **Checkpoint ✅** `workspace\rest-api\API.md` exists and matches what your API really does.
 
 ---
 
-## Topic 7 — MCP architecture (concept)
+## Topic 7 — How an MCP server works (concept)
 
-**Prerequisite:** a working API (yours or the reference).
-
-**Goal:** know the parts of an MCP before planning one.
-
-> **Theory:** read [mcp-theory.md](mcp-theory.md), parts 4–7 —
-> [how a conversation works](mcp-theory.md#4--how-a-conversation-works-step-by-step),
-> [what a tool is made of](mcp-theory.md#5--what-a-tool-is-made-of),
-> [how the host and server connect](mcp-theory.md#6--how-the-host-and-the-server-connect) and
-> [where MCP sits next to your API](mcp-theory.md#7--where-mcp-sits-next-to-your-api). This topic is the short version.
+Full version: [mcp-theory.md](mcp-theory.md), parts 4–7.
 
 An **MCP server** is a small program that tells an AI app: *"here are the actions you may take, and
-exactly what each one needs."* The AI decides **when** to use an action; your code decides **what it
-is allowed to do**.
+exactly what each one needs."* The AI decides **when** to use an action. Your code decides **what is
+allowed**.
 
 ```
  You (plain English)
       |
-      v
- Claude Desktop  (the AI app = MCP host/client)
-      |   starts your server and talks to it over stdin/stdout ("stdio")
-      v
- Your MCP server (Node.js)   list_murid  get_murid  create_murid  update_murid  delete_murid
+ Claude Desktop            the AI app. It starts your server and talks to it directly
+      |
+ Your MCP server (Node.js)  list_murid  get_murid  create_murid  update_murid  delete_murid
       |   HTTP + X-API-Key
-      v
  Your REST API (ColdFusion)  --->  Oracle
 ```
 
-| Word | Meaning here |
+| Word | Means |
 |---|---|
-| **Tool** | one action the AI may call, e.g. `create_murid` |
-| **Description** | the sentence the AI reads to decide *when* to use the tool — written for the AI |
-| **Input schema** | the exact fields and rules a tool accepts; a call that breaks them is rejected before it reaches your app |
-| **stdio** | the AI app starts your server as a program and talks through its input/output — no port, no URL |
-| **Environment variables** | how the server gets the API URL and key — from the AI app's config, never from the code |
-| **SDK** | Software Development Kit — here `@modelcontextprotocol/sdk`, the official MCP library for Node.js |
+| **Tool** | one action the AI may use, e.g. `create_murid` |
+| **Description** | the sentence the AI reads to decide *when* to use the tool |
+| **Input schema** | the exact fields and rules a tool accepts. Anything else is rejected |
+| **stdio** | how the AI app talks to your server — no port, no URL |
+| **Environment variables** | how the server gets the API URL and key — from the AI app's settings, never from the code |
 
-**Three safety ideas to carry through the build**
-- The AI's tool call is an **untrusted request** — check it against the rules, reject bad values, never
-  "fix" them.
-- **Delete is special:** the tool demands `confirm: true`, and its description tells the AI to ask you
-  first.
-- The **key never appears** in code, in a tool result, in an error message, or in the chat.
+**Three safety rules for the build**
+- Treat every tool call from the AI as **untrusted**. Reject bad values; never "fix" them.
+- **Delete needs `confirm: true`**, and its description tells the AI to ask you first.
+- The **key never appears** in code, in an answer, in an error, or in the chat.
 
-**Checkpoint ✅** You can name the five tools and say which one needs a confirmation, and why.
+**Checkpoint ✅** Name the five tools. Which one needs a confirmation, and why?
 
 ---
 
 ## Topic 8 — Plan the MCP server with the AI
 
-**Prerequisite:** Topics 6 and 7.
+**Goal:** the same interview as Day 1 — this time you pick **MCP** at Question 1.
 
-**Goal:** the same interview as Day 1 — this time choosing **MCP** at Question 1.
-
-**Step 1 — make the workspace:**
+**Step 1 — make the workspace.** **PowerShell** — paste all five lines:
 
 ```powershell
 cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion
-New-Item -ItemType Directory workspace\mcp-server | Out-Null
+New-Item -ItemType Directory -Force workspace\mcp-server | Out-Null
 Copy-Item framework\START_PROMPT.md, framework\project_starter.json workspace\mcp-server
-Copy-Item workspace\rest-api\API.md workspace\mcp-server        # yours - or reference\api\API.md
+Copy-Item workspace\rest-api\API.md workspace\mcp-server
 code workspace\mcp-server
 ```
 
-**Step 2 — run the interview.** New Continue chat, Agent mode, paste `START_PROMPT.md`.
+> Using the reference API? Replace line 4 with: `Copy-Item reference\api\API.md workspace\mcp-server`
 
-| # | Suggested answer for the MCP |
+**Step 2 — run the interview.** New Continue chat → **Agent** → paste all of `START_PROMPT.md` → send.
+
+| # | You answer |
 |---|---|
 | 1 | **2** — Node.js MCP server |
 | 2 | "Let an AI assistant list, find, add, change and delete students in plain English, through the murid API." |
@@ -412,73 +406,78 @@ code workspace\mcp-server
 | 5 | **1** — Yes (the server sends the key on every call) |
 | 6 | "Reject values that break the rules in API.md before calling the API. Delete only after the user confirms. Show the API's error message in plain words. Never show the key." |
 
-**Step 3 — check the scope summary before you type *approved*:**
-- [ ] Node.js, the official MCP SDK (`@modelcontextprotocol/sdk`), **stdio** transport
-- [ ] base URL and key come from environment variables **`API_BASE_URL`** and **`API_KEY`**
-- [ ] 5 tools, each with a clear description and an input schema matching `API.md`
+**Step 3 — check the summary before you type *approved*:**
+- [ ] Node.js, the official MCP SDK (`@modelcontextprotocol/sdk`), **stdio**
+- [ ] the URL and key come from environment variables **`API_BASE_URL`** and **`API_KEY`**
+- [ ] 5 tools, each with a clear description and fields that match `API.md`
 - [ ] `delete_murid` requires `confirm: true`
-- [ ] nothing is written with `console.log` (it would break stdio) — `console.error` only
-- [ ] errors come back as a readable tool error — never a crash, never the key
+- [ ] uses `console.error` only — never `console.log` (it breaks stdio)
+- [ ] errors come back as a readable message — never a crash, never the key
 
-**Checkpoint ✅** `workspace\mcp-server` contains the approved `REQUIREMENTS.md` and `PHASES.md`.
+**Checkpoint ✅** `workspace\mcp-server` has the approved `REQUIREMENTS.md` and `PHASES.md`.
 
 ---
 
-## Topic 9 — First tool, end to end (MCP Inspector)
+## Topic 9 — First tool, end to end
 
-**Prerequisite:** Topic 8.
+**Goal:** one AI-ready action, reading real students from Oracle.
 
-**Goal:** the Day 2 finish line — one AI-ready action reading real data from Oracle.
+1. **Continue:** build the phases up to the first tool (usually: the project skeleton, then
+   `list_murid`). Use the same loop as Topic 4.
+2. **PowerShell** — test it with the **MCP Inspector**, a web page that runs your tools without any AI.
+   Paste the lines one by one:
 
-Build the phases up to the first tool (usually: project skeleton + `list_murid`), with the same loop
-as Topic 4. To test a tool **without any AI app**, use the **MCP Inspector** — a web page that calls
-your tools directly:
+   ```powershell
+   cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\workspace\mcp-server
+   npm install
+   ```
 
-```powershell
-cd C:\ColdFusion2021\cfusion\wwwroot\kpm-mcp-coldfusion\workspace\mcp-server
-npm install
-npx @modelcontextprotocol/inspector -e "API_BASE_URL=<your API URL>" -e "API_KEY=$(Get-Content C:\course-secrets\api-key.txt)" node index.js
-```
+   ```powershell
+   $key = Get-Content C:\course-secrets\api-key.txt
+   $url = "http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm"
+   ```
 
-- `<your API URL>` is your API from Topic 4, or the reference:
-  `http://localhost:8500/kpm-mcp-coldfusion/reference/api/murid.cfm`
-- `index.js` is the server's main file — if the AI named it differently, use that name.
+   Using **your own** API? Put its URL in `$url` instead.
 
-In the Inspector page: **Connect** → **Tools** → **List Tools** → `list_murid` → **Run Tool**. You see
-the students from Oracle.
+   ```powershell
+   npx @modelcontextprotocol/inspector -e "API_BASE_URL=$url" -e "API_KEY=$key" node index.js
+   ```
 
-**Checkpoint ✅** `list_murid` returns the 6 students in the Inspector — **an AI-ready action, working
-end to end.**
+   (If the AI named the main file something other than `index.js`, use that name.)
+3. The Inspector opens in the browser (if not, open the link it prints). Click **Connect** →
+   **Tools** → **List Tools** → **`list_murid`** → **Run Tool**.
+4. You see the **6 students** from Oracle.
+
+**Checkpoint ✅** `list_murid` returns the 6 students in the Inspector.
 
 **Common problems**
-- *Inspector says the server disconnected* → the server crashed on start. Run `node index.js` alone and
-  paste the error to the AI.
-- *`Cannot reach the app`* → `API_BASE_URL` is wrong, or ColdFusion is stopped.
-- *`401`* → the key was not passed; check the `-e "API_KEY=…"` part.
+
+| You see | Do this |
+|---|---|
+| Inspector says the server disconnected | The server crashed. Run `node index.js` alone and paste the error to the AI |
+| `Cannot reach the app` | `$url` is wrong, or ColdFusion is stopped |
+| `401` | The key was not passed. Run the `$key = …` line again, then the `npx` line |
 
 ---
 
-## End-of-Day 2 — final working state
+## End of Day 2 — what you should have
 
-You should now have:
-- `C:\course-secrets\api-key.txt` — your API key, outside the web folder.
+- `C:\course-secrets\api-key.txt` — your API key, outside the course folder.
 - `workspace\rest-api\` — the app **plus your REST API**, every phase **Verified**, with
-  `postman_collection.json` and **`API.md`**.
-- Postman — your collection (all green) and the reference collection.
-- `workspace\mcp-server\` — the approved MCP `REQUIREMENTS.md` + `PHASES.md`, and a Node.js project
-  whose **`list_murid`** works in the MCP Inspector.
+  `postman_collection.json` and `API.md`.
+- Postman — your tests (all green) and the reference tests.
+- `workspace\mcp-server\` — the approved MCP plan, and **`list_murid`** working in the Inspector.
 
 **Security recap**
-- The key is **checked first** on every API request; missing or wrong → **401**, nothing else runs.
-- Every SQL value is a **bind parameter**; bad input gets a **400** with a readable reason.
-- Errors are short and safe — no SQL, no stack trace, no key.
+- The API checks the key **first**. Missing or wrong → **401**, nothing else runs.
+- Every SQL value is a **bind parameter**. Bad input → **400** with a readable reason.
+- Errors are short — no SQL, no stack trace, no key.
 - The MCP server gets its URL and key from **environment variables**, never from its code.
 
-**Stretch goals (if time remains)**
-- Ask the AI to add a filter to the list endpoint (for example `?kelas=Bestari`) as a new phase — with
-  its own RUN TEST and a new Postman test.
-- Build `get_murid` ahead of tomorrow and test it in the Inspector.
-- Read `reference/mcp/index.js` — compare its tool descriptions with your AI's.
+**Extra, if you finish early**
+- Ask the AI to add a filter (e.g. `?kelas=Bestari`) as a new phase, with its own RUN TEST and Postman test.
+- Build `get_murid` ahead of tomorrow.
+- Compare your tool descriptions with `reference/mcp/index.js`.
 
-**Tomorrow (Day 3):** build the other four MCP tools, connect Claude Desktop, run the app in plain
-English — then try to break it on purpose, and present a final project.
+**Tomorrow (Day 3):** the other four MCP tools, Claude Desktop, running the app in plain English —
+then breaking it on purpose, and a final project.
