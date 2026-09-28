@@ -61,7 +61,8 @@ shown in it. Put the right key back.
 
 **Stuck? Use the answer key.** `code/reference/mcp/` is a finished server with the same 5 tools.
 1. **VS Code:** **File → Open Folder…** → the course folder → `code\reference\mcp` → **Select Folder**.
-2. **Terminal → New Terminal**. Type `npm install` → **Enter**. Then `npm test` → **Enter**.
+2. **Terminal → New Terminal** → the **˅** arrow next to **+** → **Command Prompt**. Type
+   `npm install` → **Enter**. Then `npm test` → **Enter**.
 
 It ends with **ALL PASSED** (12 checks). Still not working by 10:30? Use the reference server for the
 rest of today.

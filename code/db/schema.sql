@@ -3,7 +3,7 @@
 --
 --  Run / reset any time (Oracle XE running, user cfapp created by create_user.sql):
 --    cd <course folder>\db
---    sqlplus -s 'cfapp/cfapp123@//localhost:1521/XEPDB1' '@schema.sql'
+--    sqlplus -s "cfapp/cfapp123@//localhost:1521/XEPDB1" "@schema.sql"
 --
 --  Two tables:
 --    pelajar - simple 3-column table (id, name, email) used by the

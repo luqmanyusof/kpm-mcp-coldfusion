@@ -53,9 +53,9 @@ the AI chat**.
 ### 1.3 — Install Node.js (runs the MCP server this afternoon)
 
 1. **Browser:** install the **LTS** version from `https://nodejs.org/`. Keep all defaults.
-2. **PowerShell** — open a **new** one:
+2. **Command Prompt** (Start → type `cmd` → **Enter**) — open a **new** one, type:
 
-   ```powershell
+   ```
    node -v
    ```
 
@@ -68,14 +68,14 @@ the AI chat**.
 | **File Explorer:** open `C:\course-secrets\api-key.txt` | your key, on one line |
 | **Browser:** `http://localhost:8500/kpm-mcp-coldfusion/code/reference/api/murid.cfm` | `{"error":"Missing or wrong API key."}` — **correct!** The browser sends no key |
 | Postman | opens |
-| **PowerShell:** `node -v` | `v20` or higher |
+| **Command Prompt:** `node -v` | `v20` or higher |
 
 **Common problems**
 
 | You see | Do this |
 |---|---|
 | `Server key is not configured` / 500 | The key file is missing or in another folder. Redo 1.1 |
-| `node` is not recognised | Open a **new** PowerShell |
+| `node` is not recognised | Open a **new** Command Prompt. Still not? Restart Windows |
 
 ---
 
@@ -413,8 +413,9 @@ allowed**.
 
 1. **Continue:** build the phases up to the first tool (usually: the project skeleton, then
    `list_murid`). Use the same loop as Topic 4.
-2. **Open a terminal inside VS Code:** menu **Terminal → New Terminal**. It opens at the bottom,
-   already in `workspace\mcp-server`.
+2. **Open a Command Prompt inside VS Code:** menu **Terminal → New Terminal**. It opens at the
+   bottom, already in `workspace\mcp-server`. Click the small **˅** arrow next to **+** on the
+   terminal's top bar → **Command Prompt**. Type the commands below in that one.
 3. Type this → **Enter**. It downloads what the server needs (about a minute):
 
    ```
@@ -446,6 +447,7 @@ allowed**.
 
 | You see | Do this |
 |---|---|
+| `running scripts is disabled on this system` | You typed in PowerShell, not Command Prompt. Redo step 2 |
 | Inspector says the server disconnected | The server crashed. In the VS Code terminal press **Ctrl+C**, type `node index.js` → **Enter**, and paste the error to the AI |
 | `Cannot reach the app` | `API_BASE_URL` is wrong, or ColdFusion is stopped |
 | `401` | `API_KEY` is empty or wrong. Paste it again from `api-key.txt` → **Connect** |

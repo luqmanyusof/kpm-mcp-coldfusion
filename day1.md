@@ -47,9 +47,9 @@ Desktop (Day 3).
 | **Browser** | Chrome or Edge |
 | **VS Code** | the code editor (installed in 1.7) |
 | **Services** | Start → type `Services` → open it. Starts and restarts Oracle and ColdFusion |
-| **PowerShell** | used only twice today (1.4 and 7.1) — the notes say how to open it |
+| **Command Prompt** | Start → type `cmd` → **Enter**. Used only twice today (1.4 and 7.1) |
 
-**To run a command:** copy the grey box → right-click inside PowerShell (this pastes) → **Enter**.
+**To run a command:** copy the grey box → click inside Command Prompt → **Ctrl+V** (or right-click) to paste → **Enter**.
 
 **You need:** Windows 10/11 64-bit, **admin rights**, **8 GB RAM** (16 GB is better), **20 GB free
 disk**, and no other Oracle database installed.
@@ -165,11 +165,11 @@ This is the one install step that needs typed commands — Oracle's setup script
 tool, `sqlplus`.
 
 1. **File Explorer** — open the course folder → **`code`** → **`db`**. Click the address bar at the top, type
-   `powershell`, press **Enter**. A PowerShell window opens, already in the `db` folder.
+   `cmd`, press **Enter**. A Command Prompt window opens, already in the `db` folder.
 2. Create the course user — paste this, press **Enter**:
 
-   ```powershell
-   sqlplus 'sys@//localhost:1521/XEPDB1' as sysdba '@create_user.sql'
+   ```
+   sqlplus "sys@//localhost:1521/XEPDB1" as sysdba "@create_user.sql"
    ```
 
    It asks for a password: type **your Oracle password from 1.1** (nothing shows while you type) →
@@ -177,8 +177,8 @@ tool, `sqlplus`.
 
 3. Create the tables and sample data — paste, **Enter**:
 
-   ```powershell
-   sqlplus -s 'cfapp/cfapp123@//localhost:1521/XEPDB1' '@schema.sql'
+   ```
+   sqlplus -s "cfapp/cfapp123@//localhost:1521/XEPDB1" "@schema.sql"
    ```
 
    The last lines say: `pelajar rows: 5` and `murid rows: 6`.
@@ -246,6 +246,7 @@ A **datasource** is a named database connection, saved once in ColdFusion. Pages
 |---|---|
 | Oracle installer fails half way | Uninstall it (Settings → Apps), restart Windows, install again to `C:\oraclexe\` as administrator |
 | `sqlplus` is not recognised | Restart Windows, then redo 1.4. Still missing? Type `C:\oraclexe\dbhomeXE\bin\sqlplus.exe` instead of `sqlplus` |
+| sqlplus prints a long help page (`Usage 1: sqlplus -H \| -V`) | The command was mistyped. Copy it again exactly — with the **double** quotes |
 | `ORA-12541: no listener` | Windows **Services** → start the `Oracle…TNSListener` service |
 | `ORA-12514: listener does not currently know of service` | Oracle is still starting. Wait 2 minutes. Still failing? Restart `OracleServiceXE` |
 | `ORA-01017: invalid username/password` | Step 1.4-2 needs **your** Oracle password. Everything else is `cfapp` / `cfapp123` |
@@ -474,14 +475,14 @@ The small `pelajar` table (`id`, `name`, `email`) is only for the lessons.
 
 1. **Browser:** `https://ollama.com` → **Sign up** → confirm the email.
 2. **Browser:** install the app from `https://ollama.com/download`.
-3. Link this laptop to your account. Start → type `PowerShell` → **Enter**. Type this one command →
+3. Link this laptop to your account. Start → type `cmd` → **Enter**. Type this one command →
    **Enter**:
 
-   ```powershell
+   ```
    ollama signin
    ```
 
-   The browser opens → log in → **Connect**. Close PowerShell.
+   The browser opens → log in → **Connect**. Close Command Prompt.
 
 ### 7.2 — Token Harbor (backup AI)
 
@@ -529,7 +530,7 @@ The small `pelajar` table (`id`, `name`, `email`) is only for the lessons.
 
 | You see | Do this |
 |---|---|
-| `ollama` is not recognised | Close PowerShell, open a new one. Still not? Restart Windows |
+| `ollama` is not recognised | Close Command Prompt, open a new one. Still not? Restart Windows |
 | No Gemma / Token Harbor in Continue | Redo 7.3 steps 3–4, then Reload Window |
 | Gemma: `unauthorized` or no reply | Redo 7.1 step 3; check your limits at `https://ollama.com/settings` |
 | Token Harbor `401` / `invalid api key` | Redo 7.3 step 5: `TOKEN_HARBOR_API_KEY=…`, no quotes, no spaces. Reload Window |
