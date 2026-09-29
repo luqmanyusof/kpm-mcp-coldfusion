@@ -11,7 +11,7 @@
       "6. STOP and wait for my answer. Then ask question 2, again word for word from the array. One question per message, always.",
       "7. Obey `interview_rules` throughout - especially: never assume a table, column, type or datasource; read the code, and if the code does not state it, ASK."
     ],
-    "end_condition": "After the last question: summarize the full scope in one block, get my explicit approval, THEN write REQUIREMENTS.md + PHASES.md per `output_spec` and stop for review. Only after I approve those files do you write code - one phase at a time."
+    "end_condition": "After the last question: summarize the full scope in one block, get my explicit approval, THEN write the two planning files per `output_spec` - named for the build type (REQUIREMENTS-api.md + PHASES-api.md for a REST API, REQUIREMENTS-mcp.md + PHASES-mcp.md for an MCP), never plain REQUIREMENTS.md/PHASES.md, and never overwriting the other build's files - and stop for review. Only after I approve those files do you write code - one phase at a time."
   },
 
   "starter_schema_version": "project-starter.v3-web",
@@ -39,6 +39,7 @@
     "The human sets up the environment FIRST: the application server is installed and running, the database is reachable, the datasource is defined, and the existing app opens in a browser.",
     "This starter is copied into the already-working project. You are NOT asked to install the server or database, or to define the datasource.",
     "Do NOT create the project structure, the datasource, or the server config during the interview. In a build phase you may EDIT existing files to add the new endpoint or the new MCP tool.",
+    "EXCEPTION for an MCP build: a Node.js MCP server is a brand-new project, not an edit to the existing app. Create it in its own NEW subfolder (e.g. mcp-server/) with its own package.json and index.js. This is the only build that creates new project structure; a REST API build still edits the existing app in place. Do not scatter Node.js files into the app root.",
     "If the datasource or the app is not working when you start a build phase, STOP and tell me - do not try to set it up."
   ],
 
@@ -137,8 +138,9 @@
   ],
 
   "output_spec": {
-    "files": [ "REQUIREMENTS.md", "PHASES.md" ],
-    "location": "root of the current project",
+    "files": [ "REQUIREMENTS-api.md", "PHASES-api.md", "REQUIREMENTS-mcp.md", "PHASES-mcp.md" ],
+    "files_note": "Write ONLY the pair for the build type chosen in question 1: a REST API build writes REQUIREMENTS-api.md and PHASES-api.md; an MCP build writes REQUIREMENTS-mcp.md and PHASES-mcp.md. NEVER write a plain REQUIREMENTS.md or PHASES.md, and NEVER overwrite the other build's files - the API plan and the MCP plan must be able to sit side by side.",
+    "location": "For a REST API build, the two -api files go in the root of the current project (the app you are editing in place). For an MCP build, first create the Node.js MCP server in its own NEW subfolder (e.g. mcp-server/), then put REQUIREMENTS-mcp.md and PHASES-mcp.md inside that same subfolder. Never overwrite the REST API build's files.",
     "requirements_format": "Markdown with these numbered sections: 1 One-line goal - 2 Context (what problem this solves, who uses it) - 3 Data (fixed - table, every column with type, primary key and how ids are generated, the datasource) - 4 Hard constraints (paste into every prompt) - 5 SECURITY requirements (the access-key rule, parameterized queries, the safe error format, which tables/columns are exposed) - 6 Functional requirements (numbered, testable - the endpoints or the tools, each with its input and output) - 7 Non-functional requirements - 8 Interfaces / data contract (request and response shapes, status codes) - 9 Explicitly OUT of scope - 10 Acceptance criteria (checkboxes, each verifiable by running the app) - 11 Known traps / where the AI is likely to be wrong (dialect and framework gotchas). You MAY improve the structure if it makes the spec clearer - note what you changed and why.",
     "phases_format": "Markdown build plan. One phase = one build-and-VERIFY-BY-RUNNING cycle; do not jump ahead. Shape: an unnumbered **Pre-flight** section (prerequisites and checks the human confirms - server running, datasource works, database reachable - not a build cycle), then **Phase 1 onwards**: Phase 1 skeleton and first proof of life (the endpoint returns JSON, or the MCP lists its tools) - one phase per operation or tool - a security phase (add the key, reject bad input) - a robustness / fault-injection phase - an acceptance phase. End the file with a prompt-log table (columns: number, phase, what I asked, what the AI got wrong, my fix) and a 'Reusable prompt templates saved from this project' list.",
     "phase_structure": {
@@ -183,5 +185,5 @@
     "example": "All 5 acceptance criteria verified against the running API. 2 prompt templates saved. Known limitation: no paging on the list endpoint. Security: the key is required on every request and read from config; do not expose this against a production database."
   },
 
-  "definition_of_done": "REQUIREMENTS.md and PHASES.md exist in the project root; the data facts are taken from the code I have (not assumed); section 5 states the security requirements and the access-key behaviour; section 11 lists the known traps for this stack; failure behaviour is specified; every acceptance criterion is runnable against the app; every phase ends in a run test; and I have reviewed and approved both files before any code is written."
+  "definition_of_done": "The two planning files named for the build type (per output_spec - REQUIREMENTS-api.md/PHASES-api.md at the project root, or REQUIREMENTS-mcp.md/PHASES-mcp.md inside the new MCP subfolder) exist without overwriting the other build's files; the data facts are taken from the code I have (not assumed); section 5 states the security requirements and the access-key behaviour; section 11 lists the known traps for this stack; failure behaviour is specified; every acceptance criterion is runnable against the app; every phase ends in a run test; and I have reviewed and approved both files before any code is written."
 }
