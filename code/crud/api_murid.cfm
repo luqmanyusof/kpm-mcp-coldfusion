@@ -22,14 +22,14 @@
     // Helper function for validation
     function validateStudentInput(input) {
         var allowedFields = ["nama", "no_kp", "jantina", "tingkatan", "kelas", "tarikh_lahir", "bangsa", "agama", "pendapatan_isi_rumah", "bilangan_adik_beradik"];
-        var keys = structGetKeys(input);
         
         // 1. Check for unknown fields
-        for (var key in keys) {
+        for (var key in input) {
             if (!arrayContains(allowedFields, key)) {
                 return { "valid": false, "error": "Unknown field: #key#" };
             }
         }
+
 
         // 2. Required fields check
         var requiredFields = ["nama", "no_kp", "jantina", "tingkatan", "kelas"];
@@ -130,9 +130,9 @@
             
             // Phase 6: Robustness Validation
             local.validation = validateStudentInput(local.input);
-            if (!validation.valid) {
+            if (!local.validation.valid) {
                 cfheader(statusCode="400", statusText="Bad Request");
-                writeOutput(serializeJSON({ "error": validation.error }));
+                writeOutput(serializeJSON({ "error": local.validation.error }));
                 cabort;
             }
             
@@ -147,23 +147,23 @@
                 }
             }
             
-            queryExecute(
-                "INSERT INTO murid (nama, no_kp, jantina, tingkatan, kelas, tarikh_lahir, bangsa, agama, pendapatan_isi_rumah, bilangan_adik_beradik) 
-                 VALUES (:nama, :no_kp, :jantina, :tingkatan, :kelas, :tarikh_lahir, :bangsa, :agama, :pendapatan, :bilangan)",
-                {
-                    nama = { value: local.input.nama, cfsqltype: "cf_sql_varchar" },
-                    no_kp = { value: local.input.no_kp, cfsqltype: "cf_sql_varchar" },
-                    jantina = { value: local.input.jantina, cfsqltype: "cf_sql_varchar" },
-                    tingkatan = { value: local.input.tingkatan, cfsqltype: "cf_sql_integer" },
-                    kelas = { value: local.input.kelas, cfsqltype: "cf_sql_varchar" },
-                    tarikh_lahir = { value: (len(local.finalDate)) ? local.finalDate : null, cfsqltype: "cf_sql_date" },
-                    bangsa = { value: structKeyExists(local.input, "bangsa") ? local.input.bangsa : "", cfsqltype: "cf_sql_varchar" },
-                    agama = { value: structKeyExists(local.input, "agama") ? local.input.agama : "", cfsqltype: "cf_sql_varchar" },
-                    pendapatan = { value: structKeyExists(local.input, "pendapatan_isi_rumah") ? local.input.pendapatan_isi_rumah : null, cfsqltype: "cf_sql_numeric" },
-                    bilangan = { value: structKeyExists(local.input, "bilangan_adik_beradik") ? local.input.bilangan_adik_beradik : null, cfsqltype: "cf_sql_integer" }
-                },
-                { datasource="cf_test_crud" }
-            );
+                queryExecute(
+                    "INSERT INTO murid (nama, no_kp, jantina, tingkatan, kelas, tarikh_lahir, bangsa, agama, pendapatan_isi_rumah, bilangan_adik_beradik) 
+                     VALUES (:nama, :no_kp, :jantina, :tingkatan, :kelas, :tarikh_lahir, :bangsa, :agama, :pendapatan, :bilangan)",
+                    {
+                        nama = { value: local.input.nama, cfsqltype: "cf_sql_varchar" },
+                        no_kp = { value: local.input.no_kp, cfsqltype: "cf_sql_varchar" },
+                        jantina = { value: local.input.jantina, cfsqltype: "cf_sql_varchar" },
+                        tingkatan = { value: val(local.input.tingkatan), cfsqltype: "cf_sql_integer" },
+                        kelas = { value: local.input.kelas, cfsqltype: "cf_sql_varchar" },
+                        tarikh_lahir = { value: (len(local.finalDate)) ? local.finalDate : null, cfsqltype: "cf_sql_date" },
+                        bangsa = { value: structKeyExists(local.input, "bangsa") ? local.input.bangsa : "", cfsqltype: "cf_sql_varchar" },
+                        agama = { value: structKeyExists(local.input, "agama") ? local.input.agama : "", cfsqltype: "cf_sql_varchar" },
+                        pendapatan = { value: structKeyExists(local.input, "pendapatan_isi_rumah") ? val(local.input.pendapatan_isi_rumah) : null, cfsqltype: "cf_sql_numeric" },
+                        bilangan = { value: structKeyExists(local.input, "bilangan_adik_beradik") ? val(local.input.bilangan_adik_beradik) : null, cfsqltype: "cf_sql_integer" }
+                    },
+                    { datasource="cf_test_crud" }
+                );
             
             cfheader(statusCode="201", statusText="Created");
             writeOutput(serializeJSON({ "message": "Student created successfully." }));
@@ -206,9 +206,9 @@
 
             // Phase 6: Robustness Validation
             local.validation = validateStudentInput(local.input);
-            if (!validation.valid) {
+            if (!local.validation.valid) {
                 cfheader(statusCode="400", statusText="Bad Request");
-                writeOutput(serializeJSON({ "error": validation.error }));
+                writeOutput(serializeJSON({ "error": local.validation.error }));
                 cabort;
             }
 
@@ -223,34 +223,34 @@
                 }
             }
 
-            queryExecute(
-                "UPDATE murid SET 
-                    nama = :nama, 
-                    no_kp = :no_kp, 
-                    jantina = :jantina, 
-                    tingkatan = :tingkatan, 
-                    kelas = :kelas, 
-                    tarikh_lahir = :tarikh_lahir, 
-                    bangsa = :bangsa, 
-                    agama = :agama, 
-                    pendapatan_isi_rumah = :pendapatan, 
-                    bilangan_adik_beradik = :bilangan 
-                 WHERE id = :studentId",
-                {
-                    studentId = { value: url.id, cfsqltype: "cf_sql_integer" },
-                    nama = { value: local.input.nama, cfsqltype: "cf_sql_varchar" },
-                    no_kp = { value: local.input.no_kp, cfsqltype: "cf_sql_varchar" },
-                    jantina = { value: local.input.jantina, cfsqltype: "cf_sql_varchar" },
-                    tingkatan = { value: local.input.tingkatan, cfsqltype: "cf_sql_integer" },
-                    kelas = { value: local.input.kelas, cfsqltype: "cf_sql_varchar" },
-                    tarikh_lahir = { value: (len(local.finalDate)) ? local.finalDate : null, cfsqltype: "cf_sql_date" },
-                    bangsa = { value: structKeyExists(local.input, "bangsa") ? local.input.bangsa : "", cfsqltype: "cf_sql_varchar" },
-                    agama = { value: structKeyExists(local.input, "agama") ? local.input.agama : "", cfsqltype: "cf_sql_varchar" },
-                    pendapatan = { value: structKeyExists(local.input, "pendapatan_isi_rumah") ? local.input.pendapatan_isi_rumah : null, cfsqltype: "cf_sql_numeric" },
-                    bilangan = { value: structKeyExists(local.input, "bilangan_adik_beradik") ? local.input.bilangan_adik_beradik : null, cfsqltype: "cf_sql_integer" }
-                },
-                { datasource="cf_test_crud" }
-            );
+                queryExecute(
+                    "UPDATE murid SET 
+                        nama = :nama, 
+                        no_kp = :no_kp, 
+                        jantina = :jantina, 
+                        tingkatan = :tingkatan, 
+                        kelas = :kelas, 
+                        tarikh_lahir = :tarikh_lahir, 
+                        bangsa = :bangsa, 
+                        agama = :agama, 
+                        pendapatan_isi_rumah = :pendapatan, 
+                        bilangan_adik_beradik = :bilangan 
+                     WHERE id = :studentId",
+                    {
+                        studentId = { value: url.id, cfsqltype: "cf_sql_integer" },
+                        nama = { value: local.input.nama, cfsqltype: "cf_sql_varchar" },
+                        no_kp = { value: local.input.no_kp, cfsqltype: "cf_sql_varchar" },
+                        jantina = { value: local.input.jantina, cfsqltype: "cf_sql_varchar" },
+                        tingkatan = { value: val(local.input.tingkatan), cfsqltype: "cf_sql_integer" },
+                        kelas = { value: local.input.kelas, cfsqltype: "cf_sql_varchar" },
+                        tarikh_lahir = { value: (len(local.finalDate)) ? local.finalDate : null, cfsqltype: "cf_sql_date" },
+                        bangsa = { value: structKeyExists(local.input, "bangsa") ? local.input.bangsa : "", cfsqltype: "cf_sql_varchar" },
+                        agama = { value: structKeyExists(local.input, "agama") ? local.input.agama : "", cfsqltype: "cf_sql_varchar" },
+                        pendapatan = { value: structKeyExists(local.input, "pendapatan_isi_rumah") ? val(local.input.pendapatan_isi_rumah) : null, cfsqltype: "cf_sql_numeric" },
+                        bilangan = { value: structKeyExists(local.input, "bilangan_adik_beradik") ? val(local.input.bilangan_adik_beradik) : null, cfsqltype: "cf_sql_integer" }
+                    },
+                    { datasource="cf_test_crud" }
+                );
 
             cfheader(statusCode="200", statusText="OK");
             writeOutput(serializeJSON({ "message": "Student updated successfully." }));
